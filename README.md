@@ -1,1 +1,1 @@
-# CapstoneEclipse
+# Capstone Team Eclipse
