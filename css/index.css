@@ -11,6 +11,320 @@ body{
     color: rgb(0, 51, 103);
 }
 
+/* normal mobile size */
+#nav{
+    width: 100%;
+    top: 0;
+    background-color: rgb(211, 234, 240);
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 2rem;
+    justify-content: space-between;
+    margin-top: -2rem;
+}
+#nav div{
+    margin-top: 3rem;
+}
+
+#logo {
+    /* width:22rem; */
+    width: 30%;
+    height: 30%;
+    margin-left: 1rem;
+    margin-right: 0rem;
+}
+
+#hamburger {
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 2rem;
+    margin-right: 3rem;
+  }
+
+#login-holder {
+    display: none;
+}
+
+#nav p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* main search starts here */
+#landing-search{
+    min-height: 30rem;
+    width: 100%;
+    background-size: 100%, 85%;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+    margin-bottom: 0rem;
+    padding-bottom: 5rem;
+}
+
+#searching-area{
+    padding: 4rem;
+    font-family: 'Raleway', 'sans-serif';
+    color: rgb(0, 51, 103);
+}
+
+#landing-search h1 {
+    font-size: 2rem;
+    font-weight: bolder;
+    margin-bottom: 1rem;
+}
+
+#landing-search h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: lighter;
+}
+
+input{
+    -webkit-appearance: none;
+    border:none;
+    margin-top: 1rem;
+    font-size: 1rem;
+    padding-left: 1rem;
+    border: 1px solid rgb(0, 51, 103);
+}
+
+#keywords, #location {
+    width: 22rem;
+    height: 3rem;
+}
+
+#searching-function{
+    display: flex;
+    flex-direction: column;
+}
+
+#search-button {
+    display: none;
+}
+
+button {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-right: 0rem;
+    width: 23rem;
+    height: 3rem;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    background-color: rgb(255, 134, 134);
+}
+
+#advanced_search{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#advanced{
+    width: 1.2rem;
+    height: 1.5rem;
+    margin-right: 0.6rem;
+}
+
+#doctors {
+    width: 22rem;
+    padding-left: 4rem;
+}
+
+/* quetsion starts here */
+#question {
+    margin-bottom: 10rem;
+    text-align: center;
+}
+
+.decoration{
+    background-color: rgb(255, 134, 134);
+    width: 4rem;
+    height: 0.3rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#question h1 {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+#question p {
+    line-height: 2rem;
+}
+
+#question-main-content h2, #question-main-content p{
+    text-align: start; 
+}
+
+#question-main-content h2{
+    margin-top: 2rem;
+    font-size: 1.3rem;
+}
+
+#question-main-content p{
+    font-size: 1rem;
+    text-align: justify;
+}
+
+#question-icon {
+    width: 22rem;
+    min-width: 17%;
+    margin-left: 7rem;
+    margin-right: 0rem;
+    margin-left: auto;
+    margin-right: auto;
+} 
+
+#question-icon img{
+    width: 15rem;
+    min-width: 17%;
+} 
+
+#question-desc {
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.emphasized{
+    color: rgb(255, 134, 134);
+}
+
+/* solution starts here */
+
+#solution h1 {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+#solution-main-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: auto;
+    padding-right: auto;
+}
+
+#solution-main-content img {
+    width: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#solution{
+    text-align: center;
+    margin-bottom: 10rem;
+}
+
+.solution-desc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.solution-desc img {
+    width: 5rem;
+    margin-bottom: -1rem;
+}
+
+.solution-desc p {
+    font-size: 1em;
+    width: 13rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* about us */
+#aboutus {
+    width: 100%;
+    min-height: 23rem;
+    background-color: rgb(211, 234, 240);
+    height: 10rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    text-align: center;
+    margin-bottom: 10rem;
+}
+
+#aboutus h1{
+    font-size: 1.5rem;
+}
+
+#aboutus p{
+    text-align: start justify;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1rem;
+    line-height: 2rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+/* team starts here */
+
+#team  h1{
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+#team-main-content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-left: 10rem;
+    padding-right: 10rem;
+}
+
+#team{
+    text-align: center;
+    margin-bottom: 6rem;
+}
+
+.team-desc {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.team-desc img{
+    width: 4rem;
+}
+
+.team-desc h2{
+    font-size: 1rem;
+    font-family: 'Raleway', 'sans-serif';
+    margin-bottom: 0.4rem;
+}
+
+.team-desc p{
+    font-size: 0.8em;
+    width: 10rem;
+    margin: 0;
+}
+
+
+
+/* footer */
+footer img{
+    width: 15rem;
+    margin-bottom: 2rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}  
+
+
 /* ipad */
 @media screen and (min-width: 768px) {
     /* nav starts here */
@@ -22,12 +336,21 @@ body{
         align-items: center;
         padding-left: 2rem;
         justify-content: space-between;
+        background-color: rgb(0, 51, 103);
     }
-    #nav div{
-        margin-top: 3rem;
+
+    #logo {
+        content: url("../img/logo.png");
+        width: 50%;
+        height: 50%;
+    }
+
+    #hambuger {
+        display: none;
     }
 
     #login-holder{
+        display: block;
         color: white;
         border: 1px solid white;
         padding: 0.5rem;
@@ -36,65 +359,47 @@ body{
         margin-right: 3rem;
     }
 
-    #nav p {
-        margin: 0;
-        padding: 0;
-    }
-
 
     /* main search starts here */
-    #landing-search{
-        background-image: url("../img/home-bg.png");
-        min-height: 30rem;
-        width: 100%;
+    #landing-search {
+        background-image: url("../img/header_bg.svg");
         background-size: 100%, 85%;
         background-repeat: no-repeat;
         display: flex;
         flex-direction: row;
-        padding-top: 8rem;
-        margin-bottom: 0rem;
-        padding-bottom: 5rem;
+        overflow: hidden;
     }
 
-    #searching-area{
-        padding: 2rem;
-        font-family: 'Raleway', 'sans-serif';
+    #searching-area {
         color: white;
+        padding-left: 3rem;
     }
 
     #landing-search h1 {
-        font-size: 2.5rem;
-        font-weight: bolder;
-        margin-bottom: 1rem;
+        font-size: 1.5rem;
     }
 
     #landing-search h2 {
         font-family: 'Montserrat', sans-serif;
-        font-size: 1.1rem;
+        font-size: 0.8rem;
         font-weight: lighter;
     }
 
-    input{
+    input {
         -webkit-appearance: none;
         border:none;
         margin-top: 1rem;
-        font-size: 1rem;
+        font-size: 0.85rem;
         padding-left: 1rem;
     }
 
-    #keywords{
-        width: 27rem;
-        height: 3rem;
+    #keywords, #location {
+        width: 18rem;
+        height: 2rem;
     }
 
     #location{
-        width: 23rem;
-        height: 3rem;
-    }
-
-    #searching-function{
-        display: flex;
-        flex-direction: column;
+        width: 14.5rem;
     }
 
     #location_submit{
@@ -102,114 +407,80 @@ body{
         flex-direction: row;
     }
 
-    #search-button{
+    button {
+        display: none;
+    }
+
+    #search-button {
+        display: block;
         margin-top: 1rem;
         margin-left: 1rem;
-        padding: 0.8rem;
+        padding: 0.7rem;
         background-color: rgb(255, 134, 134);
-        width: 1.5rem;
+        width: 0.9rem;
     }
 
     #advanced_search{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+        margin-left: 0;
     }
 
-    #advanced{
+    #advanced {
+        content: url("../img/advanced.png");
         width: 1.2rem;
         height: 1.5rem;
         margin-right: 0.6rem;
     }
 
-    #heart{
-        width: 80%;
-        min-width: 27rem;
+    #advanced_search p {
+        font-size: 0.9rem;
+    }
+
+    #doctors {
+        content: url("../img/doctors_heart.png");
+        width: 20rem;
+        margin-top: 4rem;
     }
 
 
     /* quetsion starts here */
-    #question {
-        margin-bottom: 10rem;
-        text-align: center;
-    }
-
-    .decoration{
-        background-color:  rgb(255, 134, 134);
-        width: 4rem;
-        height: 0.3rem;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    #question  h1{
-        font-size: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    #question p {
-        line-height: 2rem;
-    }
-
     #question-main-content{
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
+        align-items: center;
+        /*margin-left: 0rem;
+        margin-right: 10rem; */
     }
 
     #question-main-content h2, #question-main-content p{
-    text-align: start; 
-    }
-
-    #question-main-content h2{
-        margin-top: 2 rem;
-        font-size: 1.3rem;
-    }
-
-    #question-main-content p{
-        font-size: 0.8rem;
+        text-align: start; 
     }
 
     #question-icon {
-        width:22rem;
-        min-width: 17%;
-        margin-left: 7rem;
-        margin-right: 0rem;
+        width: 20rem;
+        margin-right: 3rem;
     } 
 
-    #question-icon img{
-        width:22rem;
-        min-width: 17%;
-    } 
-
-    #question-desc{
-        width: 35%;
-        margin-left: 5rem;
+    #question-desc {
+        width: 20rem;
+        margin-right: 2rem;
     }
 
-    .emphasized{
-        color: rgb(255, 134, 134);
+    #question-desc p {
+        font-size: 1rem;
     }
 
     /* solution starts here */
 
-    #solution  h1{
-        font-size: 2rem;
+    #solution h1 {
         margin-bottom: 5rem;
     }
 
     #solution-main-content{
-        display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-between;
-        padding-left: 13rem;
-        padding-right: 10rem;
-    }
-
-    #solution{
-        text-align: center;
-        margin-bottom: 10rem;
+        padding-left: 4rem;
+        padding-right: 4rem;
     }
 
     .solution-desc {
@@ -220,52 +491,43 @@ body{
 
     .solution-desc img{
         width: 8rem;
+        margin-bottom: 0.5rem;
     }
 
-    .solution-desc p{
-        font-size: 1em;
+    .solution-desc p {
+        font-size: 0.9rem;
         width: 10rem;
     }
 
     /* about us */
-    #aboutus{
+    #aboutus {
         width: 100%;
         min-height: 23rem;
         background-image: url('../img/home-aboutus-bg.png');
         margin-bottom: 10rem;
         color: white;
-        padding-top: 3rem;
+        padding-top: 4rem;
+        padding-bottom: 1rem;
         text-align: center;
         vertical-align: middle;
     }
 
-    #aboutus h1{
-        font-size: 2rem;
-    }
-
-    #aboutus p{
+    #aboutus p {
         text-align: start;
-        padding-left: 5rem;
-        padding-right: 5rem;
-        font-size: 1rem;
+        text-align: justify;
+        width: 60%;
+        padding-left: 4rem;
+        padding-right: 4rem;
+        font-size: 0.9rem;
         line-height: 2rem;
     }
 
 
     /* team starts here */
 
-    #team  h1{
-        font-size: 2rem;
-        margin-bottom: 5rem;
-    }
-
-    #team-main-content{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding-left: 10rem;
-        padding-right: 10rem;
+    #team h1 {
+        /* font-size: 1.5rem; */
+        margin-bottom: 3rem;
     }
 
     #team{
@@ -280,19 +542,19 @@ body{
     }
 
     .team-desc img{
-        width: 8rem;
+        width: 6rem;
     }
 
     .team-desc h2{
         margin-bottom: 1rem;
+        margin-bottom: 0.3rem;
     }
 
     .team-desc p{
-        font-size: 1em;
+        font-size: 0.8em;
         width: 10rem;
-        margin: 0;
+        /* margin: 0; */
     }
-
 
 
     /* footer */
@@ -309,75 +571,30 @@ body{
   /* ipad horizontal + ipad provertical */
 @media screen and (min-width: 1023px) {
     /* nav starts here */
-    #nav{
-        width: 100%;
-        position: fixed;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding-left: 2rem;
-        justify-content: space-between;
-    }
-    #nav div{
-        margin-top: 3rem;
-    }
-
     #login-holder{
-        color: white;
-        border: 1px solid white;
-        padding: 0.5rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        margin-right: 3rem;
+        margin-right: 5rem;
     }
-
-    #nav p {
-        margin: 0;
-        padding: 0;
-    }
-
 
     /* main search starts here */
     #landing-search{
-        background-image: url("../img/home-bg.png");
-        min-height: 30rem;
-        width: 100%;
-        background-size: 100%, 85%;
-        background-repeat: no-repeat;
-        display: flex;
-        flex-direction: row;
-        padding-top: 8rem;
-        margin-bottom: 6rem;
-        padding-bottom: 15rem;
-    }
-
-    #searching-area{
-        padding: 4rem;
-        font-family: 'Raleway', 'sans-serif';
-        color: white;
+        background-image: url("../img/header_bg.svg");
+        padding-top: 5rem;
     }
 
     #landing-search h1 {
         font-size: 2.5rem;
-        font-weight: bolder;
-        margin-bottom: 1rem;
     }
 
     #landing-search h2 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.1rem;
-        font-weight: lighter;
+        font-size: 1rem;
     }
 
     input{
-        -webkit-appearance: none;
-        border:none;
-        margin-top: 1rem;
         font-size: 1rem;
         padding-left: 1rem;
     }
 
-    #keywords{
+    #keywords {
         width: 27rem;
         height: 3rem;
     }
@@ -385,16 +602,6 @@ body{
     #location{
         width: 23rem;
         height: 3rem;
-    }
-
-    #searching-function{
-        display: flex;
-        flex-direction: column;
-    }
-
-    #location_submit{
-        display: flex;
-        flex-direction: row;
     }
 
     #search-button{
@@ -405,40 +612,17 @@ body{
         width: 1.5rem;
     }
 
-    #advanced_search{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    #advanced{
-        width: 1.2rem;
-        height: 1.5rem;
-        margin-right: 0.6rem;
-    }
-
-    #heart{
-        width: 85%;
-        min-width: 27rem;
-        margin-top: 4rem;
+    #doctors {
+        width: 24rem;
     }
 
 
     /* quetsion starts here */
     #question {
         margin-bottom: 15rem;
-        text-align: center;
     }
 
-    .decoration{
-        background-color:  rgb(255, 134, 134);
-        width: 4rem;
-        height: 0.3rem;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    #question  h1{
+    #question h1{
         font-size: 2rem;
         margin-bottom: 2rem;
     }
@@ -447,44 +631,27 @@ body{
         line-height: 2rem;
     }
 
-    #question-main-content{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    #question-main-content h2, #question-main-content p{
-    text-align: start; 
-    }
-
     #question-main-content h2{
         margin-top: 1.6rem;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
     #question-main-content p{
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     #question-icon {
-        width:22rem;
-        min-width: 17%;
-        margin-left: 7rem;
-        margin-right: 0rem;
+        width: 20rem;
+        margin-left: 6rem;
     } 
 
     #question-icon img{
-        width:22rem;
-        min-width: 17%;
+        width: 20rem;
     } 
 
     #question-desc{
         width: 35%;
-        margin-left: 5rem;
-    }
-
-    .emphasized{
-        color: rgb(255, 134, 134);
+        margin-right: 6rem;
     }
 
     /* solution starts here */
@@ -495,58 +662,28 @@ body{
     }
 
     #solution-main-content{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding-left: 10rem;
-        padding-right: 10rem;
+        padding-left: 7rem;
+        padding-right: 7rem;
     }
 
     #solution{
-        text-align: center;
         margin-bottom: 15rem;
-    }
-
-    .solution-desc {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .solution-desc img{
-        width: 8rem;
     }
 
     .solution-desc p{
         font-size: 1em;
-        width: 10rem;
+        width: 13rem;
     }
 
     /* about us */
-    #aboutus{
-        width: 100%;
-        min-height: 23rem;
-        background-image: url('../img/home-aboutus-bg.png');
-        margin-bottom: 15rem;
-        color: white;
-        padding-top: 3rem;
-        text-align: center;
-        vertical-align: middle;
-    }
 
     #aboutus h1{
         font-size: 2rem;
     }
 
     #aboutus p{
-        text-align: start;
-        padding-left: 5rem;
-        padding-right: 5rem;
         font-size: 1rem;
-        line-height: 2rem;
     }
-
 
     /* team starts here */
 
@@ -556,23 +693,9 @@ body{
     }
 
     #team-main-content{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding-left: 10rem;
-        padding-right: 10rem;
-    }
+        padding-left: 6rem;
+        padding-right: 6rem;
 
-    #team{
-        text-align: center;
-        margin-bottom: 8rem;
-    }
-
-    .team-desc {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
 
     .team-desc img{
@@ -584,12 +707,10 @@ body{
     }
 
     .team-desc p{
-        font-size: 1em;
+        font-size: 0.9rem;
         width: 10rem;
         margin: 0;
     }
-
-
 
     /* footer */
     footer{
@@ -599,7 +720,6 @@ body{
         text-align: center;
         margin-bottom: 5rem;
     }  
-
 }
 
   /* ipad pro horizontal */
@@ -635,7 +755,7 @@ body{
 
     /* main search starts here */
     #landing-search{
-        background-image: url("../img/home-bg.png");
+        background-image: url("../img/header_bg.svg");
         min-height: 30rem;
         width: 100%;
         background-size: 100%, 85%;
@@ -713,8 +833,8 @@ body{
         margin-right: 0.6rem;
     }
 
-    #heart{
-        width: 90%;
+    #doctors{
+        width: 100%;
         min-width: 27rem;
         margin-top: 4rem;
     }
@@ -930,7 +1050,7 @@ body{
 
     /* main search starts here */
     #landing-search{
-        background-image: url("../img/home-bg.png");
+        background-image: url("../img/header_bg.svg");
         min-height: 30rem;
         width: 100%;
         background-size: 100%, 85%;
@@ -1010,7 +1130,7 @@ body{
         margin-right: 0.6rem;
     }
 
-    #heart{
+    #doctors{
         width: 100%;
         min-width: 27rem;
         margin-top: 4rem;
