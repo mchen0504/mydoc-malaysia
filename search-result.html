@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="He Chen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="Search result for MyDoc">
+    <!-- note -->
+    <link rel="stylesheet" href="css/search-result1.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>MYDoc</title>
+</head>
+<body>
+
+    <!-- nav -->
+    <section id='nav'>
+        <div>
+
+        </div>
+    </section>
+
+    <!-- search box for small screens -->
+    <section id='search-box-layer'>
+        <div id='search-box'>
+            <img id='close-icon' src='./img/close.svg' alt='close icon'>
+            <div align='center'>
+                <div id='search-options'>
+                    <p id='specialty'>Specialty</p>
+                    <p>Doctor</p>
+                    <p>Hospital</p>
+                    <p>Condition</p>
+                </div>
+                <!-- search box with dropdown -->
+                <div id='input-box' align='center'>
+                    <div class='input-container'>
+                        <input type="text" id='search-by-box' align='center' placeholder="Search by specialty"/>
+                        <img class='input-dropdown' src='./img/dropdown.svg' alt='dropdown arrow'>
+                    </div>
+                    <div class='input-container'>
+                        <input type="text" id='search-by-box' align='center' placeholder="City, state, or post code"/>
+                        <img class='input-dropdown' src='./img/dropdown.svg' alt='dropdown arrow'>
+                    </div>
+                    <button id='search-button' type='button'>Search</button>
+                    <!-- <a id='search-button' href="#" class="button" type="button">Search</a> -->
+                </div>
+            </div>
+        </div>
+        <div id='shadow'>
+        </div>
+    </section>
+
+    <!-- search box for large screens -->
+    <div id='ipad-shadow'>
+    </div>
+    <section id='search-box-big-screen-div'>
+        <div id='search-options'>
+            <p id='specialty'>Specialty</p>
+            <p>Doctor</p>
+            <p>Hospital</p>
+            <p>Condition</p>
+        </div>
+        <hr id='vertical-divider'>
+
+        <!-- search box with dropdown -->
+        <div id='input-box' align='center'>
+            <div class='input-container'>
+                <input type="text" id='search-by-box' align='center' placeholder="Search by specialty"/>
+                <img class='input-dropdown' src='./img/dropdown.svg' alt='dropdown arrow'>
+            </div>
+            <div class='input-container'>
+                <input type="text" id='search-by-box' align='center' placeholder="City, state, or post code"/>
+                <img class='input-dropdown' src='./img/dropdown.svg' alt='dropdown arrow'>
+            </div>
+            <button id='search-button' type='button'>Search</button>
+        </div>
+    </section>
+
+    <!-- separate filters layer for small screens -->
+    <section id='separate-layer'>
+        <div id='sep-layer-left'>
+        </div>
+        <div id='sep-layer-right'>
+            <h5>Filters</h3>
+            <hr>
+            <div id='filter-separate-layer'>
+                <div id='filter-types-ipad'>
+
+                    <!-- hospital type -->
+                    <div class='one-filter-ipad'>
+                        <p class='type-name-ipad'>Hospital Type</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Both</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Public</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Private</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- language -->
+                    <div class='one-filter-ipad' align='left'>
+                        <p class='type-name-ipad'>Languages</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>English</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Malay</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Mandarin</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Tamil</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Cantonese</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- years of experience -->
+                    <div class='one-filter-ipad' align='left'>
+                        <p class='type-name-ipad'>Years of Practice</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>< 1 year</span>
+                            </label>
+                            <div align='left'>
+                                <label class='checkbox' align='left'>
+                                    <input type='checkbox' name="scales">
+                                    <span class="checkmark"></span>
+                                    <span class='checkbox-text'>1 - 5 years</span>
+                                </label>
+                                <label class='checkbox' align='left'>
+                                    <input type='checkbox' name="scales">
+                                    <span class="checkmark"></span>
+                                    <span class='checkbox-text'>6 - 10 years</span>
+                                </label>
+                                <label class='checkbox' align='left'>
+                                    <input type='checkbox' name="scales">
+                                    <span class="checkmark"></span>
+                                    <span class='checkbox-text'>11 - 20 years</span>
+                                </label>
+                                <label class='checkbox' align='left'>
+                                    <input type='checkbox' name="scales">
+                                    <span class="checkmark"></span>
+                                    <span class='checkbox-text'>> 20 years</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id='done'>
+                <button id='done-button' type='button'>Done</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ipad size filters-->
+    <div id='filters-display-ipad'>
+
+        <!-- phone size filters-->
+        <section id='filters'>
+            <div id='filter'>
+                <a href='#' class='btn' role='button'>
+                    <p class='filter-text'>Filter
+                        <img class='dropdown-arrow' src='./img/dropdown.svg' alt='dropdown arrow'>
+                    </p>
+                </a>
+            </div>
+            <div id='display-by'>
+                <a href='#' class='btn' role='button'>
+                    <p class='display-text'>Display by Doctor
+                        <img class='dropdown-arrow' src='./img/dropdown.svg' alt='dropdown arrow'>
+                    </p>
+                </a>
+            </div>
+        </section>
+
+        <section id='filters-ipad'>
+            <div id='filter-ipad'>
+                <div id='filter-types-ipad'>
+
+                    <!-- hospital type -->
+                    <div class='one-filter-ipad'>
+                        <p class='type-name-ipad'>Hospital Type</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Both</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Public</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Private</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- language -->
+                    <div class='one-filter-ipad' align='left'>
+                        <p class='type-name-ipad'>Languages</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>English</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Malay</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Mandarin</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Tamil</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>Cantonese</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- years of experience -->
+                    <div class='one-filter-ipad' align='left'>
+                        <p class='type-name-ipad'>Years of Practice</p>
+                        <div class='options-ipad'>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales" checked="checked">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>< 1 year</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>1 - 5 years</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>6 - 10 years</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>11 - 20 years</span>
+                            </label>
+                            <label class='checkbox' align='left'>
+                                <input type='checkbox' name="scales">
+                                <span class="checkmark"></span>
+                                <span class='checkbox-text'>> 20 years</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- display-by ipad -->
+        <section id='display-by-ipad'>
+            <div id='head-switch-button'>
+                <p id='display-result-header'>Display results by doctors</p>
+                <div id='display-buttons'>
+                    <button class='display-button1' type='button'>Doctor</button>
+                    <button class='display-button2' type='button'>Hospital</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- return doctor cards -->
+        <section id='doctor-cards'>
+            <div class='container'>
+                <div class='card'>
+                    <div class='card-horizontal'>
+                        <div class='img-div'>
+                        <img class='card-img pl-4' src='./img/Dr.Alex.png' alt='dr.alex picture'>
+                        </div>
+                        <div class='card-body col-sm'>
+                            <div class='like-info'>
+                                <!-- <i class='like-icon fa fa-heart'></i> -->
+                                <img class='like-icon' src='./img/heart.svg' alt='like-icon'>
+                                <p class='like-num'>120,110</p>
+                            </div>
+                            <h4 class="card-title">Dr. Alex Leow</h5>
+                            <p class="card-text">Specialty: Gastroenterology</p>
+                            <p class="card-text">Years of Practice: 7 years</p>
+                            <p class="card-text">Language: English, Malay</p>
+                            <div class='hospital-type-label-div'>
+                                <p class='hospital-label-text'>Private</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='container'>
+                <div class='card'>
+                    <div class='card-horizontal'>
+                        <div class='img-div'>
+                        <img class='card-img pl-4' src='./img/Dr.Alex.png' alt='dr.alex picture'>
+                        </div>
+                        <div class='card-body col-sm'>
+                            <div class='like-info'>
+                                <!-- <i class='like-icon fa fa-heart'></i> -->
+                                <img class='like-icon' src='./img/heart.svg' alt='like-icon'>
+                                <p class='like-num'>120,110</p>
+                            </div>
+                            <h4 class="card-title">Dr. Alex Leow</h5>
+                            <p class="card-text">Specialty: Gastroenterology</p>
+                            <p class="card-text">Years of Practice: 7 years</p>
+                            <p class="card-text">Language: English, Malay</p>
+                            <div class='hospital-type-label-div'>
+                                <p class='hospital-label-text'>Private</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!--my own javascript-->
+    <!-- <script src="my-app/src/index.js"></script> -->
+</body>
+
+</html>
