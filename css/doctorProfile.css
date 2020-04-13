@@ -1,0 +1,353 @@
+html {
+    height: 100%; 
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(94, 110, 126);
+    overflow-x: hidden;
+    /* background-color: rgb(237, 235, 237, 38%); */
+}
+
+#nav div {
+    width: 100%;
+    height: 3rem;
+    background-color: blue;
+    position: fixed;
+    top: 0;
+}
+
+/* basic-info: picture, likes, tags */
+#menu-background{
+    background-color: white;
+}
+
+#basic-info {
+    text-align: center;
+}
+
+.doctor-pic {
+    margin-top: 5rem;
+    width: 5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 1.3rem;
+    font-family: 'Raleway', 'sans-serif';
+}
+
+.heart-icon {
+    font-size: 1rem;
+    color: red;
+}
+
+.likes {
+    font-size: 0.9rem;
+}
+
+#basic-info p {
+    color: rgb(85, 143, 215);
+    font-size: 0.8rem;
+}
+
+/* tags */
+#tags {
+    margin-top: 1.5rem;
+}
+
+#tags span {
+    background-color: rgb(255, 134, 134);
+    padding: 0.3rem 0.6rem;
+    border-radius: 1rem;
+}
+
+#tags p {
+    margin-bottom: 1rem;
+    color: white;
+}
+
+a {
+    color: rgb(85, 143, 215);
+    font-weight: lighter;
+    font-size: 0.9rem;
+}
+
+/* welcome message */
+#welcome {
+    margin-top: 2rem;
+    padding: 1rem 3rem;
+    background-color: rgb(85, 143, 215);
+    color: white;
+}
+
+#welcome-heading {
+    font-family: 'Raleway', 'sans-serif';
+    font-weight: bolder;
+    font-size: 1.1rem;
+}
+
+#welcome .step-heading {
+    font-weight: bolder;
+    font-size: 0.9rem;
+}
+
+#heading-close {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: bolder;
+}
+
+#step1 > p, #step2 > p {
+    font-size: 0.85rem;
+    font-weight: lighter;
+}
+
+#heading-close i {
+    margin-left: calc(100% - 17rem);
+}
+
+/* account tabs: profile, saved, like history, verification, settings */
+#account-tabs {
+    margin-top: 2rem;
+    margin-bottom: 10rem;
+}
+
+.warning-tab {
+    display: flex;
+    flex-direction: row;
+}
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    height: 1rem;
+    padding: 1rem 3rem;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 0.8rem;
+    align-items: center;
+}
+
+.tab img {
+    width: 1rem;
+    margin-left: -1rem;
+}
+
+.tab p {
+    width: 12rem;
+    margin-left: 0.5rem;
+}
+
+.tab i {
+    margin-left: calc(100% - 12rem);
+}
+
+/* Verification page */
+/* return to home */
+#return {
+    margin: 4rem 2rem;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.return-icon {
+    padding-right: 0.5rem;
+}
+
+#return p {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+/* verification */
+#verification {
+    margin-left: 3rem;
+}
+
+#verify-status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+#verify-status img {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    margin-bottom: 0.8rem;
+}
+
+#medical-number {
+    width: 24rem;
+    height: 1.8rem;
+    border: 1px solid rgb(0, 51, 103);
+    border-radius: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+#custom-button {
+    padding: 0.5rem;
+    color: rgb(0, 51, 103);
+    border: 1px solid rgb(0, 51, 103);
+    border-radius: 0.3rem;
+    width: 5rem;
+    cursor: pointer;
+}
+
+.input img {
+    width: 0.8rem;
+}
+
+.submit-button {
+    background-color: rgb(255, 134, 134);
+    border-radius: 0.3rem;
+    width: 25rem;
+    height: 2.5rem;
+    font-size: 0.9rem;
+    border: none;
+    color: white;
+    margin-top: 0.5rem;
+    cursor: pointer;
+}
+
+.got-it {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    #welcome p {
+        text-align: center;
+    }
+
+    #heading-close {
+        margin-left: 35%;
+    }
+
+    .tab {
+        font-size: 1rem;
+    }
+
+    .tab p {
+        margin-left: 1rem;
+    }
+
+    /* right panel: verification */
+    #return {
+        margin-left: 3rem;
+    }
+
+    #verification {
+        margin-left: 24%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    #menu-background {
+        padding-top: 5rem;
+        width: 16rem;
+        background-color: rgb(237, 235, 237, 38%);
+    }
+
+    .doctor-pic {
+        margin-top: 0;
+    }
+
+    #welcome {
+        width: 14rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: rgb(0, 51, 103);
+    }
+
+    #welcome p, #heading-close{
+        text-align: left;
+        /* margin-left: -1rem; */
+        /* padding-left: 0; */
+        margin-left: 0;
+    }
+
+    #step1 p, #step1 .step-heading {
+        font-size: 70%;
+    }
+
+    #heading-close i, #step2, br {
+        display: none;
+    }
+
+    .got-it {
+        display: block;
+        padding: 0.2rem 0.1rem;
+        background-color: rgb(255, 134, 134);
+        border: 1px solid rgb(255, 134, 134);
+        color: white;
+        width: 3rem;
+        border-radius: 0.1rem;
+        margin-left: 11rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+    }
+
+
+
+
+
+    .box2 {
+        width: 5rem;
+        /* margin: 50px auto; */
+        border: 4px solid #00bfb6;
+        padding: 0.5rem;
+        text-align: center;
+        /* font-weight: 900; */
+        color: #00bfb6;
+        font-family: arial;
+        position: relative;
+        margin-left: 10rem;
+        border-radius: 0.5rem; 
+      }
+
+      .sb11:before {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 10px solid transparent;
+        border-right: 10px solid #00bfb6;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        left: -23px;
+      }
+
+        .sb11:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 10px solid transparent;
+        border-right: 10px solid #fff;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        /* left: -17px; */
+      }
+
+}

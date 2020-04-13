@@ -35,6 +35,7 @@ section, #return {
 
 .return-icon {
     padding-right: 0.5rem;
+    width: 10rem;
   }
 
 #return p {
@@ -46,6 +47,10 @@ section, #return {
 #pic-heart {
     display: flex;
     flex-direction: row;
+}
+
+#pic-heart .heart-icon {
+    font-size: 1.5rem;
 }
 
 .doctor-pic {
@@ -62,8 +67,8 @@ section, #return {
 }
 
 .heart-icon {
-    font-size: 1.5rem;
     color: red;
+    cursor: pointer;
 }
 
 .likes {
@@ -74,7 +79,7 @@ section, #return {
 #doctor-name {
     display: block;
     text-align: center;
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 1.5rem;
     font-family: 'Raleway', 'sans-serif';
 }
@@ -91,17 +96,17 @@ section, #return {
 
 .icon-names p {
     margin-top: 0;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .icons {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 1.1rem;
+    height: 1.1rem;
     margin-right: 0.3rem;
 }
 
 /* line break */
-hr {
+.profile-section-break {
     border: 0.2rem solid rgb(237, 235, 237, 38%);
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -137,59 +142,117 @@ hr {
     margin-top: -1rem;;
 }
 
-#review-tags {
-    margin-right: -10rem;
-}
-
-.tag {
+/* hospital type and review tags */
+#hospital-type span {
     background-color: rgb(0, 51, 103);
-    padding-left: 0.4rem;
-    padding-right: 0.4rem;
-    height: 1.5rem;
-    margin-left: 0.5rem;
-    border-radius: 1rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.8rem;
 }
 
-.tag p {
+#hospital-type p {
     color: white;
     text-align: center;
     font-size: 0.8rem;
-    margin-top: 0.3rem;
+    margin-left: 0.5rem;
 }
 
 /* Review tags */
-h2 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
+#review-tags {
+    margin-right: -10rem;
+    padding-right: 2rem;
 }
 
-.decoration {
-    background-color: rgb(255, 134, 134);
-    width: 7rem;
-    height: 0.2rem;
-    margin-bottom: 1rem;
+h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1.7rem;
+}
+
+h2 span {
+    padding-bottom: 0.4rem;
+    border-bottom: 0.2rem solid rgb(255, 134, 134);
 }
 
 #tags {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     margin-left: -0.5rem;
     margin-bottom: 0.4rem;
+    margin-top: 1.3rem;
+    width: 23rem;
+
 }
 
-#tags .tag {
-    background-color: rgb(255, 134, 134);
-}
-
-#plus-icon input {
+#edit-icon {
     height: 1.5rem;
     margin-left: 0.5rem;
+    cursor: pointer;
 }
 
-a {
+/* edit icons modal */
+#modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(101, 109, 120, 50%);
+}
+
+#modal-content {
+    background-color: white;
+    width: 20rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+}
+
+#modal-title {
+    font-size: 1rem;;
+    font-weight: lighter;
+    margin-bottom: 1rem;
+}
+
+#modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+}
+
+#doctorTag, #predefinedtTag {
+    border-color: rgb(255, 134, 134);
+    margin-left: 0.5rem;
+    padding: 0.3rem;
+    font-size: 0.8rem;
+}
+
+#predefinedtTag {
+    flex: 1 0 35%;
+    margin: 0.5rem 1.2rem;
+}
+
+#doctorTag {
+    flex: 0 0 20%;
+    margin-bottom: 0.5rem;
+}
+
+#modal-tags button {
+    color: rgb(0, 51, 103);
+    border-radius: 0.3rem;
+    padding: 0.2rem 1rem;
+    font-size: 1rem;
+    border-color: rgb(0, 51, 103);
+    display: block;
+    margin: 1.6rem auto 1rem auto;
+    cursor: pointer;
+}
+
+/* see more, scheduling phone number, links */
+a, .see-all {
     color: rgb(85, 143, 215);
     font-weight: lighter;
     font-size: 0.9rem;
+}
+
+.see-all {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* make appointment */
@@ -197,7 +260,6 @@ a {
     display: flex;
     flex-direction: row;
     margin-left: -1.5rem;
-    margin-top: 1.5rem;
     margin-right: 1rem; 
     justify-content: space-between;
     align-items: center;
@@ -263,6 +325,11 @@ li {
     margin-left: auto;
     margin-right: 0;
     text-align: center;
+}
+
+#average-likes .heart-icon {
+    font-size: 1.3rem;
+    margin-right: 0.2rem;
 }
 
 #specialty-doctors p {
@@ -334,6 +401,14 @@ footer div {
         margin-left: 3rem;
         margin-right: 3rem;
     }
+}
+    
+
+@media screen and (min-width: 1024px) {
+    section, #return {
+        margin-left: 4rem;
+        margin-right: 5rem;
+    }
 
     /* doctor pic side by side with basic info */
     .container {
@@ -343,7 +418,7 @@ footer div {
     }
 
     /* not to be shown in ipad or bigger screen */
-    .container hr, #doctor-identity h1, #pic-heart .likes-number {
+    .container .profile-section-break, #doctor-identity h1, #pic-heart .likes-number {
         display: none;
     }
 
@@ -367,8 +442,12 @@ footer div {
         flex-direction: row;
         align-items: center;
     }
+
+    #name-heart .heart-icon {
+        font-size: 1.5rem;
+    }
     
-    #review-tags h2, #review-tags .decoration {
+    #review-tags h2 {
         display: none;
     }
 
@@ -377,8 +456,13 @@ footer div {
         margin-right: -0.6rem;
     }
 
+    #user-actions .icons {
+        width: 1rem;
+        height: 1rem;
+    }
+
     #user-actions p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     #basic-info, #review-tags {
@@ -390,6 +474,18 @@ footer div {
     #review-tags {
         margin-top: 1.5rem;
     }
+
+    #modal-content {
+        width: 30rem;
+    }
+
+    #predefinedtTag {
+        flex: 1 0 25%;
+    }
+
+
+
+
 
     #basic-info h1 {
         display: block;
@@ -403,10 +499,6 @@ footer div {
         margin-top: 1.5rem;
     }
 
-    #appointment .decoration {
-        display: none;
-    }
-
     #booking {
         margin: 1rem 5rem 0 5rem;
     }
@@ -415,7 +507,7 @@ footer div {
         width: 38%;
     }
 
-    .detailed-info hr {
+    .detailed-info .profile-section-break {
         display: none;
     }
 
@@ -441,13 +533,6 @@ footer div {
 
     .card {
         padding: 1rem 0.4rem;
-    }
-}
-
-@media screen and (min-width: 1024px) {
-    section, #return {
-        margin-left: 3rem;
-        margin-right: 5rem;
     }
 }
 

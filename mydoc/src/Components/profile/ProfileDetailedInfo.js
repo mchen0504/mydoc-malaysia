@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 
+// sections: qualifications, languages, procedures, conditions
 export class DetailedInfo extends Component {
     render() {
         return (
             <div className='detailed-info'>
                 <Qualifications/>
-                <hr/>
+                <hr className='profile-section-break' />
                 <Languages/>
-                <hr/>
+                <hr className='profile-section-break' />
                 <Procedures/>
-                <hr/>
+                <hr className='profile-section-break' />
                 <Conditions/>
             </div>
         )
@@ -20,8 +21,7 @@ export class Qualifications extends Component {
     render() {
         return (
             <section id='qualifications'>
-                <h2>Qualifications</h2>
-                <div className='decoration'></div>
+                <h2><span>Qualifications</span></h2>
                 <p className='content-text'>MMed (Mal), MB. BCh. BAO. (Hons) LRCPI & LRCSI (Ire), B. Biomed Sci. (Hons) (UM)</p>
             </section>
         )
@@ -32,8 +32,7 @@ export class Languages extends Component {
     render() {
         return (
             <section id='Languages'>
-                <h2>Languages</h2>
-                <div className='decoration'></div>
+                <h2><span>Languages</span></h2>
                 <ul>
                     <li>English</li>
                     <li>Mandarin</li>
@@ -50,8 +49,7 @@ export class Procedures extends Component {
     render() {
         return (
             <section id='procedures'>
-                <h2>Procedures</h2>
-                <div className='decoration'></div>
+                <h2><span>Procedures</span></h2>
                 <ul>
                     <li>Colonoscopy</li>
                     <li>Gastroscopy</li>
@@ -71,8 +69,7 @@ export class Conditions extends Component {
     render() {
         return (
             <section id='conditions'>
-                <h2>Conditions</h2>
-                <div className='decoration'></div>
+                <h2><span>Conditions</span></h2>
                 <ul>
                     <li>Helicobacter Pylori Infection</li>
                     <li>Dyspepsia</li>
