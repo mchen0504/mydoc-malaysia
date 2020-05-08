@@ -1,5 +1,4 @@
 {
-  "homepage": "http://andychenhe.github.io/CapstoneEclipseAB11",
   "name": "mydoc",
   "version": "0.1.0",
   "private": true,
@@ -25,8 +24,6 @@
     "styled-components": "^5.1.0"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -47,8 +44,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/",
-  "devDependencies": {
-    "gh-pages": "^2.2.0"
-  }
+  "proxy": "https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/"
 }

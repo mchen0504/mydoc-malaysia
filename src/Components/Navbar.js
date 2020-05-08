@@ -58,7 +58,7 @@ class Navbar extends Component {
     if (this.props.currentPage !== "Home") {
       globalSearch = (
         <Box>
-          {/* <GlobalSearch {...this.props} /> */}
+          <GlobalSearch {...this.props} />
         </Box>
       );
     }
@@ -106,8 +106,8 @@ class Navbar extends Component {
                         size="small"
                         variant="outlined"
                         color="inherit"
-                        // component={Link}
-                        // to="/login"
+                        component={Link}
+                        to="/login"
                       >
                         Login / Sign up
                       </Button>

@@ -116,7 +116,7 @@ export default function Header(props) {
                   className={classes.search}
                   startIcon={<SearchIcon />}
                   fullWidth
-                  // onClick={props.startSearch}
+                  onClick={props.startSearch}
                 >
                   Search
                 </Button>
