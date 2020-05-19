@@ -20,13 +20,13 @@ January 2020 - June 2020
 **He Chen**
 
 * Email: chenh57@uw.edu
-* Role: Full-stack developer
+* Role: Developer
 
 
 **Michelle Chen**
 
 * Email: mc0504@uw.edu
-* Role: Full-stack developer
+* Role: Front-end Developer
 
 
 **Yin Chen**
@@ -64,8 +64,6 @@ General users:
 * Book appointment through MYDoc
 * Online medical consultation 
 
-## Appendix: Handoff Plan
-![INFO 490 Capstone Project Plan - AB 11 Eclipse (1)](https://user-images.githubusercontent.com/32310896/82285224-8b249f80-99cd-11ea-8c5a-994111a1bbef.png)
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/32310896/82286940-8a8e0800-99d1-11ea-96c3-5c406dea7174.png">
