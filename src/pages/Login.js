@@ -18,6 +18,10 @@ import Bg from "../img/login/doctors-heart.png";
 //redux
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
+import { getSpecProfile } from "../redux/actions/userActions";
+import { getSpecList } from "../redux/actions/userActions";
+import { getCondList } from "../redux/actions/userActions";
+
 import store from "../redux/store";
 import { SET_AUTHENTICATED } from "../redux/types";
 
@@ -85,13 +89,24 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    this.props.loginUser(userData, this.props.history);
+    // this.props.loginUser(userData, this.props.history);
+    this.getStoredData(userData);
   };
 
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  };
+
+
+  getStoredData = async (userData) => {
+    await this.props.loginUser(userData, this.props.history);
+    // console.log(2)
+    // await this.props.getSpecProfile();
+    // console.log(3)
+    // await this.props.getSpecList();
+    // await this.props.getCondList();
   };
 
   render() {
@@ -102,7 +117,7 @@ class Login extends Component {
     const { errors } = this.state;
     return (
       <div>
-        <Navbar currentPage="Signup" />
+        <Navbar currentPage="login" />
         <div className={classes.covidBox}>
           <CovidAlert />
 
@@ -200,6 +215,14 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
 });
 
-export default connect(mapStateToProps, { loginUser })(
+
+const mapActionsToProps = {
+  getSpecProfile,
+  getSpecList,
+  getCondList,
+  loginUser
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(
   withStyles(styles)(Login)
 );

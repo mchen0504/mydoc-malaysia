@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -9,39 +9,82 @@ import Hidden from "@material-ui/core/Hidden";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Link } from "react-router-dom";
+// michelle 5/16: 加了这句
+import Alert from "@material-ui/lab/Alert";
+
+
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import {
-  updateVerification,
-  getUserData,
-} from "../../redux/actions/userActions";
+import { updateVerification } from "../../redux/actions/userActions";
+
+
 
 const useStyles = makeStyles((theme) => ({
   ...theme.account,
 }));
 
+
 // doctor account verification
 function DocAccountVerification(props) {
   const classes = useStyles();
-  // const { index } = props
 
-  const [medicalNumber, setMedicalNumber] = React.useState();
-  const [identityCard, setIdentityCard] = React.useState({
-    src: "",
-    name: "",
+  // determine if useEffect will be called: don't call if renderCount = 1
+  const [renderCount, setRenderCount] = React.useState(0);
+  // submit success success message alert
+  const [open, setOpen] = React.useState(false);
+
+  const [currentInfo, setState] = React.useState({
+    medicalRegistrationNumber: "",
+    identityCardSrc: "",
+    identityCardName: "",
+    medicalDegreeSrc: "",
+    medicalDegreeName: "",
+  })
+
+  // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
+  // in firebase is successfully set to state)
+  useEffect(() => {
+    if (renderCount == 0) {
+      return displayStoredData();
+    }
   });
-  const [medicalDegree, setMedicalDegree] = React.useState({
-    src: "",
-    name: "",
-  });
+
+  const displayStoredData = () => {
+    // call function to get data from returned props from firebase
+    getStoredData()
+      .then((res) => {
+        // set state
+        setState({
+          medicalRegistrationNumber: res.medicalRegistrationNumber,
+          identityCardSrc: res.identityCardSrc,
+          identityCardName: res.identityCardName,
+          medicalDegreeSrc: res.medicalDegreeSrc,
+          medicalDegreeName: res.medicalDegreeName,
+        })
+        // update renderCount to 1 to stop react from making any more useEffect call
+        setRenderCount(1);
+      }).catch((error) => {
+        console.error(error);
+      })
+  }
+
+  // wait for returned props from firebase to be ready
+  let getStoredData = async () => {
+    let storedVerificationInfo = await props.storedVerificationInfo;
+    return storedVerificationInfo;
+  }
+
 
   const editMedicalNumber = (event) => {
-    setMedicalNumber(event.target.value);
-  };
+    setState({
+      ...currentInfo,
+      medicalRegistrationNumber: event.target.value
+    });
+  }
 
   const uploadIdentityCard = (event) => {
     let reader = new FileReader();
@@ -50,10 +93,11 @@ function DocAccountVerification(props) {
       reader.readAsDataURL(uploaded);
     }
     reader.onload = () => {
-      setIdentityCard({
-        src: reader.result,
-        name: uploaded.name,
-      });
+      setState({
+        ...currentInfo,
+        identityCardSrc: reader.result,
+        identityCardName: uploaded.name
+      })
     };
   };
 
@@ -64,67 +108,66 @@ function DocAccountVerification(props) {
       reader.readAsDataURL(uploaded);
     }
     reader.onload = () => {
-      setMedicalDegree({
-        src: reader.result,
-        name: uploaded.name,
-      });
+      setState({
+        ...currentInfo,
+        medicalDegreeSrc: reader.result,
+        medicalDegreeName: uploaded.name
+      })
     };
   };
+
 
   // initiate push to firebase when submit button is clicked
   const submitVerification = () => {
     const newVerification = {
-      medicalNumber: medicalNumber,
-      identityCardSrc: identityCard["src"],
-      medicalDegreeSrc: medicalDegree["src"],
+      medicalRegistrationNumber: currentInfo["medicalRegistrationNumber"],
+      identityCardSrc: currentInfo["identityCardSrc"] ? currentInfo["identityCardSrc"] : " ",
+      identityCardName: currentInfo["identityCardName"] ? currentInfo["identityCardName"] : " ",
+      medicalDegreeSrc: currentInfo["medicalDegreeSrc"] ? currentInfo["medicalDegreeSrc"] : " ",
+      medicalDegreeName: currentInfo["medicalDegreeName"] ? currentInfo["medicalDegreeName"] : " "
     };
     props.updateVerification(newVerification);
+  
+
+    // michelle 5/16: 这里本来是openSuccessMsg  现在用setOpen(true)替换掉
+    // open submit success message
+    setOpen(true);
   };
 
-  const storedMedicalNum =
-    props.storedVerificationInfo &&
-    props.storedVerificationInfo.medicalRegistrationNumber;
 
-  if (!storedMedicalNum) {
+  if (!currentInfo.medicalRegistrationNumber) {
     // loading spinner if prop data is not yet available
     return (
       <div>
-        <CircularProgress
-          color="secondary"
-          style={{ marginLeft: "45%", marginTop: "10%" }}
-        />
+        <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '10%' }} />
       </div>
     );
+
   } else {
+
     return (
       <a id="accountverification" className={classes.anchor}>
         <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
           <Grid item xs={10} md={8}>
-            <Box
-              flexGrow={1}
-              flexDirection="row"
-              mt={4}
-              mb={1}
-              alignItems="center"
-            >
+            <Box flexDirection="row" mb={1} mt={4} alignItems="center">
               <Typography variant="h5" color="primary">
                 {/* Back button 手机屏幕才会出玄 */}
                 <Hidden mdUp>
-                  {/* <IconButton> */}
-                  <Link to="docaccount">
-                    <ArrowBackIosIcon
-                      className={classes.backIcon}
-                      fontSize="small"
-                    />
+                  <Link to='docaccount'>
+                    <ArrowBackIosIcon className={classes.backIcon} fontSize="small"/>
                   </Link>
-                  {/* </IconButton> */}
                 </Hidden>
                 <strong>Account Verification</strong>
               </Typography>
             </Box>
 
             <br></br>
+
+            {/* michelle  5/16: 加了这句。 上面的box里面本来有snackbar  你把它删掉 用这个就行了*/}
+            {/* 本来有openSuccessMsg和closeSuccessMsg两个function  现在不用了 可以删掉*/}
+            {open ? <Alert style={{marginBottom: '1rem'}}>Successfully submitted!</Alert> : ""}
+
             <Box display="flex" flexDirection="row">
               {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
               <CancelIcon style={{ color: "red", marginRight: 10 }} />
@@ -139,7 +182,9 @@ function DocAccountVerification(props) {
               fullWidth
               required
               label="Medical Registration Number"
-              defaultValue={storedMedicalNum}
+              // defaultValue={storedMedicalNum}
+              defaultValue={currentInfo.medicalRegistrationNumber}
+
               variant="outlined"
               onChange={editMedicalNumber}
             />
@@ -148,7 +193,7 @@ function DocAccountVerification(props) {
               <Box flexGrow={1}>
                 <Typography variant="body1" color="textSecondary">
                   Malaysian Identity Card
-                </Typography>
+              </Typography>
               </Box>
               <Box flexGrow={1}>
                 <input
@@ -169,17 +214,22 @@ function DocAccountVerification(props) {
                     size="medium"
                   >
                     Upload
-                  </Button>
+              </Button>
                 </label>
               </Box>
             </Box>
-            <Typography variant="body2">{identityCard.name}</Typography>
+            {/* <Typography variant="body2">{(identityCard.name == "") ? storedIdentityCard : identityCard.name}</Typography> */}
+            <Typography variant="body2">{currentInfo.identityCardName}</Typography>
+
+
+
+
             {/* Upload medical degree */}
             <Box display="flex" mt={5} mb={5}>
               <Box flexGrow={1}>
                 <Typography variant="body1" color="textSecondary">
                   Certified copy of Medical Degree
-                </Typography>
+              </Typography>
               </Box>
               <Box>
                 <input
@@ -200,11 +250,11 @@ function DocAccountVerification(props) {
                     size="medium"
                   >
                     Upload
-                  </Button>
+              </Button>
                 </label>
               </Box>
             </Box>
-            <Typography variant="body2">{medicalDegree.name}</Typography>
+            <Typography variant="body2">{currentInfo.medicalDegreeName}</Typography>
 
             <Button
               variant="contained"
@@ -214,7 +264,7 @@ function DocAccountVerification(props) {
               onClick={submitVerification}
             >
               Submit
-            </Button>
+          </Button>
             <br></br>
             <br></br>
           </Grid>
@@ -225,21 +275,17 @@ function DocAccountVerification(props) {
   }
 }
 
+
 DocAccountVerification.propTypes = {
-  user: PropTypes.object.isRequired,
   updateVerification: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
-  storedVerificationInfo: state.user.credentials.verification,
+  storedVerificationInfo: state.user.credentials.verification
 });
 
 const mapActionsToProps = {
   updateVerification,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(DocAccountVerification);
+export default connect(mapStateToProps, mapActionsToProps)(DocAccountVerification);

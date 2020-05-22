@@ -18,6 +18,13 @@ import Location from "./Location";
 import headerImg from "../../img/home/doctors-heart.png";
 import Testing from "../covid/Testing";
 
+// eshin新加的 5/9/2020
+import BodyPartsDialog from "../bodyparts/Body";
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+
+
 const useStyles = makeStyles((theme) => ({
   ...theme.home,
 
@@ -79,6 +86,47 @@ export default function Header(props) {
     }
   });
 
+  let renderBodyParts = null;
+  if(props.searchMethod == 'Condition'){
+    renderBodyParts = <BodyPartsDialog 
+                      changeConditionLabel={props.changeConditionLabel} 
+                      bodyPartsDic={props.bodyPartsDic}
+                      />;
+  }
+
+
+
+  let headerDisplay;
+  if (!props.conditionListForInput && !props.specialtyListForInput && !props.bodyPartsDic && !props.database){
+    headerDisplay =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />
+  } else {
+    headerDisplay = <div>
+      <SearchTabs
+                  getKeyWords={props.getKeyWords}
+                  getSearchMethod={props.getSearchMethod}
+                  setSearchMethod={props.setSearchMethod}
+                  setKeywords={props.setKeywords}
+                  conditionListForInput={props.conditionListForInput}
+                  specialtyListForInput={props.specialtyListForInput}
+                  startSearch = {props.startSearch}
+                  conditionLabel={props.conditionLabel} 
+                  changeConditionLabel={props.changeConditionLabel} 
+                />
+                <Location getLocationValue={props.getLocationValue} currentLocation={props.currentLocation}></Location>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.search}
+                  startIcon={<SearchIcon />}
+                  fullWidth
+                  onClick={props.startSearch}
+                >
+                  Search
+                </Button>
+    </div>
+  }
+
+
   return (
     <div className={classes.container}>
       <CovidAlert />
@@ -94,22 +142,25 @@ export default function Header(props) {
                   className={classes.title}
                   style={{ color: "white", fontWeight: "bold" }}
                 >
-                  Find your Ideal Doctor
+                  Find Your Ideal Doctor
                 </Typography>
                 <br></br>
                 <Typography variant="body1" style={{ color: "white" }}>
                   Quick access to doctor information in Malaysia
                 </Typography>
                 <br></br>
-                <br></br>
-                <SearchTabs
+                {/* <SearchTabs
                   getKeyWords={props.getKeyWords}
                   getSearchMethod={props.getSearchMethod}
                   setSearchMethod={props.setSearchMethod}
                   setKeywords={props.setKeywords}
                   conditionListForInput={props.conditionListForInput}
+                  specialtyListForInput={props.specialtyListForInput}
+                  startSearch = {props.startSearch}
+                  conditionLabel={props.conditionLabel} 
+                  changeConditionLabel={props.changeConditionLabel} 
                 />
-                <Location getLocationValue={props.getLocationValue}></Location>
+                <Location getLocationValue={props.getLocationValue} currentLocation={props.currentLocation}></Location>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -119,7 +170,13 @@ export default function Header(props) {
                   onClick={props.startSearch}
                 >
                   Search
-                </Button>
+                </Button> */}
+                {headerDisplay}
+              {/* 5/9/2020eshin 加的， 这个需要再condition tab才出现, 麻烦你了*/}
+              <br></br>
+              <br></br>
+              {/* <BodyPartsDialog /> */}
+              {renderBodyParts}
               </div>
             </Box>
           </Grid>

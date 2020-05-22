@@ -42,11 +42,11 @@ const filterConditionOptions = createFilterOptions({
 });
 
 // specialties options
-const specialties = [
-  { specialty: "Allergy and Immunology" },
-  { specialty: "Anesthesiology" },
-  { specialty: "Gastroenterology" },
-];
+// const specialties = [
+//   { specialty: "Allergy and Immunology" },
+//   { specialty: "Anesthesiology" },
+//   { specialty: "Gastroenterology" },
+// ];
 // doctor name options
 const docNames = [
   { name: "Alex Leow" },
@@ -59,7 +59,7 @@ const hospNames = [
   { hospName: "Sunway Medical" },
 ];
 // Conditions options
-const conditions = [{ condition: "A" }, { condition: "B" }];
+// const conditions = [{ condition: "A" }, { condition: "B" }];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -142,9 +142,9 @@ const StyledTab = withStyles((theme) => ({
 export default function GlobalSearchTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-
-
-
+  const [keyword, setkeyword] = React.useState('');
+  let specialties = props.specialtyListForInput;
+  let conditions = props.conditionListForInput;
   const handleSearchMethodChange = (event, newValue) => {
     let method = '';
     if(newValue == 0){
@@ -169,7 +169,7 @@ export default function GlobalSearchTabs(props) {
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
-    
+    console.log(newValue);
     if(newValue){
       console.log(newValue);
       props.getKeyWords(newValue.name);
@@ -195,13 +195,18 @@ export default function GlobalSearchTabs(props) {
     
   };
 
+  const getTextFieldValue = (event)=>{
+    console.log(event.target.value);
+    setkeyword(event.target.value);
+    props.getKeyWords(event.target.value);
+  }
+
   const hadleSearch = ()=>{
     props.handleClose();
     props.startSearch();
   }
 
   useEffect(() => {
-    console.log(props.searchBegin)
     if(props.searchBegin){return props.doMainSearch(props);}
     
   });
@@ -277,6 +282,7 @@ export default function GlobalSearchTabs(props) {
       <TabPanel value={value} index={1} style={{ width: "100%" }}>
         <Autocomplete
           onChange = {handleDoctorSearchKeyChange}
+          freeSolo
           options={docNames}
           getOptionLabel={(option) => option.name}
           filterOptions={filterDocOptions}
@@ -285,6 +291,7 @@ export default function GlobalSearchTabs(props) {
               {...params}
               label="Search by doctor's name"
               variant="outlined"
+              onChange = {getTextFieldValue}
             />
           )}
         />
@@ -309,11 +316,13 @@ export default function GlobalSearchTabs(props) {
         <Autocomplete
           onChange = {handleHospitalSearchKeyChange}
           options={hospNames}
+          freeSolo
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterHospOptions}
           renderInput={(params) => (
             <TextField
               {...params}
+              onChange = {getTextFieldValue}
               label="Search by hospital's name"
               variant="outlined"
             />

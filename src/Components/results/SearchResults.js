@@ -14,6 +14,9 @@ import Hidden from "@material-ui/core/Hidden";
 import CovidAlert from "../Alert";
 import DocCard from "./DocCard";
 import HospitalCard from "./HospitalCard";
+import Empty from "./SearchNotFound";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import {
   HospitalType,
   Languages,
@@ -76,7 +79,6 @@ export default function SearchResultsFilter(props) {
     // find the index of the first card in the page
     let cardStartIndex = (page - 1)*maxPage;
     let cardEndIndex = 0;
-    console.log(props.docInfo);
     // find the index of the last card in the page
     if (cardStartIndex + maxPage - 1 > props.docInfo.length){
       cardEndIndex = props.docInfo.length - 1;
@@ -85,35 +87,68 @@ export default function SearchResultsFilter(props) {
     }
 
     let allDoccards = [];
-    if (props.docInfo){
-      let key = 0;
+    // // he chen 
+    if (props.docInfo.length != 0 && props.docInfo != null){
       for (let i = cardStartIndex; i <= cardEndIndex; i ++){
         let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData = {props.docInfo[i]} key = {i}/>
         allDoccards.push(component);
       }
-
-      // allDoccards = props.docInfo.map((msgString) => {
-      //   // console.log('key: ' + key);
-      //   // console.log('cardStartIndex: ' + cardEndIndex);
-      //     if (key <= cardEndIndex && key >= cardStartIndex){
-      //       //add this valid component to resulting array
-      //       let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData = {msgString} key = {key}/>
-      //       return component;
-      //     }
-      //     key ++;
-      // })
-  } 
+    } else {
+      let component;
+      if (props.searchingState == 'in-progress'){
+        component =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
+      } else {
+        component = <Empty/>;
+      }
+      allDoccards.push(component);
+    }
   
     // create cards for doctors based on Hospital
-    let allHosCards = <div></div>;
-    if (props.hospitalInfo){
+    let allHosCards = [];
+    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
       let key = 0;
       allHosCards = props.hospitalInfo.map((msgString) => {
           let component = <HospitalCard {...props} resultData = {msgString} key = {key} updateTargetHos={props.updateTargetHos}/>
           key ++;
           return component; //add this new component to resulting array
       })
-  } 
+  } else {
+    let component = <Empty/>
+    allHosCards.push(component);
+  }
+
+  let docHosbuttonGroup = [];
+  if (props.searchMethod != 'Doctor'){
+    docHosbuttonGroup = <ToggleButtonGroup
+                      value={display}
+                      exclusive
+                      onChange={handleDisplay}
+                    >
+                      <ToggleButton value="doctor" color="primary">
+                        <Typography
+                          color="primary"
+                          style={{ textTransform: "none" }}
+                        >
+                          Doctor
+                        </Typography>
+                      </ToggleButton>
+                      <ToggleButton value="hospital">
+                        <Typography
+                          color="primary"
+                          style={{ textTransform: "none" }}
+                        >
+                          Hospital
+                        </Typography>
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+  }
+
+  let dataInfoNotesDoc = 'Display results by doctors';
+  let dataInfoNotesHos = 'Display results by hospitals';
+  if (props.searchMethod == 'Hospital'){
+    dataInfoNotesDoc = 'Doctors related to ' + '"' + props.keywords + '"';
+    dataInfoNotesHos = 'Hospitals related to' + props.keywords;
+  }
   
   return (
     <Fragment>
@@ -145,7 +180,7 @@ export default function SearchResultsFilter(props) {
                 <br></br>
                 {/* If display by doctor, filter sidebar will show years of practice;
             if display by hospital, filter sidebar will show location */}
-                {display === "doctor" ? <YearsOfPractice filterYear={props.filterYear}/> : <Location />}
+                {display === "doctor" ? <YearsOfPractice filterYear={props.filterYear}/> : <Location filterDrivingTime={props.filterDrivingTime}/>}
               </Box>
             </div>
           </Drawer>
@@ -168,7 +203,7 @@ export default function SearchResultsFilter(props) {
                     variant="h6"
                     color="primary"
                   >
-                    Display results by doctors
+                    {dataInfoNotesDoc}
                   </Typography>
                 ) : (
                   <Typography
@@ -176,7 +211,7 @@ export default function SearchResultsFilter(props) {
                     variant="h6"
                     color="primary"
                   >
-                    Display results by hospitals
+                    {dataInfoNotesHos}
                   </Typography>
                 )}
               </Grid>
@@ -184,28 +219,7 @@ export default function SearchResultsFilter(props) {
                 {/* Display by Doctor/Hospital buttons */}
                 <Fragment>
                   <div className={classes.toggleContainer}>
-                    <ToggleButtonGroup
-                      value={display}
-                      exclusive
-                      onChange={handleDisplay}
-                    >
-                      <ToggleButton value="doctor" color="primary">
-                        <Typography
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                        >
-                          Doctor
-                        </Typography>
-                      </ToggleButton>
-                      <ToggleButton value="hospital">
-                        <Typography
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                        >
-                          Hospital
-                        </Typography>
-                      </ToggleButton>
-                    </ToggleButtonGroup>
+                  {docHosbuttonGroup}
                   </div>
                 </Fragment>
               </Grid>
@@ -246,22 +260,7 @@ export default function SearchResultsFilter(props) {
           </Grid>
           <Grid item xs={5} align="right">
             <div className={classes.toggleContainer}>
-              <ToggleButtonGroup
-                value={display}
-                exclusive
-                onChange={handleDisplay}
-              >
-                <ToggleButton value="doctor" color="primary">
-                  <Typography color="primary" style={{ textTransform: "none" }}>
-                    Doctor
-                  </Typography>
-                </ToggleButton>
-                <ToggleButton value="hospital">
-                  <Typography color="primary" style={{ textTransform: "none" }}>
-                    Hospital
-                  </Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
+            {docHosbuttonGroup}
             </div>
           </Grid>
           <Grid item xs={1}></Grid>

@@ -8,7 +8,6 @@ import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import docImg from "../../img/results/docAlex.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,23 +62,35 @@ export default function DocCard(props) {
     language = language + ", " + lang;
   });
   language = language.substring(1);
+  // he chen 
   const handleClick = () => {
     props.updateTargetDoc(props.resultData);
+    props.setProfileBackToDestination("resultsPage");
     if (props.history != null) {
       props.history.push("/docprofile");
     }
   };
+
+  let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
+
+  let docLikes;
+  if (props.resultData["NumberOfLikes"]){
+    docLikes = props.resultData["NumberOfLikes"];
+  } else {
+    docLikes = 0;
+  }
 
   return (
     <Card className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* doctor image */}
-          <CardMedia
+          {/* <CardMedia
             component="img"
             className={classes.img}
-            image={docImg}
-          ></CardMedia>
+            image={docImg2}
+          ></CardMedia> */}
+          {cardImage}
         </Grid>
         <Grid item xs={12} sm={7}>
           <CardContent>
@@ -110,7 +121,7 @@ export default function DocCard(props) {
           <Box className={classes.likeBox}>
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              {props.resultData["NumberOfLikes"]}
+              { docLikes}
             </Typography>
           </Box>
         </Grid>

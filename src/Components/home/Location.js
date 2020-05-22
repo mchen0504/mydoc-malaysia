@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 // Autocomplete + Google MAP Api for Location search box
 export default function Location(props) {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = React.useState(props.currentLocation);
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
@@ -104,6 +104,11 @@ export default function Location(props) {
     };
   }, [inputValue, fetch]);
 
+  let currentAddress = 'Your current location is loading'
+  if(props.currentLocation){
+    currentAddress = props.currentLocation;
+  }
+
   return (
     <div>
       <Autocomplete
@@ -119,7 +124,8 @@ export default function Location(props) {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Add city, state, or postal code"
+            label='Please add your address'
+            placeholder={currentAddress}
             onChange={handleChange}
             variant="filled"
             className={classes.inputRoot}

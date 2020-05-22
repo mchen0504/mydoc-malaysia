@@ -1,0 +1,314 @@
+{
+    "specialties": {
+        "allergy": {
+            "name": "Gastroenterology",
+            "conditions": [
+                "Fever",
+                "Headache"
+            ],
+            "hospitals": {
+                "hospitalId1": {
+                    "name": "Pantai Hospital Kuala Lumpur",
+                    "type": "Private",
+                    "languages": [
+                        "English",
+                        "Mandarin",
+                        "Malay",
+                        "Hokkien",
+                        "Cantonese"
+                    ],
+                    "likes": 100000,
+                    "relatedSpecialty": "Gastroenterology",
+                    "website": "https://www.pantai.com.my/kuala-lumpur",
+                    "hours": "24 hours",
+                    "address": "8, Jalan Bukit Pantai 59100 Kuala Lumpur, 92310",
+                    "phoneNumber": "+603-2296 0888",
+                    "tags": [
+                        {
+                            "tagName": "Clean",
+                            "count": 27
+                        },
+                        {
+                            "tagName": "Customer Service",
+                            "count": 30
+                        },
+                        {
+                            "tagName": "Modern",
+                            "count": 10
+                        },
+                        {
+                            "tagName": "Organized",
+                            "count": 40
+                        },
+                        {
+                            "tagName": "Reliable",
+                            "count": 20
+                        },
+                        {
+                            "tagName": "Spacious",
+                            "count": 15
+                        },
+                        {
+                            "tagName": "Welcoming",
+                            "count": 21
+                        },
+                        {
+                            "tagName": "Well-equipped",
+                            "count": 27
+                        }
+                    ],
+                    "insurance": [
+                        "Asia Assistance Network",
+                        "AIA",
+                        "AIA - Employee Benefit",
+                        "AIA Datalink"
+                    ],
+                    "doctors": {
+                        "doctorId1": {
+                            "name": "Alex Leow",
+                            "specialty": "Gastroenterology",
+                            "hospital": "Pantai Hospital Kuala Lumpur",
+                            "yearsOfPractice": 7,
+                            "address": "No. A103a - Endoscopy Centre, 1st Floor, Block A, 8, Jalan Bukit Pantai 59100 Kuala Lumpur, 92130",
+                            "phoneNumber": "+603-2296 0763 Ext. 1111",
+                            "tags": [
+                                {
+                                    "tagName": "Attentive",
+                                    "count": 27
+                                },
+                                {
+                                    "tagName": "Bedside Manner",
+                                    "count": 30
+                                },
+                                {
+                                    "tagName": "Empathetic",
+                                    "count": 10
+                                },
+                                {
+                                    "tagName": "Enthusiastic",
+                                    "count": 40
+                                },
+                                {
+                                    "tagName": "Friendly",
+                                    "count": 20
+                                },
+                                {
+                                    "tagName": "Honest",
+                                    "count": 15
+                                },
+                                {
+                                    "tagName": "Knowledgeable",
+                                    "count": 21
+                                },
+                                {
+                                    "tagName": "Passionate",
+                                    "count": 27
+                                },
+                                {
+                                    "tagName": "Patient",
+                                    "count": 20
+                                },
+                                {
+                                    "tagName": "Respectful",
+                                    "count": 15
+                                },
+                                {
+                                    "tagName": "Responsible",
+                                    "count": 21
+                                },
+                                {
+                                    "tagName": "Trustworthy",
+                                    "count": 27
+                                }
+                            ],
+                            "appointment": {
+                                "onsite": {
+                                    "status": "active"
+                                },
+                                "call": {
+                                    "content": "206-123-4567",
+                                    "status": ""
+                                },
+                                "online": {
+                                    "content": "https://www.pantai.com.my/kuala-lumpur",
+                                    "status": "active"
+                                },
+                                "email": {
+                                    "content": "alex@gmail.com",
+                                    "status": "active"
+                                }
+                            },
+                            "qualifications": "MMed (Mal), MB. BCh. BAO. (Hons) LRCPI & LRCSI (Ire), B. Biomed Sci. (Hons) (UM)",
+                            "languages": [
+                                "English",
+                                "Mandarin",
+                                "Malay",
+                                "Hokkien",
+                                "Cantonese"
+                            ],
+                            "type": "Private",
+                            "procedures": [
+                                "Colonoscopy",
+                                "Gastroscopy",
+                                "Endoscopic Retrograde Cholangiopancreatography (ERCP)",
+                                "Fibroscan",
+                                "Liver Biopsy",
+                                "Endoscopic Ultrasound (EUS)",
+                                "Small Bowel Enteroscopy",
+                                "Capsule Endoscopy"
+                            ],
+                            "conditions": [
+                                "Helicobacter Pylori Infection",
+                                "Dyspepsia",
+                                "Gastro Esophageal Reflux Disease",
+                                "Fever"
+                            ],
+                            "likes": 123143
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "users": {
+        "userId1": {
+            "email": "yin@gmail.com",
+            "username": "userId",
+            "userType": "doctor",
+            "firstLetter": "u",
+            "createdAt": "2020-05-06T00:46:32:827Z",
+            "imgSrc": "",
+            "profile": {
+                "gender": "",
+                "workBuildingInfo": "",
+                "workStreet": "",
+                "workCity": "",
+                "workState": "",
+                "workPostalCode": ""
+            },
+            "saved": {
+                "doctors": [
+                    {
+                        "uid": "0987",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "8w343",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    }
+                ],
+                "hospitals": [
+                    {
+                        "uid": "0986",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "0934dgf6",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    }
+                ]
+            },
+            "likeHistory": {
+                "doctors": [
+                    "username1",
+                    "username2"    
+                ],
+                
+                "hospitals": [
+                    {
+                        "uid": "0986",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "0934dgf6",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    }
+                ]
+            },
+            "verification": {
+                "medicalRegistrationNumber": "78923",
+                "identityCardSrc": "",
+                "identityCardName": "",
+                "medicalDegreeSrc": "",
+                "medicalDegreeName": ""
+            },
+            "addedDoctorTags": {
+                "doctorusername1": [
+                    "Friendly",
+                    "Attentive",
+                    "Honest"
+                ],
+                "doctorusername2": [
+                    "Attentive",
+                    "Honest",
+                    "Knowledgeable"
+                ]
+            },
+            "addedHospitalTags": {
+                "hospitalkey1": [
+                    "Friendly",
+                    "Attentive",
+                    "Honest"
+                ]
+            }
+        },
+        "userId2": {
+            "email": "doc@gmail.com",
+            "username": "userId",
+            "userType": "general",
+            "firstLetter": "u",
+            "createdAt": "2020-05-05T00:46:32:827Z",
+            "imgSrc": "",
+            "saved": {
+                "doctors": [
+                    {
+                        "uid": "0987",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "8w343",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    }
+                ],
+                "hospitals": [
+                    {
+                        "uid": "0986",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "0934dgf6",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    }
+                ]
+            },
+            "likeHistory": {
+                "doctors": [
+                    {
+                        "uid": "0987",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "8w343",
+                        "specialty": "Gastroenterology",
+                        "hospital": "Pantai Hospital Kuala Lumpar"
+                    }
+                ],
+                "hospitals": [
+                    {
+                        "uid": "0986",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    },
+                    {
+                        "uid": "0934dgf6",
+                        "name": "Pantai Hospital Kuala Lumpar"
+                    }
+                ]
+            }
+        }
+    }
+}

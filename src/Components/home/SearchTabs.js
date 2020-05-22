@@ -57,11 +57,11 @@ const filterConditionOptions = createFilterOptions({
 });
 
 // specialties options
-const specialties = [
-  { specialty: "Allergy and Immunology" },
-  { specialty: "Anesthesiology" },
-  { specialty: "Gastroenterology" },
-];
+// const specialties = [
+//   { specialty: "Allergy and Immunology" },
+//   { specialty: "Anesthesiology" },
+//   { specialty: "Gastroenterology" },
+// ];
 // doctor name options
 const docNames = [
   { name: "Alex Leow" },
@@ -116,8 +116,10 @@ const StyledTab = withStyles((theme) => ({
 export default function SearchTabs(props) {
   const classes = useStyles();
   const conditions = props.conditionListForInput;
+  const specialties = props.specialtyListForInput;
 
   const [value, setValue] = React.useState(0);
+  const [keyword, setkeyword] = React.useState('');
 
   const handleSearchMethodChange = (event, newValue) => {
     let method = '';
@@ -158,11 +160,15 @@ export default function SearchTabs(props) {
 
   const handleConditionSearchKeyChange = (event, newValue) => {
     if(newValue){
-      props.getKeyWords(newValue.condition);
+      props.changeConditionLabel(newValue.condition, 'normal');
     }
     
   };
 
+  const getTextFieldValue = (event)=>{
+    setkeyword(event.target.value);
+    props.getKeyWords(event.target.value);
+  }
   return (
     <div>
       <div className={classes.tabContainer}>
@@ -202,6 +208,7 @@ export default function SearchTabs(props) {
       <TabPanel value={value} index={1}>
         <Autocomplete
           onChange = {handleDoctorSearchKeyChange}
+          freeSolo
           options={docNames}
           getOptionLabel={(option) => option.name}
           filterOptions={filterDocOptions}
@@ -210,6 +217,13 @@ export default function SearchTabs(props) {
               {...params}
               label="Search by doctor's name"
               variant="filled"
+              onChange = {getTextFieldValue}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  props.getKeyWords(keyword);
+                  props.startSearch();
+                }
+              }}
               className={classes.inputRoot}
               InputProps={{ ...params.InputProps, disableUnderline: true }}
             />
@@ -222,6 +236,7 @@ export default function SearchTabs(props) {
       <TabPanel value={value} index={2}>
         <Autocomplete
           onChange = {handleHospitalSearchKeyChange}
+          freeSolo
           options={hospNames}
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterHospOptions}
@@ -229,6 +244,13 @@ export default function SearchTabs(props) {
             <TextField
               {...params}
               label="Search by hospital's name"
+              onChange = {getTextFieldValue}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  props.getKeyWords(keyword);
+                  props.startSearch();
+                }
+              }}
               variant="filled"
               className={classes.inputRoot}
               InputProps={{ ...params.InputProps, disableUnderline: true }}
@@ -245,15 +267,19 @@ export default function SearchTabs(props) {
           options={conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterConditionOptions}
-          renderInput={(params) => (
-            <TextField
+          renderInput={(params) => {
+            if(props.conditionLabel != ""){
+              params.inputProps.value = props.conditionLabel;
+            }
+            return <TextField
               {...params}
-              label="Search by medical condition"
+              label={"Search by medical condition"}
               variant="filled"
               className={classes.inputRoot}
               InputProps={{ ...params.InputProps, disableUnderline: true }}
             />
-          )}
+          }
+        }
         />
         <br></br>
       </TabPanel>

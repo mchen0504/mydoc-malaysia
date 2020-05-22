@@ -53,7 +53,7 @@ export default function DocInfo(props) {
             <Divider className={classes.divider} style={{ width: 120 }} />
             <br></br>
             <Typography variant="body1">
-              {props.targetDoc['Qualification']}
+              {props.targetDoc['Qualifications']}
             </Typography>
           </Box>
           <Hidden smUp>

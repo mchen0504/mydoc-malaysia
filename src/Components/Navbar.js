@@ -55,7 +55,7 @@ class Navbar extends Component {
     const { authenticated } = this.props;
 
     let globalSearch = null;
-    if (this.props.currentPage !== "Home") {
+    if (this.props.currentPage !== "Home" && this.props.currentPage !== "signUp"&& this.props.currentPage !== "login"&& this.props.currentPage != "account") {
       globalSearch = (
         <Box>
           <GlobalSearch {...this.props} />

@@ -20,10 +20,15 @@ class DocProfile extends Component {
   render() {
     const { classes } = this.props;
     window.scrollTo(0, 0);
+    // he chen 
+    const backToPage = this.props.profileBackToDestination
     return (
       <div>
+        {
+          // // he chen 
+        }
         <Navbar  currentPage='DocProfile' {...this.props}/>
-        <DocInfo {...this.props} backTo={'resultsPage'}/>
+        <DocInfo {...this.props} backTo={backToPage}/>
         <hr className={classes.line}></hr>
         <Appointment {...this.props}/>
         <hr className={classes.line}></hr>

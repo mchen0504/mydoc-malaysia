@@ -40,7 +40,7 @@ class UserMenu extends Component {
     const {
       classes,
       user: {
-        credentials: { firstLetter },
+        credentials: { firstLetter, userType },
       },
     } = this.props;
 
@@ -67,7 +67,7 @@ class UserMenu extends Component {
         >
           <div>
             {/* 目前是link to docaccount (我还没弄Useraccount) 5/1/2020 */}
-            <MenuItem component={Link} to="/docaccount">
+            <MenuItem component={Link} to="/account">
               My Account
             </MenuItem>
             <MenuItem onClick={this.handleLogout}>Log Out</MenuItem>

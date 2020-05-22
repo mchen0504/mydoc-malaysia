@@ -61,12 +61,40 @@ export default function DocInfo(props) {
   // carousel 显示的卡片数量 （eshin added 5/4/20)
   const breakPoints = [{ itemsToShow: 3 }];
 
+
+  // created 5/11
+  let doctors = props.targetHos.doctors;
+  let conditionList = [];
+  let doctorSortList = [];
+  for (let doctor in doctors){
+    let targetDoc = doctors[doctor];
+    targetDoc.Conditions = targetDoc.Conditions.map((item)=>{
+      let newItem = item.toLowerCase();
+        newItem = newItem.replace(newItem[0],newItem[0].toUpperCase())
+      return newItem
+    });
+    targetDoc.Conditions.forEach((condition) => {
+      if (conditionList.indexOf(condition) == -1){
+        conditionList.push(condition)
+      }
+    });
+    doctorSortList.push(targetDoc);
+  }
+  doctorSortList.sort((a,b)=>{return b.NumberOfLikes - a.NumberOfLikes});
+  let doctorCards = [];
+  doctorSortList.forEach((doc, index)=>{
+    let card = <TopRatedDocCard {...props} targetDoc={doc} key={index}/>
+    doctorCards.push(card);
+  })
+
+
+
   // create procedure List
-  let specialities = props.targetHos["TopSpecialty"].map((spec) => {
-    let specCards = (
-      <p>{spec["SpecialtyName"] + " (" + spec["Likes"] + ") "}</p>
+  let conditionsDesc = conditionList.map((singleCondition) => {
+    let conditionInfo = (
+      <p>{singleCondition}</p>
     );
-    return specCards;
+    return conditionInfo;
   });
 
   // create condition List
@@ -75,6 +103,7 @@ export default function DocInfo(props) {
     return insuranceCards;
   });
 
+  
   return (
     <Grid container spacing={0}>
       <Grid item xs={12}>
@@ -94,12 +123,7 @@ export default function DocInfo(props) {
           {/* 这里出现top rated doctors 的卡片*/}
           {/* eshin added 5/4/20 */}
           <Carousel breakPoints={breakPoints}>
-            <TopRatedDocCard />
-            <TopRatedDocCard />
-            <TopRatedDocCard />
-            <TopRatedDocCard />
-            <TopRatedDocCard />
-            <TopRatedDocCard />
+            {doctorCards}
           </Carousel>
         </Box>
         <br></br>
@@ -119,10 +143,10 @@ export default function DocInfo(props) {
           >
             {/* top rated specialties */}
             <Typography variant="h6" color="primary">
-              Top Rated Specialities
+              Conditions
             </Typography>
             <Divider className={classes.divider} style={{ width: 200 }} />
-            <Typography variant="body1">{specialities}</Typography>
+            <Typography variant="body1">{conditionsDesc}</Typography>
           </Box>
           <Hidden smUp>
             <hr className={classes.line}></hr>

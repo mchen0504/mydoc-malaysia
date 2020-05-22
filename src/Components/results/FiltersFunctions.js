@@ -157,7 +157,6 @@ export function YearsOfPractice(props) {
           }
         }
       }
-      console.log('hi');
       props.filterYear(yearRange);
     }
     return setYearChange(false);
@@ -219,183 +218,107 @@ export function YearsOfPractice(props) {
 }
 
 // Filter: location
-export function Location() {
+export function Location(props) {
   const [state, setState] = React.useState({
-    kualalumpur: false,
-    selangor: false,
-    johor: false,
-    melaka: false,
-    negerisembilan: false,
-    pahang: false,
-    perak: false,
-    kelantan: false,
-    terengganu: false,
-    kedah: false,
-    pulaupinang: false,
-    perlis: false,
-    sabah: false,
-    sarawak: false,
-    labuan: false,
-    putrajaya: false,
+    lessThan30mins: false,
+    between30minsTo1hour: false,
+    between1hourTo2hours: false,
+    between2hoursTo3hours: false,
+    over3hours: false
   });
 
+  const [timeDomain, settimeDomain] = React.useState(true);
+
+  useEffect(()=>{
+    if(timeDomain){
+      console.log(state);
+      let timeRangeTrans = {
+        lessThan30mins: [0,0.5],
+        between30minsTo1hour: [0.5,1],
+        between1hourTo2hours: [1,2],
+        between2hoursTo3hours: [2,3],
+        over3hours: [3,1000],
+      };
+      let timeRange = [1000,-1];
+      console.log(timeRangeTrans);
+      for (let key in state){
+        if(state[key]){
+          let min = timeRangeTrans[key][0];
+          let max = timeRangeTrans[key][1];
+          if(timeRange[0] >= min){
+            timeRange[0] = min;
+          }
+          if (timeRange[1] <= max){
+            timeRange[1] = max;
+          }
+        }
+      }
+      props.filterDrivingTime(timeRange);
+    }
+    return settimeDomain(false);
+
+  });
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+    settimeDomain(true);
   };
 
   const {
-    kualalumpur,
-    selangor,
-    johor,
-    melaka,
-    negerisembilan,
-    pahang,
-    perak,
-    kelantan,
-    terengganu,
-    kedah,
-    pulaupinang,
-    perlis,
-    sabah,
-    sarawak,
-    labuan,
-    putrajaya,
+    lessThan30mins,
+    between30minsTo1hour,
+    between1hourTo2hours,
+    between2hoursTo3hours,
+    over3hours
   } = state;
 
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">Location</FormLabel>
+      <FormLabel component="legend">Driving time</FormLabel>
       <br></br>
       <FormGroup>
         <FormControlLabel
           control={
-            <Checkbox
-              checked={kualalumpur}
-              onChange={handleChange}
-              name="kualalumpur"
-            />
+            <Checkbox checked={lessThan30mins} onChange={handleChange} name="lessThan30mins" />
           }
-          label="Kuala Lumpur"
+          label="< 30mins"
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={selangor}
+              checked={between30minsTo1hour}
               onChange={handleChange}
-              name="selangor"
+              name="between30minsTo1hour"
             />
           }
-          label="Selangor"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={johor} onChange={handleChange} name="johor" />
-          }
-          label="Johor"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={melaka} onChange={handleChange} name="melaka" />
-          }
-          label="Melaka"
+          label="30mins - 1hour"
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={negerisembilan}
+              checked={between1hourTo2hours}
               onChange={handleChange}
-              name="negerisembilan"
+              name="between1hourTo2hours"
             />
           }
-          label="Negeri Sembilan"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={pahang} onChange={handleChange} name="pahang" />
-          }
-          label="Pahang"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={perak} onChange={handleChange} name="perak" />
-          }
-          label="Perak"
+          label="1hour - 2hours"
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={kelantan}
+              checked={between2hoursTo3hours}
               onChange={handleChange}
-              name="kelantan"
+              name="between2hoursTo3hours"
             />
           }
-          label="Kelantan"
+          label="2hours - 3hours"
         />
         <FormControlLabel
           control={
-            <Checkbox
-              checked={terengganu}
-              onChange={handleChange}
-              name="terengganu"
-            />
+            <Checkbox checked={over3hours} onChange={handleChange} name="over3hours" />
           }
-          label="Terengganu"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={kedah} onChange={handleChange} name="kedah" />
-          }
-          label="Kedah"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={pulaupinang}
-              onChange={handleChange}
-              name="pulaupinang"
-            />
-          }
-          label="Pulau Pinang"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={perlis} onChange={handleChange} name="perlis" />
-          }
-          label="Perlis"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={sabah} onChange={handleChange} name="sabah" />
-          }
-          label="Sabah"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={sarawak}
-              onChange={handleChange}
-              name="sarawak"
-            />
-          }
-          label="Sarawak"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={labuan} onChange={handleChange} name="labuan" />
-          }
-          label="labuan"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={putrajaya}
-              onChange={handleChange}
-              name="putrajaya"
-            />
-          }
-          label="Putrajaya"
+          label="> 3hours"
         />
       </FormGroup>
-    </FormControl>
+  </FormControl>
   );
 }

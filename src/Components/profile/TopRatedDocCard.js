@@ -38,11 +38,19 @@ const useStyles = makeStyles((theme) => ({
 //This card is imported in HospDetailedInfo.js
 
 // Each indiivdual doctor card
-export default function TopRatedDocCard() {
+export default function TopRatedDocCard(props) {
   const classes = useStyles();
 
+  const handleOnclick = ()=>{
+    props.setProfileBackToDestination("hospprofile");
+    props.updateTargetDoc(props.targetDoc);
+    if (props.history != null) {
+      props.history.push("/docprofile");
+    }
+  }
+
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={handleOnclick}>
       <CardActionArea>
         <CardContent>
           <Box
@@ -56,12 +64,12 @@ export default function TopRatedDocCard() {
               <CardMedia
                 component="img"
                 className={classes.img}
-                image={docImg}
+                src={props.targetDoc.imgSrc}
               ></CardMedia>
             </div>
             {/* doctor details */}
             <Typography variant="body1" color="primary">
-              Dr. Alex Leow
+              {props.targetDoc.name}
             </Typography>
             <br></br>
             <Typography
@@ -69,14 +77,14 @@ export default function TopRatedDocCard() {
               color="textSecondary"
               align="center"
             >
-              <strong>Specialty: </strong> <span>Gastroenterology</span>
+              <strong>Specialty: </strong> <span>{props.targetDoc.specialty}</span>
             </Typography>
             <br></br>
             {/* Like icon + number of likes */}
             <Box className={classes.likeBox}>
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                100
+              {props.targetDoc.likes}
               </Typography>
             </Box>
           </Box>

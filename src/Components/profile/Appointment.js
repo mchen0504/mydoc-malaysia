@@ -46,10 +46,10 @@ export default function Appointment(props) {
 
 
   // create grid based on appointment list
-  let appointment = props.targetDoc['Appointment'];
+  let appointment = props.targetDoc['appointment'];
   let appointmentList = [];
   for (let appointmentType in appointment){
-    if(appointmentType == 'Email' && appointment[appointmentType]['Status'] == 'Active'){
+    if(appointmentType == 'email' && appointment[appointmentType]['status'] == true){
       appointmentList.push(<Grid item xs={6} sm={2}>
         <Box
           display="flex"
@@ -60,11 +60,11 @@ export default function Appointment(props) {
         >
           <img src={emailIcon} className={classes.icon} alt="emailicon"></img>
           <br></br>
-          <Link style={{ textDecoration: "underline" }}>Email</Link>
+          <Link style={{ textDecoration: "underline" }}> <a href={appointment[appointmentType]['content']} target="_blank">Email</a></Link>
         </Box>
       </Grid>)
     }
-    if(appointmentType == 'Online' && appointment[appointmentType]['Status'] == 'Active'){
+    if(appointmentType == 'online' && appointment[appointmentType]['status'] == true){
       appointmentList.push(
         <Grid item xs={6} sm={2}>
           <Box
@@ -80,12 +80,12 @@ export default function Appointment(props) {
               alt="onlineicon"
             ></img>
             <br></br>
-            <Link style={{ textDecoration: "underline" }}>Online</Link>
+            <Link style={{ textDecoration: "underline" }}> <a href={appointment[appointmentType]['content']} target="_blank">Online</a></Link>
           </Box>
         </Grid>)
     }
 
-    if(appointmentType == 'Onsite' && appointment[appointmentType]['Status'] == 'Active'){
+    if(appointmentType == 'onsite' && appointment[appointmentType]['status'] == true){
       appointmentList.push( 
       <Grid item xs={6} sm={2}>
         <Box
@@ -110,7 +110,7 @@ export default function Appointment(props) {
       )
     }
 
-    if(appointmentType == 'PhoneCall' && appointment[appointmentType]['Status'] == 'Active'){
+    if(appointmentType == 'call' && appointment[appointmentType]['status'] == true){
       appointmentList.push(
       <Grid item xs={6} sm={2}>
         <Box
@@ -122,7 +122,7 @@ export default function Appointment(props) {
         >
           <img src={phoneIcon} className={classes.icon} alt="phoneicon"></img>
           <br></br>
-          <Link style={{ textDecoration: "underline" }}>+603-22960763</Link>
+      <Link style={{ textDecoration: "underline" }} ><a href={appointment[appointmentType]['content']} target="_blank">{appointment['call']['content']}</a></Link>
         </Box>
       </Grid>)
     }
