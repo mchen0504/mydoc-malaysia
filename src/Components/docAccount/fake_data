@@ -1,0 +1,337 @@
+// let rootData = {
+//     Gastroenterology: 
+//       {
+//         Name: "Gastroenterology", 1
+//         Condition: ["Fever", "Headache"], 2
+//         Hospital: {
+//           PantaiHospitalKualaLumpur : {
+//             HospitalName: "Pantai Hospital Kuala Lumpur", 1
+//             HospitalType: "Private", 1
+//             Language: [ 1
+//               "English",
+//               "Mandarin",
+//               "Malay",
+//               "Hokkien",
+//               "Cantonese",
+//             ],
+//             likes: 10000000, 1
+//             RelateSpecialty: "Gastroenterology", 1
+//             Web: "https://www.pantai.com.my/kuala-lumpur", 1
+//             Hours: "24 hours", 1
+//             Address: "8, Jalan Bukit Pantai 59100 Kuala Lumpur", 1
+//             Phone: "+603-2296 0888", 1
+//             Tags: [
+//               {
+//                 TagName: "Customer Service",
+//                 Number: 2,
+//               },
+//               {
+//                 TagName: "Facility",
+//                 Number: 3,
+//               },
+//               {
+//                 TagName: "Friendly",
+//                 Number: 5,
+//               },
+//             ] 1 ,
+//             Insurance: 1 [
+//               "Asia Assistance Network",
+//               "AIA",
+//               "AIA - Employee Benefit",
+//               "AIA Datalink",
+//             ],
+//             Doctors: {
+//               AlexLeow1 : {
+//                 DocName: "Alex Leow", 1
+//                 Specialty: "Gastroenterology", 1
+//                 Hospital: "Pantai Hospital Kuala Lumpur", 1
+//                 imgAddress:"../../img/results/docAlex.png" ,
+//                 YearsofPractice: 7,1
+//                 Address: "No. A103a - Endoscopy Centre, 1st Floor, Block A, 8, Jalan Bukit Pantai 59100 Kuala Lumpur",1
+//                 Phone: " +603-2296 0763 Ext. 1111",1
+//                 Tags:1 [
+//                   {
+//                     TagName: "Bedside Manner",
+//                     Number: 1,
+//                   },
+//                   {
+//                     TagName: "Enthusiastic",
+//                     Number: 10,
+//                   },
+//                   {
+//                     TagName: "Friendly",
+//                     Number: 5,
+//                   },
+//                 ],
+//                 Appointment: 1{
+//                   Onsite: {
+//                     Content: "Onsite",
+//                     Status: "Active",
+//                   },
+//                   PhoneCall: {
+//                     Content: "206-123-4567",
+//                     Status: "",
+//                   },
+//                   Online: {
+//                     Content: "https://www.pantai.com.my/kuala-lumpur",
+//                     Status: "Active",
+//                   },
+//                   Email: {
+//                     Content: "chenh57@uw.edu",
+//                     Status: "Active",
+//                   },
+//                 },
+//                 Qualification1:
+//                   "MMed (Mal), MB. BCh. BAO. (Hons) LRCPI & LRCSI (Ire), B. Biomed Sci. (Hons) (UM)",
+//                 Language1: [
+//                   "English",
+//                   "Mandarin",
+//                   "Malay",
+//                   "Hokkien",
+//                   "Cantonese",
+//                 ],
+//                 Type1: "Private",
+//                 Procedures1: [
+//                   "Colonoscopy",
+//                   "Gastroscopy",
+//                   "Endoscopic Retrograde Cholangiopancreatography (ERCP)",
+//                   "Fibroscan",
+//                   "Liver Biopsy",
+//                   "Endoscopic Ultrasound (EUS)",
+//                   "Small Bowel Enteroscopy",
+//                   "Capsule Endoscopy",
+//                 ],
+//                 Conditions1: [
+//                   "Helicobacter Pylori Infection",
+//                   "Dyspepsia",
+//                   "Gastro Esophageal Reflux Disease",
+//                   "Fever",
+//                 ],
+//                 NumberOfLikes1: 12
+//               },
+//               AlexLeow2 : {
+//                 DocName: "Lisa Wong",
+//                 Specialty: "Gastroenterology",
+//                 Hospital: "Pantai Hospital Kuala Lumpur",
+//                 imgAddress:"../../img/results/docAlex.png" ,
+//                 YearsofPractice: 7,
+//                 Address:
+//                   "No. A103a - Endoscopy Centre, 1st Floor, Block A, 8, Jalan Bukit Pantai 59100 Kuala Lumpur",
+//                 Phone: " +603-2296 0763 Ext. 1111",
+//                 Tags: [
+//                   {
+//                     TagName: "Bedside Manner",
+//                     Number: 1,
+//                   },
+//                   {
+//                     TagName: "Enthusiastic",
+//                     Number: 10,
+//                   },
+//                   {
+//                     TagName: "Friendly",
+//                     Number: 5,
+//                   },
+//                 ],
+//                 Appointment: {
+//                   Onsite: {
+//                     Content: "Onsite",
+//                     Status: "Active",
+//                   },
+//                   PhoneCall: {
+//                     Content: "206-123-4567",
+//                     Status: "",
+//                   },
+//                   Online: {
+//                     Content: "https://www.pantai.com.my/kuala-lumpur",
+//                     Status: "Active",
+//                   },
+//                   Email: {
+//                     Content: "chenh57@uw.edu",
+//                     Status: "Active",
+//                   },
+//                 },
+//                 Qualification:
+//                   "MMed (Mal), MB. BCh. BAO. (Hons) LRCPI & LRCSI (Ire), B. Biomed Sci. (Hons) (UM)",
+//                 Language: [
+//                   "English",
+//                   "Mandarin",
+//                   "Malay",
+//                   "Hokkien",
+//                   "Cantonese",
+//                 ],
+//                 Type: "Private",
+//                 Procedures: [
+//                   "Colonoscopy",
+//                   "Gastroscopy",
+//                   "Endoscopic Retrograde Cholangiopancreatography (ERCP)",
+//                   "Fibroscan",
+//                   "Liver Biopsy",
+//                   "Endoscopic Ultrasound (EUS)",
+//                   "Small Bowel Enteroscopy",
+//                   "Capsule Endoscopy",
+//                 ],
+//                 Conditions: [
+//                   "Helicobacter Pylori Infection",
+//                   "Dyspepsia",
+//                   "Gastro Esophageal Reflux Disease",
+//                   "Fever",
+//                 ],
+//                 NumberOfLikes: 12315
+//               }
+//             }
+//           }
+//         }
+//       }
+//     };
+
+
+// function getRandomInt(max) {
+  //   return Math.floor(Math.random() * Math.floor(max));
+  // }
+  // const createSplData = (numOfDoc)=>{
+  //   let specialtyList = ['Allergy', 'Anesthesiology', 'Neuroradiology'];
+  //   let conditionList = ['Fever', "Vomit", "Headache", "Dizziness", "Stomachache"];
+  //   let fakeCondition = [];
+  //   conditionList.forEach((condition)=>{
+  //     if(getRandomInt(10) > 5){
+  //       fakeCondition.push(condition);
+  //     }
+  //   })
+  //   let fakeSpec = specialtyList[getRandomInt(specialtyList.length)];
+  //   let fakeSpecData = {
+  //     Name : fakeSpec,
+  //     conditions:fakeCondition,
+  //     hospital:createFakeHospitalData(3,fakeSpec, fakeCondition),
+  //     specialty: fakeSpec
+  //   }
+  //   return fakeSpecData
+  // }
+
+  // const createFakeHospitalData = (numOfDoc, spec,fakeCondition)=>{
+  //   let docFirstName = ['Alex', 'Chris', "Kelly"];
+  //   let docLastName = ['Wong', 'Tang', "Lee"];
+  //   let insurance = ['Asia Assistance Network',
+  //   'AIA',
+  //   'AIA - Employee Benefit',
+  //   'AIA Datalink',
+  //   'Compumed',
+  //   'Etiqa Insurance']
+  //   let language = ['Chinese', "English", "Malay", "Hindi"]
+  //   let hours = ['24 hours', '9:00am - 10:00pm', "8:00am - 12:00am"]
+  //   let conditionList = ['Fever', "Vomit", "Headache", "Dizziness", "Stomachache"];
+  //   let hospital = [
+  //     {name:'Chris1', address:'12321', type:'Private', phone:'206-6123-2931', web:'www.baidu.com'},
+  //     {name:'Chris2', address:'12321', type:'Private', phone:'206-6123-2931', web:'www.baidu.com'},
+  //     {name:'Chris3', address:'12321', type:'Private', phone:'206-6123-2931', web:'www.baidu.com'},
+  //     {name:'Chris4', address:'12321', type:'Private', phone:'206-6123-2931', web:'www.baidu.com'},
+  //     {name:'Chris5', address:'12321', type:'Private', phone:'206-6123-2931', web:'www.baidu.com'}
+  //   ]
+    
+  //   let fakeHosCombine = hospital[getRandomInt(hospital.length)];
+  //   let fakeLanguageList = [];
+  //   language.forEach((lang)=>{
+  //     if(getRandomInt(10) > 5){
+  //       fakeLanguageList.push(lang);
+  //     }
+  //   })
+
+  //   let fakeinsurance = [];
+  //   insurance.forEach((insurance)=>{
+  //     if(getRandomInt(10) > 5){
+  //       fakeinsurance.push(insurance);
+  //     }
+  //   })
+  //   let fakeHour = hours[getRandomInt(hours.length)];
+
+  //   let fakeDocs = {};
+  //   for (let i = 0; i < numOfDoc; i ++){
+  //     let docFname = docFirstName[getRandomInt(docFirstName.length)];
+  //     let docLname = docLastName[getRandomInt(docLastName.length)];
+  //     let key = docFname + docLname;
+  //     let value = createFakeUser(docFname, docLname, fakeHosCombine, spec,fakeCondition);
+  //     fakeDocs['doctor'][key] = value;
+  //   }
+    
+  //   let fakeHos = {
+  //     address:fakeHosCombine.address,
+  //     hours:fakeHour,
+  //     insurance:fakeinsurance,
+  //     languages:fakeLanguageList,
+  //     likes:getRandomInt(1000),
+  //     name:fakeHosCombine.name,
+  //     phone:fakeHosCombine.phone,
+  //     relatedSpecialty: spec,
+  //     type: fakeHosCombine.type,
+  //     website:fakeHosCombine.web
+  //   }
+
+  //   return fakeHos
+
+    
+  // }
+
+  // const createFakeUser = (docFname, docLname, fakeHosCombine, spec,fakeCondition) =>{
+  //   let fakeName = docFname + ' ' + docLname;
+  //   let fakeAddress = fakeHosCombine.address;
+  //   let proc = ['p1', 'p2', 'p3', 'p4'];
+  //   let qualification = ['q1', 'q2', 'q3', 'q4'];
+  //   let appointment = {
+  //     call : {
+  //       content : "",
+  //       status : getRandomInt(10) > 5,
+  //     },
+  //     email : {
+  //       content : "",
+  //       status : getRandomInt(10) > 5,
+  //     },
+  //     online : {
+  //       content : "",
+  //       status : getRandomInt(10) > 5,
+  //     },
+  //     onsite : {
+  //       content : "",
+  //       status : getRandomInt(10) > 5,
+  //     }
+  //   }
+  //   let deleted = false;
+  //   let language = ['Chinese', "English", "Malay", "Hindi"];
+  //   let fakeLanguageList = [];
+  //   language.forEach((lang)=>{
+  //     if(getRandomInt(10) > 5){
+  //       fakeLanguageList.push(lang);
+  //     }
+  //   })
+  //   let likes = getRandomInt(1000);
+  //   let yearOfPractice = getRandomInt(30);
+  //   let publish = true;
+  //   let fakeProc  = [];
+  //   proc.forEach((procitem)=>{
+  //     if(getRandomInt(10) > 5){
+  //       fakeProc.push(procitem);
+  //     }
+  //   })
+  //   // proc[getRandomInt(proc.length)];
+  //   let fakeQualification = qualification[getRandomInt(qualification.length)];
+
+  //   let fakeUser = {
+  //     address : fakeHosCombine.address,
+  //     appointment : appointment,
+  //     conditions : fakeCondition,
+  //     deleted : false,
+  //     hospital : fakeHosCombine.name,
+  //     phone : fakeHosCombine.phone,
+  //     procedures :fakeProc,
+  //     publish : true,
+  //     qualifications: fakeQualification,
+  //     specialty : spec,
+  //     type: fakeHosCombine.type,
+  //     languages:fakeLanguageList,
+  //     likes:likes,
+  //     yearOfPractice:yearOfPractice
+  //   };
+
+  //   return fakeUser;
+
+  // }
+  // console.log('fake data here');
+  // console.log(createSplData(3));

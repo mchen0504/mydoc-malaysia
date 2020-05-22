@@ -8,11 +8,10 @@ import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Box from "@material-ui/core/Box";
 import docImg from "../../img/results/docAlex.png";
-import { black } from "color-name";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 230
+    maxWidth: 230,
   },
 
   img: {
@@ -34,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: 20,
     },
   },
-
 }));
 
 //This card is imported in HospDetailedInfo.js
@@ -86,7 +84,7 @@ export default function TopRatedDocCard(props) {
             <Box className={classes.likeBox}>
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                &nbsp;{props.targetDoc.likes}
+              {props.targetDoc.likes}
               </Typography>
             </Box>
           </Box>

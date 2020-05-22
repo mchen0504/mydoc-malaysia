@@ -107,14 +107,14 @@ function HospTags(props) {
         if (!res[1].addedHospTags) {
           userStored = "";
         } else {
-          if (!res[1].addedHospTags.PantaiHospitalKualaLumpur) {
+          if (!res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
             userStored = "";
           } else {
-            userStored = res[1].addedHospTags.PantaiHospitalKualaLumpur;
+            userStored = res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
           }
         }
         setState({
-          currentTags: res[0].tags ? res[0].tags : "",
+          currentTags: res[0].tags ? props.targetHos.tags : "",
           storedUserTags: userStored
         })
         // update renderCount to 1 to stop react from making any more useEffect call
@@ -257,17 +257,19 @@ function HospTags(props) {
     )
   });
 
-
+  console.log('target hos super')
+  console.log(props.targetHos);
   const updateSelectedTags = () => {
     const hospitalNewTags = {
-      hospital: "Pantai Hospital Kuala Lumpur",
+      hospital: props.targetHos.HospitalName,
       tags: allTags["storedUserTags"],
     };
     props.updateUserStoredHospTags(hospitalNewTags);
 
+    
     const updateInfo = {
-      specialty: "Gastroenterology",
-      hospital: "Pantai Hospital Kuala Lumpur",
+      specialty: props.targetHos.RelateSpecialty,
+      hospital: props.targetHos.HospitalName,
       tags: allTags["currentTags"]
     }
     props.updateHospTags(updateInfo);

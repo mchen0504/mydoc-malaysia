@@ -15,13 +15,17 @@ const styles = (theme) => ({
 });
 
 class HospProfile extends Component {
+  
   render() {
+    window.scrollTo(0, 0);
+    // he chen 
+    const backToPage = this.props.profileBackToDestination
     const { classes } = this.props;
     console.log(this.props.targetHos);
     return (
       <div>
         <Navbar currentPage='HosProfile' {...this.props}/>
-        <HospInfo {...this.props} backTo={'resultsPage'}/>
+        <HospInfo {...this.props} backTo={backToPage}/>
         <hr className={classes.line}></hr>
         <HospDetailedInfo {...this.props} />
       </div>

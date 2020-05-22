@@ -71,8 +71,7 @@ function Account(props) {
       <Navbar currentPage='account'/>
       <Hidden smDown>
         <div className={classes.covidBox} style={{ position: "relative" }}>
-          <CovidAlert />
-
+          {/* <CovidAlert /> */}
           <Grid container spacing={0}>
             <Grid item md={4} lg={3}>
               <DocSideNav />

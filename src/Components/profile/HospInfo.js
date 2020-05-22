@@ -98,13 +98,26 @@ function HospInfo(props) {
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
         props.history.push("/results");
-      } else if (props.backTo == "profilePage") {
+      } else if (props.backTo == "hospprofile") {
         props.history.push("/hospprofile");
-      }else{
+      } else if (props.backTo == "likeHistory"){
         props.history.push("/likehistory");
+      } else {
+        props.history.push("/saved");
       }
     }
   };
+
+  let returnPageDesc;
+  if (props.backTo == "resultsPage"){
+    returnPageDesc = "Result Page";
+  } else if (props.backTo == "hospprofile") {
+    returnPageDesc = "Hospital Profile";
+  } else if (props.backTo == "likeHistory"){
+    returnPageDesc = "Liked History Page";
+  } else {
+    returnPageDesc = "Saved History Page";
+  }
 
   const [renderCount, setRenderCount] = React.useState(0);
 
@@ -334,7 +347,7 @@ function HospInfo(props) {
         address: props.targetHos.address,
         likes: likeSaveInfo.numLikes,
         phone: props.targetHos.phone,
-        relatedSpecialty: props.targetHos.relateSpecialty,
+        relatedSpecialty: props.targetHos.relatedSpecialty,
         type: props.targetHos.type
       };
       likeSaveInfo.savedList.push(newHospInfo);
@@ -400,7 +413,9 @@ function HospInfo(props) {
     });
   };
 
-
+  console.log('props.targetHos');
+  console.log(props.targetHos);
+  
   const reported = likeSaveInfo.reportedList.includes(props.targetHos.name);
 
   // send hospital report to database
@@ -468,7 +483,6 @@ function HospInfo(props) {
       open: false,
     });
   };
-
 
   // for login in diagolue: render correponding icon for user option: recommend, like, save
   let Icon = FavoriteIcon;
@@ -578,7 +592,7 @@ function HospInfo(props) {
           startIcon={<ArrowBackIosIcon />}
           onClick={backToRes}
         >
-          Return to Hospitals
+          Return to {returnPageDesc}
         </Button>
       </Box>
 
@@ -883,7 +897,7 @@ function HospInfo(props) {
             </Box>
           </Box>
           {/* edit Tag component (imported from HospTag.js) */}
-          <HospTags tagInfo={props.targetHos["tags"]} handleLoginOpen={handleLoginOpen}/>
+          <HospTags tagInfo={props.targetHos["tags"]} targetHos={props.targetHos} handleLoginOpen={handleLoginOpen}/>
         </Grid>
 
         <Grid item xs={12} sm={1} md={2}>

@@ -260,6 +260,7 @@ export const getSpecProfile = () => (dispatch) => {
   axios
     .get("/getspecprofile")
     .then((res) => {
+      console.log('load specprofile data!!')
       dispatch({
         type: GET_PROFILE /* use in userReducer.js */,
         payload: res.data,

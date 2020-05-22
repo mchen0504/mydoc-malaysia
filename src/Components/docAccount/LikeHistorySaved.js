@@ -149,7 +149,7 @@ function LikeHistorySaved(props) {
           // console.log('target doc');
           // console.log(targetDoc);
           return (
-            <DocCard {...props} key={doctor.username} targetDoc={targetDoc} targetDocUserName={username}/>
+            <DocCard {...props} key={doctor.username} targetDoc={targetDoc} targetDocUserName={username} displayType={displayType}/>
           )
         })
 
@@ -157,13 +157,14 @@ function LikeHistorySaved(props) {
         // list of liked hospitals cards on hospital tab
         let hosCardsList = likedHospitals.map(hospital => {
           console.log('loading hos cards');
+          console.log(hospital);
           let specialty = hospital.relatedSpecialty;
           let hospitalUserName = hospital.name.replace(/\s+/g, "");
           console.log(specialty);
           console.log(res[1].data);
           let targetHos = res[1].data[specialty]['hospitals'][hospitalUserName];
           return (
-            <HospitalCard {...props} key={hospital.name} targetHos={targetHos} targetHosUserName={hospitalUserName} hospitalInfo={hospital} getSpecialtyData={getSpecialtyData} database = {databaseInfo} />
+            <HospitalCard {...props} key={hospital.name} targetHos={targetHos} targetHosUserName={hospitalUserName} hospitalInfo={hospital} displayType={displayType} database = {databaseInfo} />
           )
         })
         setDoctorCards(docCardsList);
@@ -323,7 +324,8 @@ function DocCard(props) {
     // console.log(newestTargetDoc['NumberOfLikes'])
     console.log(newestTargetDoc);
     props.updateTargetDoc(newestTargetDoc);
-    props.setProfileBackToDestination("likehistory");
+    console.log('page name:');
+    props.setProfileBackToDestination(props.displayType);
     if (props.history != null) {
       props.history.push("/docprofile");
     }
@@ -448,8 +450,8 @@ function HospitalCard(props) {
     newestTargetHos['Conditions'] = conditionList;
     // console.log(newestTargetDoc['NumberOfLikes'])
     console.log(newestTargetHos);
-    props.updateTargetDoc(newestTargetHos);
-    props.setProfileBackToDestination("likehistory");
+    props.updateTargetHos(newestTargetHos);
+    props.setProfileBackToDestination(props.displayType);
     if (props.history != null) {
       props.history.push("/hospprofile");
     }

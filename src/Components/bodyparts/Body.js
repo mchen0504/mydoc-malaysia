@@ -201,7 +201,7 @@ export default function BodyPartsDialog(props) {
                   color="primary"
                   style={{ marginLeft: 20 }}
                 >
-                  <strong>2. Select Symptoms</strong>
+                  <strong>2. Select organ</strong>
               </Typography>
               <Box
                 style={{ border: "1px solid rgba(237, 235, 237, 1)" }}

@@ -81,10 +81,6 @@ const useStyles = makeStyles((theme) => ({
 
   reportButton: {
     marginRight: "1rem",
-  },
-
-  signUpInButton: {
-    paddingLeft: "7.5rem"
   }
 }));
 
@@ -96,13 +92,18 @@ function DocInfo(props) {
   const classes = useStyles();
 
   const backToRes = () => {
+    console.log('backTo:');
+    // likeHistory
+    console.log(props.backTo);
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
         props.history.push("/results");
       } else if (props.backTo == "hospprofile") {
         props.history.push("/hospprofile");
-      } else{
+      } else if (props.backTo == "likeHistory"){
         props.history.push("/likehistory");
+      } else {
+        props.history.push("/saved");
       }
     }
   };
@@ -131,7 +132,6 @@ function DocInfo(props) {
 
   // only get called once in the first render
   useEffect(() => {
-    console.log('hi here is useeffect');
     // if (renderCount == 0) {
       displayStoredData();
     // }
@@ -140,13 +140,6 @@ function DocInfo(props) {
   const displayStoredData = () => {
     getStoredData()
       .then((res) => {
-        console.log('hi-3');
-        console.log(res);
-        console.log('hi-4');
-        console.log(props.targetDoc);
-
-
-        
         // like
         let listOfLikes;
         let liked = false;
@@ -157,8 +150,6 @@ function DocInfo(props) {
           if (res[1].likeHistory.doctors) {
             listOfLikes = res[1].likeHistory.doctors;
             // if the user has liked this particular doctor before
-            console.log(res[1].likeHistory.doctors);
-            console.log(props.targetDoc.userName);
             const index = res[1].likeHistory.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
             if (index != -1) {
               liked = true;
@@ -187,9 +178,6 @@ function DocInfo(props) {
             listOfSaves = [];
           }
         };
-        console.log('doctor data in doctor profile:');
-        console.log(props.targetDoc);
-        console.log(listOfLikes);
         setState({
           username: res[1].username,
           hasLiked: liked,
@@ -213,7 +201,6 @@ function DocInfo(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    console.log('hi-2');
     let [storedSearchInfo, userStoredCredentials] =
       await Promise.all([props.searchInfo, props.storedCredentials]);
     return [storedSearchInfo, userStoredCredentials];
@@ -271,7 +258,6 @@ function DocInfo(props) {
 
 
     }
-    console.log(props.targetDoc)
     let updateInfo = {
       specialty: props.targetDoc.specialty,
       hospital: props.targetDoc.hospital,
@@ -472,8 +458,6 @@ function DocInfo(props) {
     const sendToAccount = {
       reportedDoctors: reportedList,
     };
-    console.log('report list');
-    console.log(sendToAccount);
     props.sendReportedDoctors(sendToAccount);
 
     setReportOpen(false);
@@ -533,11 +517,13 @@ if (loginOpen.userOption == "Recommend") {
   let returnPageDesc;
   if (props.backTo == "resultsPage"){
     returnPageDesc = "Result Page";
-  } else {
+  } else if (props.backTo == "hospprofile") {
     returnPageDesc = "Hospital Profile";
+  } else if (props.backTo == "likeHistory"){
+    returnPageDesc = "Liked History Page";
+  } else {
+    returnPageDesc = "Saved History Page";
   }
-
-
 
   return (
     <div>
@@ -686,7 +672,6 @@ if (loginOpen.userOption == "Recommend") {
                       </Box>
                       <Box display="flex" mt={2} mb={2}>
                         <Button
-                          className={classes.signUpInButton}
                           variant="contained"
                           color="primary"
                           style={{ textTransform: "none" }}
@@ -700,7 +685,6 @@ if (loginOpen.userOption == "Recommend") {
 
                       <Box display="flex" mb={2}>
                         <Button
-                          className={classes.signUpInButton}
                           variant="outlined"
                           color="primary"
                           style={{ textTransform: "none" }}
@@ -851,8 +835,8 @@ if (loginOpen.userOption == "Recommend") {
               </Typography>
             </Box>
           </Box>
-          {/* edit Tag component (imported from Tag.js) */}
-          <DocTags tagInfo={props.targetDoc["tags"]} handleLoginOpen={handleLoginOpen} />
+          {console.log(props.targetDoc)}
+          <DocTags tagInfo={props.targetDoc["tags"]} targetDoc={props.targetDoc} handleLoginOpen={handleLoginOpen} />
         </Grid>
 
         <Grid item xs={12} sm={1} md={2}>

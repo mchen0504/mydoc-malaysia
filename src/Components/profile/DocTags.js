@@ -102,18 +102,21 @@ function Tags(props) {
     getStoredData()
       .then((res) => {
         // set state
+        console.log(res);
         let userStored;
         if (!res[1].addedDoctorTags) {
           userStored = "";
         } else {
-          if (!res[1].addedDoctorTags.verify) {
+          console.log(props.targetDoc.userName);
+          if (!res[1].addedDoctorTags[props.targetDoc.userName]) {
+            console.log('No stored tags before');
             userStored = "";
           } else {
-            userStored = res[1].addedDoctorTags.verify;
+            userStored = res[1].addedDoctorTags[props.targetDoc.userName];
           }
         }
         setState({
-          currentTags: res[0].tags ? res[0].tags : "",
+          currentTags: res[0].tags ? props.targetDoc.tags : "",
           storedUserTags: userStored
         })
         // update renderCount to 1 to stop react from making any more useEffect call
@@ -261,15 +264,16 @@ function Tags(props) {
 
   const updateSelectedTags = () => {
     const doctorNewTags = {
-      username: "verify",
+      username: props.targetDoc.userName,
       tags: allTags["storedUserTags"],
     };
     props.updateUserStoredDocTags(doctorNewTags);
 
+    console.log(props.targetDoc);
     const updateInfo = {
-      specialty: "Gastroenterology",
-      hospital: "Pantai Hospital Kuala Lumpur",
-      username: "verify",
+      specialty:props.targetDoc.Specialty,
+      hospital: props.targetDoc.Hospital,
+      username: props.targetDoc.userName,
       tags: allTags["currentTags"]
     };
     props.updateDoctorTags(updateInfo);

@@ -75,23 +75,54 @@ export default function SearchResultsFilter(props) {
   };
 
     // create cards for doctors based on results
-    let pageNavCount = Math.ceil(props.docInfo.length / maxPage);
+    let pageNavCount;
+    if (display == 'doctor'){
+      pageNavCount = Math.ceil(props.docInfo.length / maxPage);
+    } else {
+      pageNavCount = Math.ceil(props.hospitalInfo.length / maxPage)
+    }
     // find the index of the first card in the page
     let cardStartIndex = (page - 1)*maxPage;
     let cardEndIndex = 0;
     // find the index of the last card in the page
-    if (cardStartIndex + maxPage - 1 > props.docInfo.length){
-      cardEndIndex = props.docInfo.length - 1;
+    if (display == 'doctor'){
+      if (cardStartIndex + maxPage - 1 > props.docInfo.length){
+        cardEndIndex = props.docInfo.length - 1;
+      } else {
+        cardEndIndex = maxPage - 1 + cardStartIndex;
+      }
     } else {
-      cardEndIndex = maxPage - 1 + cardStartIndex;
+      if (cardStartIndex + maxPage - 1 > props.hospitalInfo.length){
+        cardEndIndex = props.hospitalInfo.length - 1;
+      } else {
+        cardEndIndex = maxPage - 1 + cardStartIndex;
+      }
     }
+    
 
     let allDoccards = [];
-    // // he chen 
-    if (props.docInfo.length != 0 && props.docInfo != null){
-      for (let i = cardStartIndex; i <= cardEndIndex; i ++){
-        let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData = {props.docInfo[i]} key = {i}/>
+    let allHosCards = [];
+    if (display == 'doctor'){
+      // // he chen 
+      if (props.docInfo.length != 0 && props.docInfo != null){
+        for (let i = cardStartIndex; i <= cardEndIndex; i ++){
+          let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData = {props.docInfo[i]} key = {i}/>
+          allDoccards.push(component);
+        }
+      } else {
+        let component;
+        if (props.searchingState == 'in-progress'){
+          component =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
+        } else {
+          component = <Empty/>;
+        }
         allDoccards.push(component);
+      }
+    } else {
+    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
+      for (let i = cardStartIndex; i <= cardEndIndex; i ++){
+        let component =  <HospitalCard {...props} resultData = {props.hospitalInfo[i]} key = {i} updateTargetHos={props.updateTargetHos}/>
+        allHosCards.push(component);
       }
     } else {
       let component;
@@ -100,22 +131,24 @@ export default function SearchResultsFilter(props) {
       } else {
         component = <Empty/>;
       }
-      allDoccards.push(component);
+      allHosCards.push(component);
     }
-  
+
+    }
+
     // create cards for doctors based on Hospital
-    let allHosCards = [];
-    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
-      let key = 0;
-      allHosCards = props.hospitalInfo.map((msgString) => {
-          let component = <HospitalCard {...props} resultData = {msgString} key = {key} updateTargetHos={props.updateTargetHos}/>
-          key ++;
-          return component; //add this new component to resulting array
-      })
-  } else {
-    let component = <Empty/>
-    allHosCards.push(component);
-  }
+  //   let allHosCards = [];
+  //   if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
+  //     let key = 0;
+  //     allHosCards = props.hospitalInfo.map((msgString) => {
+  //         let component = <HospitalCard {...props} resultData = {msgString} key = {key} updateTargetHos={props.updateTargetHos}/>
+  //         key ++;
+  //         return component; //add this new component to resulting array
+  //     })
+  // } else {
+  //   let component = <Empty/>
+  //   allHosCards.push(component);
+  // }
 
   let docHosbuttonGroup = [];
   if (props.searchMethod != 'Doctor'){

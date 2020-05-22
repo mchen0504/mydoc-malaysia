@@ -17,6 +17,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import RemoveIcon from "@material-ui/icons/RemoveCircleOutlineSharp";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import axios from "axios";
 
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -155,33 +156,40 @@ function DocEditProfile(props) {
       console.log('hi: 1');
       getStoredData();
     // }
-  }, []);
+  },[]);
 
 
   // if (res[0] && res[1] && res[2] && res[3] && Object.keys(res[0]).length > 0 && Object.keys(res[1]).length > 0 && Object.keys(res[2]).length > 0 && Object.keys(res[3]).length > 0) {
 
   let getStoredData = async () => {
-    await props.getSpecProfile();
-    await props.getSpecList();
-    await props.getCondList();
+    let baseurl =   "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
+    // let storedSearchInfo2 = await axios.get(baseurl+'getspecprofile');
+    // let userInfo = props.credentials;
+    // let storedSearchInfo =  props.doctorData;
+    // let specialtyList =  props.specialtyList;
+    // let conditionsList =  props.conditionsList;
+    let storedSearchInfoData =  await axios.get(baseurl+'getspecprofile');
+    let specialtyListData =  await axios.get(baseurl+'getspeclist');
+    let conditionsListData =  await axios.get(baseurl+'getcondlist');
+    let userInfoData = await axios.get(baseurl+'user');
+    let userInfo = userInfoData.data.credentials;
+        let storedSearchInfo2 =  storedSearchInfoData.data;
+    let specialtyList2 =  specialtyListData.data;
+    let conditionsList2 =  conditionsListData.data;
+    let dataSet = [userInfo, storedSearchInfo2, specialtyList2, conditionsList2]
+    const allContents = {
+      credentials : dataSet[0],
+      doctorData : dataSet[1],
+      specialtyList : dataSet[2],
+      conditionsList : dataSet[3],
+    };
 
-    let userInfo = props.credentials;
-    let storedSearchInfo =  props.doctorData;
-    let specialtyList =  props.specialtyList;
-    let conditionsList =  props.conditionsList;
-
-    // const test = await useSelector(state => state.user);
-    // // console.log(test)
-    return [userInfo, storedSearchInfo, specialtyList, conditionsList];
-    // return [userInfo, storedSearchInfo];
-  };
-
-  // He Chen 18th May assign value to the props
-    const allContents = useSelector(state => state.user);
     if(allContents.credentials&&allContents.doctorData&&allContents.specialtyList&&allContents.conditionsList&&renderCount==0&&Object.keys(allContents.doctorData).length > 0){
       let res = [allContents.credentials, allContents.doctorData,allContents.specialtyList,allContents.conditionsList];
       window.scrollTo(0, 0);
         // data -> from doctor account
+        console.log('hi here');
+        console.log(allContents);
         const userInfo = res[0].profile;
 
         // data -> from specialty data
@@ -242,6 +250,12 @@ function DocEditProfile(props) {
     } else if (allContents.credentials&&allContents.doctorData&&allContents.specialtyList&&allContents.conditionsList&&renderCount==0){
       setRenderCount(1);
     }
+    
+    return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
+
+    // return [userInfo, storedSearchInfo];
+  };
+
   // submit success snackbar
   // const [open, setOpen] = React.useState(false);
 
@@ -1527,7 +1541,12 @@ export default connect(mapStateToProps, mapActionsToProps)(DocEditProfile);
 
 // ---------------  autocomplete lists (need to add more later) ---------------- //
 
-const hospitals = ["Pantai Hospital Kuala Lumpur", "Sunway Medical Centre"];
+const hospitals = ["Pantai Hospital Kuala Lumpur", 
+"Sunway Medical Centre",
+'Hospital Kuala Lumpur',
+'Tung Shin Hospital',
+'University Malaya Medical Centre',
+'Prince Court Medical Centre'];
 
 const states = [
   "Kuala Lumpur",
@@ -1549,10 +1568,15 @@ const states = [
 ];
 
 const specialties = [
-  "Allergy and Immunology",
-  "Anesthesiology",
-  "Arthroplasty",
+  "General Surgery",
+  "Cardiology",
+  "Ophthalmology",
   "Gastroenterology",
+  'Neurology, Obstetrics & Gynecology',
+  'Otorhinolaryngology',
+  'Urology',
+  'Paediatrics',
+  'Orthopaedics'
 ];
 
 const languageList = ["English", "Malay", "Mandarin", "Tamil"];
