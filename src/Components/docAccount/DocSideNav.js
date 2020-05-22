@@ -99,7 +99,10 @@ function DocSideNav(props) {
     // michelle 5/16: 这边新加了两个state： specialty 和 hospital
     // remain undefined for general users/doctors that haven't filled out their profiles
     specialty: "",
-    hospital: ""
+    hospital: "",
+
+    profileShowWarning: "",
+    verifyShowWarning: ""
   })
 
   const indicator = "";
@@ -110,7 +113,7 @@ function DocSideNav(props) {
   // initial render: only gets called once
   useEffect(() => {
     // if (renderCount == 0) {
-      if (!indicator) {
+    if (!indicator) {
       return displayStoredData();
     }
   }, []);
@@ -122,12 +125,17 @@ function DocSideNav(props) {
     fetchData()
       .then((res) => {
         // if res exists (if the second async function did run), add res to returnedInfo
+        console.log(res)
         if (res) {
           returnedInfo.push(res);
         }
 
+        
+
         // let credentials = returnedInfo[0].data.credentials;
         let username = returnedInfo[0].username;
+
+        console.log(username)
 
         let storedTags;
         let likes;
@@ -136,10 +144,30 @@ function DocSideNav(props) {
         let doctorSpecialty;
         let doctorHospital;
 
+        let profileWarning = false;
+        let verifyWarning = false;
+
+
+        // check if all fields of verification have been filled.
+        if (returnedInfo[0].verification) {
+
+          const verifyHasEmpty =
+            !Object.values(returnedInfo[0].verification).some(x => (x !== null && x !== ""));
+
+          const notAllFilled = Object.keys(returnedInfo[0].verification).length !== 5;
+
+          verifyWarning = (verifyHasEmpty || notAllFilled) ? true : false;
+        }
+
+
+
         // if we did not go into search data --> no specialty exists
         if (returnedInfo.length == 1) {
           storedTags = "";
           likes = 0;
+          // no data in search = never submitted profile
+          profileWarning = true;
+
         } else {
 
           // michelle 5/16: 这两句原来前面有let  名字也不太一样 你可以直接替换掉
@@ -151,6 +179,9 @@ function DocSideNav(props) {
           // let doctorInfo = returnedInfo[1].data[specialty].hospitals[hospital].doctors[username];
           storedTags = doctorInfo.tags ? doctorInfo.tags : "";
           likes = doctorInfo.likes ? doctorInfo.likes : 0;
+
+          // has data in search data = has submitted profile
+          profileWarning = false;
         }
 
 
@@ -163,12 +194,15 @@ function DocSideNav(props) {
 
           // michelle 5/16: 这两句是新加的
           specialty: doctorSpecialty,
-          hospital: doctorHospital
+          hospital: doctorHospital,
+
+          verifyShowWarning: verifyWarning,
+          profileShowWarning: profileWarning
         })
 
 
         // if (username) {
-          setRenderCount(1);
+        setRenderCount(1);
         // }
       }).catch((error) => {
         console.error(error);
@@ -181,6 +215,7 @@ function DocSideNav(props) {
     // wait for the first async function to finish before peoceeding
     return await getStoredCredentials()
       .then((res) => {
+
         // add result from the first async function to returnedInfo
         const credentials = res.data.credentials;
         returnedInfo.push(credentials);
@@ -202,6 +237,9 @@ function DocSideNav(props) {
 
 
   let getSpecialtyData = async (searchSpecialty, searchHospital) => {
+    console.log("I have entered searching....")
+    console.log(searchSpecialty)
+    console.log(searchHospital)
     let specialtyData =
       await axios.get(proxyurl + axios.defaults.baseURL + "getdoctorusersearchinfo",
         {
@@ -212,7 +250,6 @@ function DocSideNav(props) {
         });
     return specialtyData;
   }
-
 
 
 
@@ -260,7 +297,7 @@ function DocSideNav(props) {
           }
           props.updateDoctorProfilePic(updateInfo);
         }
-        
+
       }).catch((error) => {
         console.error(error);
       });
@@ -376,10 +413,10 @@ function DocSideNav(props) {
               ) : <br></br>}
 
               {userInfo.userType == "doctor" ? (
-              <div className={classes.tagBox}>
-                  { tagList }
-              </div>
-              ) : <br/>}
+                <div className={classes.tagBox}>
+                  {tagList}
+                </div>
+              ) : <br />}
 
             </Box>
 
@@ -398,19 +435,25 @@ function DocSideNav(props) {
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
                 {/* 第一次user要显示这个tooltip */}
-                <Tooltip
-                  disableFocusListener
-                  placement="right"
-                  title={
-                    <h2 style={{ fontWeight: "normal", lineHeight: 1.5 }}>
-                      2. Set up your profile <br></br>
-                      <br></br>
-                      Add your personal, work, and expertise information.
-                </h2>
-                  }
-                >
-                  <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
-                </Tooltip>
+
+                {userInfo.profileShowWarning ? (
+                  <Tooltip
+                    disableFocusListener
+                    placement="right"
+                    title={
+                      <h2 style={{ fontWeight: "normal", lineHeight: 1.5 }}>
+                        2. Set up your profile <br></br>
+                        <br></br>
+                        Add your personal, work, and expertise information.
+                  </h2>
+                    }
+                  >
+                    <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
+                  </Tooltip>
+                ) : (
+                    ""
+                  )}
+
               </ListItem>
             ) : ""}
 
@@ -444,41 +487,46 @@ function DocSideNav(props) {
 
             {/* Account verification */}
             {userInfo.userType == "doctor" ? (
-            <ListItem
-              button
-              selected={selectedIndex === 3}
-              onClick={(event) => handleListItemClick(event, 3)}
-              style={{ position: "relative" }}
-              component="a"
-              href="/accountverification"
-            >
-              <ListItemIcon style={{ marginLeft: 20 }}>
-                <VerifiedUserIcon />
-              </ListItemIcon>
-              <ListItemText primary="Account Verification" />
-              {/* 第一次user要显示这个tooltip */}
-
-              <Tooltip
-                disableFocusListener
-                placement="right"
-                title={
-                  <h2 style={{ fontWeight: "normal", lineHeight: 1.5 }}>
-                    Welcome Alex! Before you start: <br></br>
-                    <br></br>
-                    1. Verify your account <br></br>
-                    <br></br>
-                    Once you verified your account, you will be able to publish
-                    your profile.
-                </h2>
-                }
+              <ListItem
+                button
+                selected={selectedIndex === 3}
+                onClick={(event) => handleListItemClick(event, 3)}
+                style={{ position: "relative" }}
+                component="a"
+                href="/accountverification"
               >
-                <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
-              </Tooltip>
-            </ListItem>
-            ) : "" }
+                <ListItemIcon style={{ marginLeft: 20 }}>
+                  <VerifiedUserIcon />
+                </ListItemIcon>
+                <ListItemText primary="Account Verification" />
+                {/* 第一次user要显示这个tooltip */}
+
+                {userInfo.verifyShowWarning ? (
+                  <Tooltip
+                    disableFocusListener
+                    placement="right"
+                    title={
+                      <h2 style={{ fontWeight: "normal", lineHeight: 1.5 }}>
+                        Welcome Alex! Before you start: <br></br>
+                        <br></br>
+                        1. Verify your account <br></br>
+                        <br></br>
+                        Once you verified your account, you will be able to publish
+                        your profile.
+                  </h2>
+                    }
+                  >
+                    <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
+                  </Tooltip>
+                ) : (
+                    ""
+                  )}
+
+              </ListItem>
+            ) : ""}
 
             {/* Account settings */}
-            <ListItem
+            {/* <ListItem
               button
               selected={selectedIndex === 4}
               onClick={(event) => handleListItemClick(event, 4)}
@@ -489,7 +537,7 @@ function DocSideNav(props) {
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Account Settings" />
-            </ListItem>
+            </ListItem> */}
           </List>
         </div>
       </Fragment>

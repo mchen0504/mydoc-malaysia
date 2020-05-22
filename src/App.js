@@ -883,16 +883,16 @@ function App() {
             />;
   };
 
-  const renderAccountSettings = (renderProps) => {
-    return <Account 
-            {...renderProps}
-            updateTargetDoc={updateTargetDoc}
-            updateTargetHos={updateTargetHos}
-            setProfileBackToDestination={setProfileBackToDestination} 
-            database = {database} 
-            index={5} 
-            />;
-  };
+  // const renderAccountSettings = (renderProps) => {
+  //   return <Account 
+  //           {...renderProps}
+  //           updateTargetDoc={updateTargetDoc}
+  //           updateTargetHos={updateTargetHos}
+  //           setProfileBackToDestination={setProfileBackToDestination} 
+  //           database = {database} 
+  //           index={5} 
+  //           />;
+  // };
 
 
 
@@ -950,12 +950,12 @@ function App() {
                 render={renderAccountVerification}
                 index={4}
               ></Route>
-              <Route
+              {/* <Route
                 exact
                 path="/accountsettings"
                 render={renderAccountSettings}
                 index={5}
-              ></Route>
+              ></Route> */}
             </div>
           </Switch>
         </Router>

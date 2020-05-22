@@ -43,6 +43,8 @@ function DocAccountVerification(props) {
     identityCardName: "",
     medicalDegreeSrc: "",
     medicalDegreeName: "",
+
+    hasEmpty: ""
   })
 
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
@@ -57,6 +59,9 @@ function DocAccountVerification(props) {
     // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
+
+
+        console.log(Object.keys(res).length === 5)
         // set state
         setState({
           medicalRegistrationNumber: res.medicalRegistrationNumber,
@@ -64,6 +69,8 @@ function DocAccountVerification(props) {
           identityCardName: res.identityCardName,
           medicalDegreeSrc: res.medicalDegreeSrc,
           medicalDegreeName: res.medicalDegreeName,
+
+          hasEmpty: (Object.keys(res).length === 5) ? false : true
         })
         // update renderCount to 1 to stop react from making any more useEffect call
         setRenderCount(1);
@@ -135,6 +142,15 @@ function DocAccountVerification(props) {
   };
 
 
+  // check if all fields are filled out on verification page
+  // const hasEmpty = Object.values(currentInfo).some(x => (typeof x === "undefined"));
+
+
+  // console.log(typeof(currentInfo.medicalDegreeName))
+
+
+  console.log(currentInfo.hasEmpty)
+
   if (!currentInfo.medicalRegistrationNumber) {
     // loading spinner if prop data is not yet available
     return (
@@ -168,13 +184,18 @@ function DocAccountVerification(props) {
             {/* 本来有openSuccessMsg和closeSuccessMsg两个function  现在不用了 可以删掉*/}
             {open ? <Alert style={{marginBottom: '1rem'}}>Successfully submitted!</Alert> : ""}
 
-            <Box display="flex" flexDirection="row">
-              {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
-              <CancelIcon style={{ color: "red", marginRight: 10 }} />
-              <Typography variant="body1">
-                Account not verified<br></br>
-              </Typography>
-            </Box>
+            {currentInfo.hasEmpty ? (
+              <Box display="flex" flexDirection="row">
+                {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
+                <CancelIcon style={{ color: "red", marginRight: 10 }} />
+                <Typography variant="body1">
+                  Account not verified<br></br>
+                </Typography>
+              </Box>
+            ) : (
+              ""
+            )}
+
             <br></br>
             <br></br>
             {/* Meidcal reg number */}

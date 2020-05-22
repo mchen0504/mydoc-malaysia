@@ -10,6 +10,7 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Carousel from "react-elastic-carousel";
 
+
 //components
 import TopRatedDocCard from "./TopRatedDocCard";
 
@@ -52,7 +53,13 @@ const useStyles = makeStyles((theme) => ({
       border: "5px solid rgba(0, 0, 0, 0.05)",
     },
   },
+
+  topRatedCard: {
+    paddingBottom: 10
+  }
+
 }));
+
 
 // for Top Rated Doctors, Top Rated Specialty, Insurance Accepted section (used in HospProfile.js under pages folder)
 export default function DocInfo(props) {
@@ -83,7 +90,7 @@ export default function DocInfo(props) {
   doctorSortList.sort((a,b)=>{return b.NumberOfLikes - a.NumberOfLikes});
   let doctorCards = [];
   doctorSortList.forEach((doc, index)=>{
-    let card = <TopRatedDocCard {...props} targetDoc={doc} key={index}/>
+    let card = <TopRatedDocCard className={classes.topRatedCard} {...props} targetDoc={doc} key={index}/>
     doctorCards.push(card);
   })
 
@@ -122,7 +129,7 @@ export default function DocInfo(props) {
           <br></br>
           {/* 这里出现top rated doctors 的卡片*/}
           {/* eshin added 5/4/20 */}
-          <Carousel breakPoints={breakPoints}>
+          <Carousel className={classes.button} breakPoints={breakPoints}>
             {doctorCards}
           </Carousel>
         </Box>

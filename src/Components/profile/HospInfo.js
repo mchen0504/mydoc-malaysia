@@ -455,12 +455,18 @@ function HospInfo(props) {
     userOption: "",
   });
 
-  const handleLoginOpen = () => {
-    setLoginOpen(true);
+  const handleLoginOpen = (option) => {
+    setLoginOpen({
+      open: true,
+      userOption: option,
+    });
   };
 
   const handleLoginClose = () => {
-    setLoginOpen(false);
+    setLoginOpen({
+      ...loginOpen,
+      open: false,
+    });
   };
 
 

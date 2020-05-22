@@ -81,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
 
   reportButton: {
     marginRight: "1rem",
+  },
+
+  signUpInButton: {
+    paddingLeft: "7.5rem"
   }
 }));
 
@@ -140,6 +144,9 @@ function DocInfo(props) {
         console.log(res);
         console.log('hi-4');
         console.log(props.targetDoc);
+
+
+        
         // like
         let listOfLikes;
         let liked = false;
@@ -679,6 +686,7 @@ if (loginOpen.userOption == "Recommend") {
                       </Box>
                       <Box display="flex" mt={2} mb={2}>
                         <Button
+                          className={classes.signUpInButton}
                           variant="contained"
                           color="primary"
                           style={{ textTransform: "none" }}
@@ -692,6 +700,7 @@ if (loginOpen.userOption == "Recommend") {
 
                       <Box display="flex" mb={2}>
                         <Button
+                          className={classes.signUpInButton}
                           variant="outlined"
                           color="primary"
                           style={{ textTransform: "none" }}
