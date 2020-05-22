@@ -43,6 +43,8 @@ function DocAccountVerification(props) {
     identityCardName: "",
     medicalDegreeSrc: "",
     medicalDegreeName: "",
+
+    hasEmpty: ""
   })
 
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
@@ -64,6 +66,8 @@ function DocAccountVerification(props) {
           identityCardName: res.identityCardName,
           medicalDegreeSrc: res.medicalDegreeSrc,
           medicalDegreeName: res.medicalDegreeName,
+
+          hasEmpty: (Object.keys(res).length === 5) ? false : true
         })
         // update renderCount to 1 to stop react from making any more useEffect call
         setRenderCount(1);
@@ -168,6 +172,8 @@ function DocAccountVerification(props) {
             {/* 本来有openSuccessMsg和closeSuccessMsg两个function  现在不用了 可以删掉*/}
             {open ? <Alert style={{marginBottom: '1rem'}}>Successfully submitted!</Alert> : ""}
 
+
+            {currentInfo.hasEmpty ? (
             <Box display="flex" flexDirection="row">
               {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
               <CancelIcon style={{ color: "red", marginRight: 10 }} />
@@ -175,6 +181,10 @@ function DocAccountVerification(props) {
                 Account not verified<br></br>
               </Typography>
             </Box>
+            ) : (
+              ""
+            )}
+
             <br></br>
             <br></br>
             {/* Meidcal reg number */}

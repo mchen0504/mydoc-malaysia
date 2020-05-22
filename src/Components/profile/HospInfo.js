@@ -85,6 +85,10 @@ const useStyles = makeStyles((theme) => ({
       border: "5px solid rgba(0, 0, 0, 0.05)",
     },
   },
+
+  signUpInButton: {
+    paddingLeft: "7.5rem"
+  }
 }));
 
 //for hospital image + basic info + likes
@@ -157,13 +161,13 @@ function HospInfo(props) {
         let liked = false;
 
         // if the user has never liked any hospitals
-        if (!res[1].likeHistory) {
+        if (!res.likeHistory) {
           listOfLikes = [];
         } else {
-          if (res[1].likeHistory.hospitals) {
-            listOfLikes = res[1].likeHistory.hospitals;
+          if (res.likeHistory.hospitals) {
+            listOfLikes = res.likeHistory.hospitals;
             // if the user has liked this particular hospital before
-            const index = res[1].likeHistory.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase());
+            const index = res.likeHistory.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase());
             if (index != -1) {
               liked = true;
             }
@@ -177,13 +181,13 @@ function HospInfo(props) {
         let saved = false;
 
         // if the user has never saved any hospitals
-        if (!res[1].saved) {
+        if (!res.saved) {
           listOfSaves = [];
         } else {
-          if (res[1].saved.hospitals) {
-            listOfSaves = res[1].saved.hospitals;
+          if (res.saved.hospitals) {
+            listOfSaves = res.saved.hospitals;
             // if the user has saved this particular hospital before
-            const index = res[1].saved.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase())
+            const index = res.saved.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase())
             if (index != -1) {
               saved = true;
             }
@@ -196,14 +200,14 @@ function HospInfo(props) {
         setState({
           hasLiked: liked,
           likedList: listOfLikes,
-          numLikes: props.targetHos.likes,
+          numLikes: props.targetHos.likes ? props.targetHos.likes : 0,
 
           hasSaved: saved,
           savedList: listOfSaves,
 
-          reportedList: res[1].reportedHospitals ? res[1].reportedHospitals : "",
-          numReports: res[0].report ? res[0].report.reportCount : 0,
-          reportReasonsList: res[0].report ? res[0].report.reportReasons : "",
+          reportedList: res.reportedHospitals ? res.reportedHospitals : [],
+          numReports: props.targetHos.report ? props.targetHos.report.reportCount : 0,
+          reportReasonsList: props.targetHos.report ? props.targetHos.report.reportReasons : [],
           oneReason: ""
         });
         console.log('likeSaveInfo');
@@ -217,9 +221,12 @@ function HospInfo(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    let [storedSearchInfo, userStoredCredentials] =
-      await Promise.all([props.searchInfo, props.storedCredentials]);
-    return [storedSearchInfo, userStoredCredentials];
+    // let [storedSearchInfo, userStoredCredentials] =
+    //   await Promise.all([props.searchInfo, props.storedCredentials]);
+    // return [storedSearchInfo, userStoredCredentials];
+
+    let storedCredentials = await props.storedCredentials;
+    return storedCredentials;
   }
 
 
@@ -725,6 +732,7 @@ function HospInfo(props) {
                     </Box>
                     <Box display="flex" mt={2} mb={2}>
                       <Button
+                        className={classes.signUpInButton}
                         variant="contained"
                         color="primary"
                         style={{ textTransform: "none" }}
@@ -738,6 +746,7 @@ function HospInfo(props) {
 
                     <Box display="flex" mb={2}>
                       <Button
+                        className={classes.signUpInButton}
                         variant="outlined"
                         color="primary"
                         style={{ textTransform: "none" }}

@@ -226,6 +226,10 @@ function LikeHistorySaved(props) {
   //   )
   // })
 
+
+
+  console.log(doctorCards)
+
     return (
       <a id="likehistory" className={classes.anchor}>
         <Grid container spacing={0}>

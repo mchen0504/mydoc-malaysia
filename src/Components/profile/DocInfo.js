@@ -81,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
 
   reportButton: {
     marginRight: "1rem",
+  },
+
+  signUpInButton: {
+    paddingLeft: "7.5rem"
   }
 }));
 
@@ -144,13 +148,13 @@ function DocInfo(props) {
         let listOfLikes;
         let liked = false;
         // if the user has never liked any doctors
-        if (!res[1].likeHistory) {
+        if (!res.likeHistory) {
           listOfLikes = [];
         } else {
-          if (res[1].likeHistory.doctors) {
-            listOfLikes = res[1].likeHistory.doctors;
+          if (res.likeHistory.doctors) {
+            listOfLikes = res.likeHistory.doctors;
             // if the user has liked this particular doctor before
-            const index = res[1].likeHistory.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
+            const index = res.likeHistory.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
             if (index != -1) {
               liked = true;
             }
@@ -164,13 +168,13 @@ function DocInfo(props) {
         let saved = false;
 
         // if the user has never saved any doctors
-        if (!res[1].saved) {
+        if (!res.saved) {
           listOfSaves = [];
         } else {
-          if (res[1].saved.doctors) {
-            listOfSaves = res[1].saved.doctors;
+          if (res.saved.doctors) {
+            listOfSaves = res.saved.doctors;
             // if the user has saved this particular doctor before
-            const index = res[1].saved.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
+            const index = res.saved.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
             if (index != -1) {
               saved = true;
             }
@@ -179,17 +183,21 @@ function DocInfo(props) {
           }
         };
         setState({
-          username: res[1].username,
+          username: res.username,
           hasLiked: liked,
           likedList: listOfLikes,
-          numLikes: props.targetDoc.NumberOfLikes,
+          numLikes: props.targetDoc.NumberOfLikes ? props.targetDoc.NumberOfLikes : 0,
 
           hasSaved: saved,
           savedList: listOfSaves,
 
-          reportedList: res[1].reportedDoctors ? res[1].reportedDoctors : [],
-          numReports: res[0].report ? res[0].report.reportCount : 0,
-          reportReasonsList: res[0].report ? res[0].report.reportReasons : [],
+          reportedList: res.reportedDoctors ? res.reportedDoctors : [],
+          // numReports: res[0].report ? res[0].report.reportCount : 0,
+          numReports: props.targetDoc.report ? props.targetDoc.report.reportCount : 0,
+
+          // reportReasonsList: res[0].report ? res[0].report.reportReasons : [],
+          reportReasonsList: props.targetDoc.report ? props.targetDoc.report.reportReasons : [],
+
           oneReason: ""
         });
 
@@ -201,9 +209,10 @@ function DocInfo(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    let [storedSearchInfo, userStoredCredentials] =
-      await Promise.all([props.searchInfo, props.storedCredentials]);
-    return [storedSearchInfo, userStoredCredentials];
+    // let [storedSearchInfo, userStoredCredentials] =
+    //   await Promise.all([props.searchInfo, props.storedCredentials]);
+    let storedCredentials = await props.storedCredentials;
+    return storedCredentials;
   }
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -520,10 +529,14 @@ if (loginOpen.userOption == "Recommend") {
   } else if (props.backTo == "hospprofile") {
     returnPageDesc = "Hospital Profile";
   } else if (props.backTo == "likeHistory"){
-    returnPageDesc = "Liked History Page";
+    returnPageDesc = "Like History";
   } else {
-    returnPageDesc = "Saved History Page";
+    returnPageDesc = "Saved";
   }
+
+
+
+  console.log(props.targetDoc)
 
   return (
     <div>
@@ -672,6 +685,7 @@ if (loginOpen.userOption == "Recommend") {
                       </Box>
                       <Box display="flex" mt={2} mb={2}>
                         <Button
+                          className={classes.signUpInButton}
                           variant="contained"
                           color="primary"
                           style={{ textTransform: "none" }}
@@ -685,6 +699,7 @@ if (loginOpen.userOption == "Recommend") {
 
                       <Box display="flex" mb={2}>
                         <Button
+                          className={classes.signUpInButton}
                           variant="outlined"
                           color="primary"
                           style={{ textTransform: "none" }}
@@ -836,6 +851,7 @@ if (loginOpen.userOption == "Recommend") {
             </Box>
           </Box>
           {console.log(props.targetDoc)}
+
           <DocTags tagInfo={props.targetDoc["tags"]} targetDoc={props.targetDoc} handleLoginOpen={handleLoginOpen} />
         </Grid>
 

@@ -98,28 +98,24 @@ function Tags(props) {
   }, [allTags]);
 
   const displayStoredData = () => {
-    // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
-        // set state
-        console.log(res);
         let userStored;
-        if (!res[1].addedDoctorTags) {
+        if (!res.addedDoctorTags) {
           userStored = "";
         } else {
-          console.log(props.targetDoc.userName);
-          if (!res[1].addedDoctorTags[props.targetDoc.userName]) {
+          if (!res.addedDoctorTags[props.targetDoc.userName]) {
+
             console.log('No stored tags before');
             userStored = "";
           } else {
-            userStored = res[1].addedDoctorTags[props.targetDoc.userName];
+            userStored = res.addedDoctorTags[props.targetDoc.userName];
           }
         }
         setState({
-          currentTags: res[0].tags ? props.targetDoc.tags : "",
+          currentTags: props.tagInfo ? props.tagInfo : "",
           storedUserTags: userStored
         })
-        // update renderCount to 1 to stop react from making any more useEffect call
         setRenderCount(1);
       }).catch((error) => {
         console.error(error);
@@ -129,9 +125,12 @@ function Tags(props) {
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
     // making two asynchronous calls: one from searchInfo and one from user credentials info
-    let [storedSearchInfo, userStoredCredentials] =
-      await Promise.all([props.searchInfo, props.storedCredentials]);
-    return [storedSearchInfo, userStoredCredentials];
+    // let [storedSearchInfo, userStoredCredentials] =
+    //   await Promise.all([props.searchInfo, props.storedCredentials]);
+    // return [storedSearchInfo, userStoredCredentials];
+
+    let storedCredentials = await props.storedCredentials;
+    return storedCredentials;
   }
 
 
@@ -196,12 +195,12 @@ function Tags(props) {
           // otherwise (no one had added tags for the doctor before), use the new tag to start the list
           currentTags: allTags.currentTags ? [
             ...prevState.currentTags, { tagName: tag, count: 1 }
-          ] : [ { tagName: tag, count: 1 } ],
+          ] : [{ tagName: tag, count: 1 }],
           // if the user has selected tags for this doctor before, add the new tag to the list
           // otherwise, use the new tag to start a list
           storedUserTags: allTags.storedUserTags ? [
             ...prevState.storedUserTags, tag
-          ] : [ tag ]
+          ] : [tag]
         }))
       }
     }
@@ -251,7 +250,7 @@ function Tags(props) {
       } else {
         selected = false;
       }
-    // all tags have never been selected before by the user
+      // all tags have never been selected before by the user
     } else {
       selected = false;
     }
@@ -271,7 +270,7 @@ function Tags(props) {
 
     console.log(props.targetDoc);
     const updateInfo = {
-      specialty:props.targetDoc.Specialty,
+      specialty: props.targetDoc.Specialty,
       hospital: props.targetDoc.Hospital,
       username: props.targetDoc.userName,
       tags: allTags["currentTags"]
@@ -279,6 +278,8 @@ function Tags(props) {
     props.updateDoctorTags(updateInfo);
     setOpen(false);
   }
+
+  console.log(props.tagInfo)
 
   if (renderCount == 0) {
     // loading spinner if prop data is not yet available
@@ -325,13 +326,13 @@ function Tags(props) {
           ) : (
               // michelle 5/16: 这边原来是“”  现在用下面的button替换掉
               <Button
-              color="primary"
-              startIcon={<EditOutlinedIcon />}
-              onClick={() => props.handleLoginOpen("Tag")}
-              style={{ textTransform: "none" }}
-              className={classes.editTagsButton}
-            >
-              Edit Tags
+                color="primary"
+                startIcon={<EditOutlinedIcon />}
+                onClick={() => props.handleLoginOpen("Tag")}
+                style={{ textTransform: "none" }}
+                className={classes.editTagsButton}
+              >
+                Edit Tags
           </Button>
             )}
         </div>

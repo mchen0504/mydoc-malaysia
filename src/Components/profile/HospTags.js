@@ -104,17 +104,17 @@ function HospTags(props) {
       .then((res) => {
         // set state
         let userStored;
-        if (!res[1].addedHospTags) {
+        if (!res.addedHospTags) {
           userStored = "";
         } else {
-          if (!res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
+          if (!res.addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
             userStored = "";
           } else {
-            userStored = res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
+            userStored = res.addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
           }
         }
         setState({
-          currentTags: res[0].tags ? props.targetHos.tags : "",
+          currentTags: props.tagInfo ? props.tagInfo : "",
           storedUserTags: userStored
         })
         // update renderCount to 1 to stop react from making any more useEffect call
@@ -127,9 +127,12 @@ function HospTags(props) {
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
     // making two asynchronous calls: one from searchInfo and one from user credentials info
-    let [storedSearchInfo, userStoredCredentials] =
-      await Promise.all([props.searchInfo, props.storedCredentials]);
-    return [storedSearchInfo, userStoredCredentials];
+    // let [storedSearchInfo, userStoredCredentials] =
+    //   await Promise.all([props.searchInfo, props.storedCredentials]);
+    // return [storedSearchInfo, userStoredCredentials];
+
+    let storedCredentials = await props.storedCredentials;
+    return storedCredentials;
   }
 
   const [open, setOpen] = React.useState(false);
