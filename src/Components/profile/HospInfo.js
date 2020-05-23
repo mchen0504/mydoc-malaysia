@@ -100,14 +100,20 @@ function HospInfo(props) {
   const authenticated = props.authenticated;
 
   const backToRes = () => {
+    console.log('history:')
+    console.log(props.backTo);
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
+        console.log(1);
         props.history.push("/results");
       } else if (props.backTo == "hospprofile") {
-        props.history.push("/hospprofile");
+        console.log(2);
+        props.history.push("/results");
       } else if (props.backTo == "likeHistory"){
+        console.log(3);
         props.history.push("/likehistory");
       } else {
+        console.log(4);
         props.history.push("/saved");
       }
     }
@@ -117,7 +123,7 @@ function HospInfo(props) {
   if (props.backTo == "resultsPage"){
     returnPageDesc = "Result Page";
   } else if (props.backTo == "hospprofile") {
-    returnPageDesc = "Hospital Profile";
+    returnPageDesc = "Result Page";
   } else if (props.backTo == "likeHistory"){
     returnPageDesc = "Liked History Page";
   } else {

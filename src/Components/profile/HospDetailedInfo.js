@@ -66,7 +66,6 @@ export default function DocInfo(props) {
   let doctors = props.targetHos.doctors;
   let conditionList = [];
   let doctorSortList = [];
-  console.log(doctors);
   for (let doctor in doctors){
     let targetDoc = doctors[doctor];
     targetDoc.Conditions = targetDoc.conditions.map((item)=>{
@@ -104,7 +103,6 @@ export default function DocInfo(props) {
     return insuranceCards;
   });
 
-  console.log(props)
   
   return (
     <Grid container spacing={0}>

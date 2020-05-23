@@ -56,26 +56,6 @@ const filterConditionOptions = createFilterOptions({
   stringify: (option) => option.condition,
 });
 
-// specialties options
-// const specialties = [
-//   { specialty: "Allergy and Immunology" },
-//   { specialty: "Anesthesiology" },
-//   { specialty: "Gastroenterology" },
-// ];
-// doctor name options
-const docNames = [
-  { name: "Alex Leow" },
-  { name: "Alex Tan" },
-  { name: "Bryan Lee" },
-];
-// hospital options
-const hospNames = [
-  { hospName: "Pantai Hospital Kuala Lumpur" },
-  { hospName: "Sunway Medical" },
-];
-// Conditions options
-// const conditions = [{ condition: "Fever" }, { condition: "Headache" }];
-
 function TabPanel(props) {
   const { children, value, index } = props;
   return value === index && <Box mt={2}>{children}</Box>;
@@ -136,6 +116,35 @@ export default function SearchTabs(props) {
     props.getSearchMethod(method);
   };
 
+
+  // He Chen 2020 5/22
+  let docNames = [];
+  let hospNames = [];
+
+  const getDocHosNameList = () => {
+    // console.log(props.database === undefined);
+    let allInfo = props.database;
+    for (let spec in allInfo){
+      let targetSpec = allInfo[spec];
+      for (let hos in targetSpec.hospitals){
+        let hospital = targetSpec.hospitals[hos];
+        hospNames.push({hospName : hospital.name});
+        let doctorsList = hospital.doctors;
+        for (let docId in doctorsList){
+          docNames.push({name:doctorsList[docId].name});
+        }
+      }
+    }
+    docNames = new Set(docNames.map(e => JSON.stringify(e)));
+    docNames = Array.from(docNames).map(e => JSON.parse(e));
+    hospNames = new Set(hospNames.map(e => JSON.stringify(e)));
+    hospNames = Array.from(hospNames).map(e => JSON.parse(e));
+  }
+
+  getDocHosNameList();
+  // He Chen 2020 5/22 ends
+
+
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if(newValue){
       props.setSearchMethod('Specialty');
@@ -191,8 +200,10 @@ export default function SearchTabs(props) {
           options={specialties}
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterSpecialtyOptions}
+          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
+            // disabled={true}
               {...params}
               label="Search by specialty"
               variant="filled"
@@ -212,6 +223,7 @@ export default function SearchTabs(props) {
           options={docNames}
           getOptionLabel={(option) => option.name}
           filterOptions={filterDocOptions}
+          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -240,6 +252,7 @@ export default function SearchTabs(props) {
           options={hospNames}
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterHospOptions}
+          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -267,6 +280,7 @@ export default function SearchTabs(props) {
           options={conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterConditionOptions}
+          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => {
             if(props.conditionLabel != ""){
               params.inputProps.value = props.conditionLabel;

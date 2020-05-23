@@ -102,6 +102,7 @@ export default function Header(props) {
   } else {
     headerDisplay = <div>
       <SearchTabs
+                  database = {props.database}
                   getKeyWords={props.getKeyWords}
                   getSearchMethod={props.getSearchMethod}
                   setSearchMethod={props.setSearchMethod}
