@@ -1541,8 +1541,8 @@ export default connect(mapStateToProps, mapActionsToProps)(DocEditProfile);
 
 // ---------------  autocomplete lists (need to add more later) ---------------- //
 
-const hospitals = ["Pantai Hospital Kuala Lumpur", 
-"Sunway Medical Centre",
+const hospitals = [
+"Pantai Hospital Kuala Lumpur", 
 'Hospital Kuala Lumpur',
 'Tung Shin Hospital',
 'University Malaya Medical Centre',
@@ -1572,11 +1572,12 @@ const specialties = [
   "Cardiology",
   "Ophthalmology",
   "Gastroenterology",
-  'Neurology, Obstetrics & Gynecology',
+  "Neurology",
+  "Obstetrics & Gynecology",
   'Otorhinolaryngology',
   'Urology',
   'Paediatrics',
   'Orthopaedics'
 ];
 
-const languageList = ["English", "Malay", "Mandarin", "Tamil"];
+const languageList = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];

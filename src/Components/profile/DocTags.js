@@ -14,10 +14,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 import { updateUserStoredDocTags } from "../../redux/actions/userActions";
 
 import { updateDoctorTags } from "../../redux/actions/dataActions";
+
+const proxyurl = "https://cors-anywhere.herokuapp.com/";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -101,19 +105,21 @@ function Tags(props) {
     getStoredData()
       .then((res) => {
         let userStored;
-        if (!res.addedDoctorTags) {
+        if (!res[1].addedDoctorTags) {
           userStored = "";
         } else {
-          if (!res.addedDoctorTags[props.targetDoc.userName]) {
+          if (!res[1].addedDoctorTags[props.targetDoc.userName]) {
 
             console.log('No stored tags before');
             userStored = "";
           } else {
-            userStored = res.addedDoctorTags[props.targetDoc.userName];
+            userStored = res[1].addedDoctorTags[props.targetDoc.userName];
           }
         }
+
+        console.log(res[0])
         setState({
-          currentTags: props.tagInfo ? props.tagInfo : "",
+          currentTags: res[0].data.tags ? res[0].data.tags : "",
           storedUserTags: userStored
         })
         setRenderCount(1);
@@ -125,12 +131,19 @@ function Tags(props) {
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
     // making two asynchronous calls: one from searchInfo and one from user credentials info
-    // let [storedSearchInfo, userStoredCredentials] =
-    //   await Promise.all([props.searchInfo, props.storedCredentials]);
-    // return [storedSearchInfo, userStoredCredentials];
+    let [storedSearchInfo, userStoredCredentials] =
+      await Promise.all([axios.get(proxyurl + axios.defaults.baseURL + "getallsearchdata",
+      {
+        params: {
+          specialty: props.targetDoc.specialty,
+          hospital: props.targetDoc.Hospital,
+          username: props.targetDoc.userName
+        }
+      }), props.storedCredentials]);
+    return [storedSearchInfo, userStoredCredentials];
 
-    let storedCredentials = await props.storedCredentials;
-    return storedCredentials;
+    // let storedCredentials = await props.storedCredentials;
+    // return storedCredentials;
   }
 
 
@@ -270,7 +283,7 @@ function Tags(props) {
 
     console.log(props.targetDoc);
     const updateInfo = {
-      specialty: props.targetDoc.Specialty,
+      specialty: props.targetDoc.specialty,
       hospital: props.targetDoc.Hospital,
       username: props.targetDoc.userName,
       tags: allTags["currentTags"]

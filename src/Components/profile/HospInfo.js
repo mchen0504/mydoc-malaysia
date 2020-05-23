@@ -153,9 +153,6 @@ function HospInfo(props) {
     // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
-        console.log('hi im here')
-        console.log(props.targetHos)
-        console.log(res)
         // like
         let listOfLikes;
         let liked = false;
@@ -210,8 +207,6 @@ function HospInfo(props) {
           reportReasonsList: props.targetHos.report ? props.targetHos.report.reportReasons : [],
           oneReason: ""
         });
-        console.log('likeSaveInfo');
-        console.log(likeSaveInfo);
 
         // setRenderCount(1);
       }).catch((error) => {
@@ -249,7 +244,6 @@ function HospInfo(props) {
         })
       })
     } else {
-      console.log(props.targetHos);
       const newHospInfo = {
         name: props.targetHos.name,
         address: props.targetHos.address,
@@ -260,7 +254,6 @@ function HospInfo(props) {
       };
 
       likeSaveInfo.likedList.push(newHospInfo);
-      console.log(likeSaveInfo);
       setState(
         // add to the list if the list contains other doctors, otherwise use this doctor to start a list
         (prevState) => {
@@ -278,7 +271,6 @@ function HospInfo(props) {
   const toggleLike = () => {
     waitLikeUpdate()
       .then((res) => {
-        console.log(likeSaveInfo.likedList);
         props.changeHospLikeStatus(likeSaveInfo.likedList);
         const updateInfo = {
           specialty: props.targetHos.relatedSpecialty,
@@ -300,19 +292,15 @@ function HospInfo(props) {
 
   const updateLocalDocList = (updateInfo)=>{
     // set location target list location
-    console.log('local list');
     let newHosList = [];
     for (let hos in props.hospitalInfo){
       let hosItem = props.hospitalInfo[hos];
-      console.log('hosItem')
-      console.log(hosItem)
       if (hosItem.name == props.targetHos.name){
         hosItem.NumberOfLikes = likeSaveInfo.numLikes;
         hosItem.likes = likeSaveInfo.numLikes;
       }
       newHosList.push(hosItem);
     }
-    console.log(newHosList);
     props.sethospitalInfo(newHosList);
 
     // set database
@@ -321,8 +309,6 @@ function HospInfo(props) {
     let hospitalId = updateInfo['hospital'].replace(/\s/g,'')
     newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['likes'] = likeSaveInfo.numLikes;
     newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['NumberOfLikes'] = likeSaveInfo.numLikes;
-    console.log('new database')
-    console.log(newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]);
     props.setDatabase(newDatabase);
   }
 
@@ -420,8 +406,6 @@ function HospInfo(props) {
     });
   };
 
-  console.log('props.targetHos');
-  console.log(props.targetHos);
   
   const reported = likeSaveInfo.reportedList.includes(props.targetHos.name);
 

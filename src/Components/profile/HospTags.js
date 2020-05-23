@@ -14,9 +14,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from "axios";
+
 
 import { updateUserStoredHospTags } from "../../redux/actions/userActions";
 import { updateHospTags } from "../../redux/actions/dataActions";
+
+const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 
 // ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
@@ -102,19 +106,21 @@ function HospTags(props) {
     // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
+        console.log("entering......")
+        console.log(res[0])
         // set state
         let userStored;
-        if (!res.addedHospTags) {
+        if (!res[1].addedHospTags) {
           userStored = "";
         } else {
-          if (!res.addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
+          if (!res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
             userStored = "";
           } else {
-            userStored = res.addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
+            userStored = res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
           }
         }
         setState({
-          currentTags: props.tagInfo ? props.tagInfo : "",
+          currentTags: res[0].data.tags ? res[0].data.tags : "",
           storedUserTags: userStored
         })
         // update renderCount to 1 to stop react from making any more useEffect call
@@ -126,13 +132,17 @@ function HospTags(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    // making two asynchronous calls: one from searchInfo and one from user credentials info
-    // let [storedSearchInfo, userStoredCredentials] =
-    //   await Promise.all([props.searchInfo, props.storedCredentials]);
-    // return [storedSearchInfo, userStoredCredentials];
-
-    let storedCredentials = await props.storedCredentials;
-    return storedCredentials;
+    let [storedSearchInfo, userStoredCredentials] =
+      await Promise.all([axios.get(proxyurl + axios.defaults.baseURL + "hospsearchinfo",
+      {
+        params: {
+          specialty: props.targetHos.relatedSpecialty,
+          hospital: props.targetHos.HospitalName.replace(/\s+/g, ""),
+        }
+      }), props.storedCredentials]);
+    return [storedSearchInfo, userStoredCredentials];
+    // let storedCredentials = await props.storedCredentials;
+    // return storedCredentials;
   }
 
   const [open, setOpen] = React.useState(false);
@@ -260,8 +270,6 @@ function HospTags(props) {
     )
   });
 
-  console.log('target hos super')
-  console.log(props.targetHos);
   const updateSelectedTags = () => {
     const hospitalNewTags = {
       hospital: props.targetHos.HospitalName,
