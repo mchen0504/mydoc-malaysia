@@ -103,11 +103,11 @@ export default function SearchTabs(props) {
 
   const handleSearchMethodChange = (event, newValue) => {
     let method = '';
-    if(newValue == 0){
+    if (newValue == 0) {
       method = 'Specialty';
-    } else if (newValue == 1){
+    } else if (newValue == 1) {
       method = 'Doctor';
-    } else if (newValue == 2){
+    } else if (newValue == 2) {
       method = 'Hospital';
     } else {
       method = 'Condition';
@@ -124,14 +124,16 @@ export default function SearchTabs(props) {
   const getDocHosNameList = () => {
     // console.log(props.database === undefined);
     let allInfo = props.database;
-    for (let spec in allInfo){
+    for (let spec in allInfo) {
       let targetSpec = allInfo[spec];
-      for (let hos in targetSpec.hospitals){
+      for (let hos in targetSpec.hospitals) {
         let hospital = targetSpec.hospitals[hos];
-        hospNames.push({hospName : hospital.name});
+        hospNames.push({ hospName: hospital.name });
         let doctorsList = hospital.doctors;
-        for (let docId in doctorsList){
-          docNames.push({name:doctorsList[docId].name});
+        for (let docId in doctorsList) {
+          if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
+            docNames.push({ name: doctorsList[docId].name });
+          }
         }
       }
     }
@@ -146,35 +148,35 @@ export default function SearchTabs(props) {
 
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
-    if(newValue){
+    if (newValue) {
       props.setSearchMethod('Specialty');
       props.getKeyWords(newValue.specialty);
     }
-    
+
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
-    if(newValue){
+    if (newValue) {
       props.getKeyWords(newValue.name);
     }
-    
+
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
-    if(newValue){
+    if (newValue) {
       props.getKeyWords(newValue.hospName);
     }
-    
+
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
-    if(newValue){
+    if (newValue) {
       props.changeConditionLabel(newValue.condition, 'normal');
     }
-    
+
   };
 
-  const getTextFieldValue = (event)=>{
+  const getTextFieldValue = (event) => {
     setkeyword(event.target.value);
     props.getKeyWords(event.target.value);
   }
@@ -196,14 +198,14 @@ export default function SearchTabs(props) {
       {/* autocomplete: search by specialty */}
       <TabPanel value={value} index={0}>
         <Autocomplete
-          onChange = {handleSpecialtySearchKeyChange}
+          onChange={handleSpecialtySearchKeyChange}
           options={specialties}
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterSpecialtyOptions}
-          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
+          disabled={props.database === undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
-            // disabled={true}
+              // disabled={true}
               {...params}
               label="Search by specialty"
               variant="filled"
@@ -218,18 +220,18 @@ export default function SearchTabs(props) {
       {/* autocomplete: search by doctor's namey */}
       <TabPanel value={value} index={1}>
         <Autocomplete
-          onChange = {handleDoctorSearchKeyChange}
+          onChange={handleDoctorSearchKeyChange}
           freeSolo
           options={docNames}
           getOptionLabel={(option) => option.name}
           filterOptions={filterDocOptions}
-          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
+          disabled={props.database === undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Search by doctor's name"
               variant="filled"
-              onChange = {getTextFieldValue}
+              onChange={getTextFieldValue}
               onKeyPress={(ev) => {
                 if (ev.key === 'Enter') {
                   props.getKeyWords(keyword);
@@ -247,17 +249,17 @@ export default function SearchTabs(props) {
       {/* autocomplete: search by hospital's name */}
       <TabPanel value={value} index={2}>
         <Autocomplete
-          onChange = {handleHospitalSearchKeyChange}
+          onChange={handleHospitalSearchKeyChange}
           freeSolo
           options={hospNames}
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterHospOptions}
-          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
+          disabled={props.database === undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Search by hospital's name"
-              onChange = {getTextFieldValue}
+              onChange={getTextFieldValue}
               onKeyPress={(ev) => {
                 if (ev.key === 'Enter') {
                   props.getKeyWords(keyword);
@@ -276,13 +278,13 @@ export default function SearchTabs(props) {
       {/* autocomplete: search by condition */}
       <TabPanel value={value} index={3}>
         <Autocomplete
-          onChange = {handleConditionSearchKeyChange}
+          onChange={handleConditionSearchKeyChange}
           options={conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterConditionOptions}
           disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
           renderInput={(params) => {
-            if(props.conditionLabel != ""){
+            if (props.conditionLabel != "") {
               params.inputProps.value = props.conditionLabel;
             }
             return <TextField
@@ -293,7 +295,7 @@ export default function SearchTabs(props) {
               InputProps={{ ...params.InputProps, disableUnderline: true }}
             />
           }
-        }
+          }
         />
         <br></br>
       </TabPanel>

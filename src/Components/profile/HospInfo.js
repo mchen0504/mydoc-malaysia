@@ -29,8 +29,6 @@ import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";
 
-//images
-import hospImg from "../../img/results/pantaihospital.png";
 
 //components
 import CovidAlert from "../Alert";
@@ -100,8 +98,6 @@ function HospInfo(props) {
   const authenticated = props.authenticated;
 
   const backToRes = () => {
-    console.log('history:')
-    console.log(props.backTo);
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
         console.log(1);
@@ -499,86 +495,6 @@ function HospInfo(props) {
     Icon = EditOutlinedIcon;
   }
 
-//   const signUpInDialogue = (option) => {
-//     const optionFirstUpper = option[0].toUpperCase() + option.slice(1);
-
-//     return (
-
-//       <Dialog
-//         fullWidth="true"
-//         maxWidth="sm"
-//         open={loginOpen}
-//         onClose={handleLoginClose}
-//       >
-//         <Box display="flex" alignItems="center">
-//           <Box flexGrow={1}>
-//             <DialogTitle>{optionFirstUpper} a Doctor</DialogTitle>
-//           </Box>
-//           <Box>
-//             <DialogActions>
-//               <IconButton
-//                 size="small"
-//                 onClick={handleLoginClose}
-//                 color="primary"
-//               >
-//                 <CloseIcon />
-//               </IconButton>
-//             </DialogActions>
-//           </Box>
-//         </Box>
-//         <DialogContent>
-//           <Box
-//             display="flex"
-//             flexDirection="column"
-//             justifyContent="center"
-//             alignItems="center"
-//           >
-//             <ErrorOutlineOutlinedIcon />
-//             <br></br>
-//             <Typography variant="body1" align="center">
-//               You need to sign in to {option} this doctor
-//                         </Typography>
-//           </Box>
-//           <Box display="flex" mt={2} mb={2}>
-//             <Button
-//               variant="contained"
-//               color="primary"
-//               style={{ textTransform: "none" }}
-//               fullWidth
-//               component={Link}
-//               to="/login"
-//             >
-//               Log in
-//                         </Button>
-//           </Box>
-
-//           <Box display="flex" mb={2}>
-//             <Button
-//               variant="outlined"
-//               color="primary"
-//               style={{ textTransform: "none" }}
-//               fullWidth
-//               component={Link}
-//               to="/signup"
-//             >
-//               Sign up
-//                         </Button>
-//           </Box>
-//         </DialogContent>
-//       </Dialog>
-//     )
-//   }
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div>
@@ -605,7 +521,7 @@ function HospInfo(props) {
           <Grid item xs={6} align="center">
             {/* hospital image */}
             <div style={{ width: 150, height: 180 }}>
-              <img className={classes.img} src={hospImg} alt="hospimg" />
+              <img className={classes.img} src={props.targetHos["imgSrc"]} alt="hospimg" />
             </div>
           </Grid>
           {/* Like icon + number of likes */}
@@ -653,7 +569,7 @@ function HospInfo(props) {
             <Hidden xsDown>
               {/* hospital image */}
               <div style={{ width: 200, height: 250 }}>
-                <img className={classes.img} src={hospImg} alt="hospimg" />
+                <img className={classes.img} src={props.targetHos["imgSrc"]} alt="hospimg" />
               </div>
             </Hidden>
 
@@ -865,7 +781,7 @@ function HospInfo(props) {
           <Box className={classes.profileGrid} mt={3} mb={3}>
             <Typography variant="body1" color="textPrimary">
               <strong>Official website: </strong>{" "}
-              <Link href="https://www.pantai.com.my/kuala-lumpur">Link</Link>
+              <a href={props.targetHos["Web"]} style={{ color: "#003367" }}>Link</a>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">

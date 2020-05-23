@@ -66,24 +66,27 @@ export default function DocInfo(props) {
   let doctors = props.targetHos.doctors;
   let conditionList = [];
   let doctorSortList = [];
-  for (let doctor in doctors){
+  for (let doctor in doctors) {
     let targetDoc = doctors[doctor];
-    targetDoc.Conditions = targetDoc.conditions.map((item)=>{
-      let newItem = item.toLowerCase();
-        newItem = newItem.replace(newItem[0],newItem[0].toUpperCase())
-      return newItem
-    });
-    targetDoc.Conditions.forEach((condition) => {
-      if (conditionList.indexOf(condition) == -1){
-        conditionList.push(condition)
-      }
-    });
-    doctorSortList.push(targetDoc);
+    // if the doctor has published their profile and they are still in this specialty
+    if (targetDoc.publish && !targetDoc.deleted) {
+      targetDoc.Conditions = targetDoc.conditions.map((item) => {
+        let newItem = item.toLowerCase();
+        newItem = newItem.replace(newItem[0], newItem[0].toUpperCase())
+        return newItem
+      });
+      targetDoc.Conditions.forEach((condition) => {
+        if (conditionList.indexOf(condition) == -1) {
+          conditionList.push(condition)
+        }
+      });
+      doctorSortList.push(targetDoc);
+    }
   }
-  doctorSortList.sort((a,b)=>{return b.NumberOfLikes - a.NumberOfLikes});
+  doctorSortList.sort((a, b) => { return b.NumberOfLikes - a.NumberOfLikes });
   let doctorCards = [];
-  doctorSortList.forEach((doc, index)=>{
-    let card = <TopRatedDocCard {...props} targetDoc={doc} key={index}/>
+  doctorSortList.forEach((doc, index) => {
+    let card = <TopRatedDocCard {...props} targetDoc={doc} key={index} />
     doctorCards.push(card);
   })
 
@@ -103,7 +106,7 @@ export default function DocInfo(props) {
     return insuranceCards;
   });
 
-  
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={12}>
@@ -122,9 +125,15 @@ export default function DocInfo(props) {
           <br></br>
           {/* 这里出现top rated doctors 的卡片*/}
           {/* eshin added 5/4/20 */}
-          <Carousel breakPoints={breakPoints}>
-            {doctorCards}
-          </Carousel>
+
+          {(doctorCards.length !== 0) ? (
+            <Carousel breakPoints={breakPoints}>
+              {doctorCards}
+            </Carousel>
+          ) : (
+              ""
+            )}
+
         </Box>
         <br></br>
         <hr className={classes.thinLine}></hr>

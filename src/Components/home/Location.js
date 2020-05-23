@@ -124,7 +124,7 @@ export default function Location(props) {
         renderInput={(params) => (
           <TextField
             {...params}
-            label='Please add your address'
+            label='Enter a location'
             placeholder={currentAddress}
             onChange={handleChange}
             variant="filled"

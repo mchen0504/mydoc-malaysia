@@ -98,7 +98,7 @@ export default function Header(props) {
 
   let headerDisplay;
   if (!props.conditionListForInput && !props.specialtyListForInput && !props.bodyPartsDic && !props.database){
-    headerDisplay =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />
+    headerDisplay =  <CircularProgress color="secondary" style={{ marginLeft: '35%', marginTop: '5%' }} />
   } else {
     headerDisplay = <div>
       <SearchTabs

@@ -2,14 +2,12 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 
-import hospImg from "../../img/results/pantaihospital.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +74,7 @@ export default function HospitalCard(props) {
   let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
 
   return (
-    <Card className={classes.root} onClick={handleClick}>
+    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {cardImage}

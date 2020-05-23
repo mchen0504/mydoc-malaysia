@@ -854,6 +854,7 @@ function DocEditProfile(props) {
 
     window.scrollTo(0, 0);
     setOpen(true);
+    props.setProfileWarning(false);
 
     // // wait for data sent to firebase before reloading the window
     // const delay = (ms) => new Promise((res) => setTimeout(res, ms));

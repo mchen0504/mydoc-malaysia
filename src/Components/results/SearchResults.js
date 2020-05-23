@@ -77,7 +77,7 @@ export default function SearchResultsFilter(props) {
     setPage(value);
   };
 
-  if (!props.keywords) {
+  if (props.searchingState == 'in-progress' && !props.keywords) {
     props.history.push("/");
     window.location.reload();
   }
@@ -120,7 +120,7 @@ export default function SearchResultsFilter(props) {
     } else {
       let component;
       if (props.searchingState == 'in-progress') {
-        component = <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
+        component = <CircularProgress color="secondary" style={{ marginLeft: '47%', marginTop: '5%' }} />;
       } else {
         component = <Empty />;
       }
@@ -187,7 +187,7 @@ export default function SearchResultsFilter(props) {
   let dataInfoNotesHos = 'Display results by hospitals';
   if (props.searchMethod == 'Hospital') {
     dataInfoNotesDoc = 'Doctors related to ' + '"' + props.keywords + '"';
-    dataInfoNotesHos = 'Hospitals related to' + props.keywords;
+    dataInfoNotesHos = 'Hospitals related to ' + '"' + props.keywords + '"';
   }
 
 

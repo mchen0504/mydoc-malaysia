@@ -44,7 +44,8 @@ function DocAccountVerification(props) {
     medicalDegreeSrc: "",
     medicalDegreeName: "",
 
-    hasEmpty: ""
+    hasEmpty: "",
+
   })
 
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
@@ -59,6 +60,8 @@ function DocAccountVerification(props) {
     // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
+        const notAllFilled = !Object.values(res).some(x => (x !== " "));
+
         // set state
         setState({
           medicalRegistrationNumber: res.medicalRegistrationNumber,
@@ -67,7 +70,8 @@ function DocAccountVerification(props) {
           medicalDegreeSrc: res.medicalDegreeSrc,
           medicalDegreeName: res.medicalDegreeName,
 
-          hasEmpty: (Object.keys(res).length === 5) ? false : true
+          hasEmpty: (Object.keys(res).length !== 5 || notAllFilled) ? true : false
+          
         })
         // update renderCount to 1 to stop react from making any more useEffect call
         setRenderCount(1);
@@ -131,11 +135,22 @@ function DocAccountVerification(props) {
       medicalDegreeName: currentInfo["medicalDegreeName"] ? currentInfo["medicalDegreeName"] : " "
     };
     props.updateVerification(newVerification);
-  
+
 
     // michelle 5/16: 这里本来是openSuccessMsg  现在用setOpen(true)替换掉
     // open submit success message
     setOpen(true);
+
+    // if all fields are not empty (including " "), set hasEmpty = true
+    if (newVerification.medicalRegistrationNumber &&
+      newVerification.identityCardSrc !== " " &&
+      newVerification.medicalDegreeSrc !== " ") {
+      setState({ 
+        ...currentInfo,
+        hasEmpty: false 
+      });
+      props.setVerifyWarning(false);
+    }
   };
 
 
@@ -159,7 +174,7 @@ function DocAccountVerification(props) {
                 {/* Back button 手机屏幕才会出玄 */}
                 <Hidden mdUp>
                   <Link to='account'>
-                    <ArrowBackIosIcon className={classes.backIcon} fontSize="small"/>
+                    <ArrowBackIosIcon className={classes.backIcon} fontSize="small" />
                   </Link>
                 </Hidden>
                 <strong>Account Verification</strong>
@@ -170,20 +185,20 @@ function DocAccountVerification(props) {
 
             {/* michelle  5/16: 加了这句。 上面的box里面本来有snackbar  你把它删掉 用这个就行了*/}
             {/* 本来有openSuccessMsg和closeSuccessMsg两个function  现在不用了 可以删掉*/}
-            {open ? <Alert style={{marginBottom: '1rem'}}>Successfully submitted!</Alert> : ""}
+            {open ? <Alert style={{ marginBottom: '1rem' }}>Successfully submitted!</Alert> : ""}
 
 
             {currentInfo.hasEmpty ? (
-            <Box display="flex" flexDirection="row">
-              {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
-              <CancelIcon style={{ color: "red", marginRight: 10 }} />
-              <Typography variant="body1">
-                Account not verified<br></br>
-              </Typography>
-            </Box>
+              <Box display="flex" flexDirection="row">
+                {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
+                <CancelIcon style={{ color: "red", marginRight: 10 }} />
+                <Typography variant="body1">
+                  Account not verified<br></br>
+                </Typography>
+              </Box>
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             <br></br>
             <br></br>

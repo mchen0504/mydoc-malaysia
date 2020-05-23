@@ -17,17 +17,12 @@ import axios from "axios";
 import savedLikeNoResultsFound from "../../img/savedLikeNoResultsFound.png";
 
 
-// import DocCard from "../../Components/results/DocCard";
-// import HospCard from "../../Components/results/HospitalCard";
-
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import docImg from "../../img/results/docAlex.png";
-import hospImg from "../../img/results/pantaihospital.png";
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: 10,
     },
   },
+
   likeBox: {
     marginTop: 16,
     display: "flex",
@@ -103,19 +99,17 @@ function LikeHistorySaved(props) {
 
   const [renderCount, setRenderCount] = React.useState(0);
 
-  const [saveLike, setSaveLike] = React.useState({
-    doctors: [],
-    hospitals: []
-  })
+  // const [saveLike, setSaveLike] = React.useState({
+  //   doctors: [],
+  //   hospitals: []
+  // })
 
   const [databaseInfo, setDatabase] = React.useState({})
 
-  const indicator = "";
+  // const indicator = "";
 
   useEffect(() => {
-    // if (!indicator) {
     displayStoredCredentials();
-    // }
   }, []);
 
 
@@ -190,13 +184,12 @@ function LikeHistorySaved(props) {
 
         setDoctorCards(docCardsList);
         setHospitalCards(hosCardsList);
-        setSaveLike({
-          doctors: likedDoctors,
-          hospitals: likedHospitals
-        });
+        setRenderCount(1);
+        // setSaveLike({
+        //   doctors: likedDoctors,
+        //   hospitals: likedHospitals
+        // });
 
-        // setDatabase(res[1].data);
-        // setRenderCount(1);
       })
       .catch((error) => {
         console.error(error);
@@ -222,92 +215,76 @@ function LikeHistorySaved(props) {
     return data;
   }
 
-  // // list of liked doctor cards on doctor tab
-  // let doctorCards = saveLike.doctors.map(doctor => {
-  //   let specialty = doctor.specialty;
-  //   let hospital = doctor.hospital.replace(/\s+/g, "");
-  //   let username = doctor.username.replace(/\s+/g, "");
-  //   console.log('databaseinf');
-  //   console.log(databaseInfo);
-  //   let targetDoc = databaseInfo[specialty]['hospitals'][hospital]['doctors'][username];
-  //   return (
-  //     <DocCard {...props} key={doctor.username} targetDoc={targetDoc} targetDocUserName={username}/>
-  //   )
-  // })
-
-  // // list of liked hospitals cards on hospital tab
-  // let hospitalCards = saveLike.hospitals.map(hospital => {
-  //   console.log('hi');
-  //   let specialty = hospital.specialty;
-  //   let hospitalUserName = hospital.name.replace(/\s+/g, "");
-  //   let targetHos = databaseInfo[specialty]['hospitals'][hospitalUserName];
-  //   return (
-  //     <HospitalCard {...props} key={hospital.name} targetHos={targetHos} targetHosUserName={hospitalUserName} hospitalInfo={hospital} getSpecialtyData={getSpecialtyData} database = {databaseInfo} />
-  //   )
-  // })
+  if (renderCount === 0) {
+    return (
+      <div>
+        <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />
+      </div>
+    );
+  } else {
 
 
-  return (
-    <a id="likehistory" className={classes.anchor}>
-      <Grid container spacing={0}>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={10} md={8}>
-          <Box display="flex" mt={4} mb={3} flexWrap="wrap" alignItems="center">
-            <Box flexGrow={1} flexDirection="row" mb={1}>
-              <Typography variant="h5" color="primary">
-                {/* Back button, 手机屏幕才会出现 */}
-                <Hidden mdUp>
-                  {/* <IconButton> */}
-                  <Link to="account">
-                    <ArrowBackIosIcon
-                      className={classes.backIcon}
-                      fontSize="small"
-                    />
-                  </Link>
-                  {/* </IconButton> */}
-                </Hidden>
-                <strong>
-                  {displayType === "likeHistory" ? "Like History" : "Saved"}
-                </strong>
-              </Typography>
+    return (
+      <a id="likehistory" className={classes.anchor}>
+        <Grid container spacing={0}>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10} md={8}>
+            <Box display="flex" mt={4} mb={3} flexWrap="wrap" alignItems="center">
+              <Box flexGrow={1} flexDirection="row" mb={1}>
+                <Typography variant="h5" color="primary">
+                  {/* Back button, 手机屏幕才会出现 */}
+                  <Hidden mdUp>
+                    {/* <IconButton> */}
+                    <Link to="account">
+                      <ArrowBackIosIcon
+                        className={classes.backIcon}
+                        fontSize="small"
+                      />
+                    </Link>
+                    {/* </IconButton> */}
+                  </Hidden>
+                  <strong>
+                    {displayType === "likeHistory" ? "Like History" : "Saved"}
+                  </strong>
+                </Typography>
+              </Box>
+              {/* Display by Doctor/Hospital buttons */}
+              <Box>
+                <ToggleButtonGroup
+                  value={display}
+                  exclusive
+                  onChange={handleDisplay}
+                >
+                  <ToggleButton value="doctor" color="primary">
+                    <Typography color="primary" style={{ textTransform: "none" }}>
+                      Doctor
+                  </Typography>
+                  </ToggleButton>
+                  <ToggleButton value="hospital">
+                    <Typography color="primary" style={{ textTransform: "none" }}>
+                      Hospital
+                  </Typography>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Box>{" "}
             </Box>
-            {/* Display by Doctor/Hospital buttons */}
-            <Box>
-              <ToggleButtonGroup
-                value={display}
-                exclusive
-                onChange={handleDisplay}
-              >
-                <ToggleButton value="doctor" color="primary">
-                  <Typography color="primary" style={{ textTransform: "none" }}>
-                    Doctor
-                  </Typography>
-                </ToggleButton>
-                <ToggleButton value="hospital">
-                  <Typography color="primary" style={{ textTransform: "none" }}>
-                    Hospital
-                  </Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Box>{" "}
-          </Box>
 
-          <br></br>
-          <br></br>
+            <br></br>
+            <br></br>
 
-          {/* if user clicks on display by 'doctor', then render doctor cards */}
-          {display === "doctor" ? (
-            <Fragment>{doctorCards}</Fragment>
-          ) : (
-              <Fragment>{hospitalCards}</Fragment>
-            )}
+            {/* if user clicks on display by 'doctor', then render doctor cards */}
+            {display === "doctor" ? (
+              <Fragment>{doctorCards}</Fragment>
+            ) : (
+                <Fragment>{hospitalCards}</Fragment>
+              )}
+          </Grid>
+          <Grid item xs={1} md={3}></Grid>
         </Grid>
-        <Grid item xs={1} md={3}></Grid>
-      </Grid>
-    </a>
-  );
+      </a>
+    );
+  }
 }
-// }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // might be deleted later if naming conventions unify
@@ -459,7 +436,7 @@ function HospitalCard(props) {
           <CardMedia
             component="img"
             className={classes.img}
-            image={hospImg}
+            image={props.targetHos["imgSrc"]}
           ></CardMedia>
         </Grid>
 
@@ -508,19 +485,20 @@ function HospitalCard(props) {
 
 
 
-LikeHistorySaved.propTypes = {
-  // updateVerification: PropTypes.func.isRequired,
-  // getAllSearchData: PropTypes.func.isRequired
-};
+// LikeHistorySaved.propTypes = {
+//   // updateVerification: PropTypes.func.isRequired,
+//   // getAllSearchData: PropTypes.func.isRequired
+// };
 
-const mapStateToProps = (state) => ({
-  storedCredentials: state.user.credentials,
-  // searchData: state.data.searchData
-});
+// const mapStateToProps = (state) => ({
+//   storedCredentials: state.user.credentials,
+//   // searchData: state.data.searchData
+// });
 
-const mapActionsToProps = {
-  // updateVerification,
-  // getAllSearchData
-};
+// const mapActionsToProps = {
+//   // updateVerification,
+//   // getAllSearchData
+// };
 
-export default connect(mapStateToProps, mapActionsToProps)(LikeHistorySaved);
+// export default connect(mapStateToProps, mapActionsToProps)(LikeHistorySaved);
+export default LikeHistorySaved;

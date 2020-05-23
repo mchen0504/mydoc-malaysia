@@ -151,7 +151,9 @@ export default function GlobalSearchTabs(props) {
           hospNames.push({hospName : hospital.name});
           let doctorsList = hospital.doctors;
           for (let docId in doctorsList){
-            docNames.push({name:doctorsList[docId].name});
+            if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
+              docNames.push({ name: doctorsList[docId].name });
+            }
           }
         }
       }

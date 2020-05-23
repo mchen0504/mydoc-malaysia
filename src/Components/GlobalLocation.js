@@ -101,7 +101,7 @@ export default function Location() {
             {...params}
             defaultValue = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
             placeholder = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
-            label="Add city, state, or postal code"
+            label="Enter a location"
             onChange={handleChange}
             variant="outlined" //changed from filled to outlined
           />

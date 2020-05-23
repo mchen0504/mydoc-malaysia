@@ -37,6 +37,19 @@ const useStyles = makeStyles((theme) => ({
 function Account(props) {
   const classes = useStyles();
 
+  const [profileShowWarning, setWarningProfile] = React.useState("");
+
+  const [verifyShowWarning, setWarningVerify] = React.useState("");
+
+
+  const setProfileWarning = (value) => {
+    setWarningProfile(value);
+  }
+
+  const setVerifyWarning = (value) => {
+    setWarningVerify(value);
+  }
+
 
   // right panel on large screen
   let rightPanel;
@@ -45,20 +58,31 @@ function Account(props) {
 
   const index = props.index;
   if (index == 0) {
-    rightPanel = props.storedCredentials.userType == "doctor" ? <DocEditProfile /> : <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
-    mobileScreen = <DocSideNav />;
+    rightPanel = props.storedCredentials.userType == "doctor" ?
+      (
+        <DocEditProfile setProfileWarning={setProfileWarning} />
+      ) : (
+        <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+      );
+
+    mobileScreen = <DocSideNav
+      profileShowWarning={profileShowWarning}
+      setProfileWarning={setProfileWarning}
+      verifyShowWarning={verifyShowWarning}
+      setVerifyWarning={setVerifyWarning}
+    />;
   } else if (index == 1) {
-    rightPanel = <DocEditProfile />;
-    mobileScreen = <DocEditProfile />;
+    rightPanel = <DocEditProfile setProfileWarning={setProfileWarning} />;
+    mobileScreen = <DocEditProfile setProfileWarning={setProfileWarning} />;
   } else if (index == 2) {
     rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
-    mobileScreen = <LikeHistorySaved{...props} database={props.database} saveLike="saved" />;
+    mobileScreen = <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
   } else if (index == 3) {
     rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
     mobileScreen = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
   } else if (index == 4) {
-    rightPanel = <DocAccountVerification />;
-    mobileScreen = <DocAccountVerification />;
+    rightPanel = <DocAccountVerification verifyShowWarning={verifyShowWarning} setVerifyWarning={setVerifyWarning} />;
+    mobileScreen = <DocAccountVerification verifyShowWarning={verifyShowWarning} setVerifyWarning={setVerifyWarning} />;
   } else {
     rightPanel = <AccountSettings />;
     mobileScreen = <AccountSettings />;
@@ -75,7 +99,12 @@ function Account(props) {
         </div>
         <Grid container spacing={0}>
           <Grid item md={4} lg={3}>
-            <DocSideNav />
+            <DocSideNav
+              profileShowWarning={profileShowWarning}
+              setProfileWarning={setProfileWarning}
+              verifyShowWarning={verifyShowWarning}
+              setVerifyWarning={setVerifyWarning}
+            />;
           </Grid>
           <Grid item sm={12} md={8} lg={9}>
             {/* default large screen shows profile even if profile is not selected */}

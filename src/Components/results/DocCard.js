@@ -85,7 +85,7 @@ export default function DocCard(props) {
   }
 
   return (
-    <Card className={classes.root} onClick={handleClick}>
+    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {cardImage}

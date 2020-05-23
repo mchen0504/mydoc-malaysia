@@ -101,8 +101,8 @@ function DocSideNav(props) {
     specialty: "",
     hospital: "",
 
-    profileShowWarning: "",
-    verifyShowWarning: ""
+    // profileShowWarning: "",
+    // verifyShowWarning: ""
   })
 
   const indicator = "";
@@ -149,7 +149,7 @@ function DocSideNav(props) {
         if (returnedInfo[0].verification) {
 
           const verifyHasEmpty =
-            !Object.values(returnedInfo[0].verification).some(x => (x !== null && x !== ""));
+            !Object.values(returnedInfo[0].verification).some(x => (x !== null && x !== "" && x !== " "));
 
           const notAllFilled = Object.keys(returnedInfo[0].verification).length !== 5;
 
@@ -193,9 +193,13 @@ function DocSideNav(props) {
           specialty: doctorSpecialty,
           hospital: doctorHospital,
 
-          verifyShowWarning: verifyWarning,
-          profileShowWarning: profileWarning
-        })
+          // verifyShowWarning: verifyWarning,
+          // profileShowWarning: profileWarning
+        });
+
+        // set profileShowWarning in account.js
+        props.setProfileWarning(profileWarning);
+        props.setVerifyWarning(verifyWarning);
 
 
         // if (username) {
@@ -283,14 +287,12 @@ function DocSideNav(props) {
 
         // if the user has specialty stored in file (the user is a doctor and has submitted their profile)
         if (userInfo.specialty) {
-          console.log(userInfo.specialty)
           const updateInfo = {
             specialty: userInfo.specialty,
             hospital: userInfo.hospital,
             username: userInfo.username,
             imgSrc: imgSrc
           }
-          console.log(updateInfo)
           props.updateDoctorProfilePic(updateInfo);
         }
 
@@ -432,7 +434,7 @@ function DocSideNav(props) {
                 <ListItemText primary="Profile" />
                 {/* 第一次user要显示这个tooltip */}
 
-                {userInfo.profileShowWarning ? (
+                {props.profileShowWarning ? (
                   <Tooltip
                     disableFocusListener
                     placement="right"
@@ -497,7 +499,7 @@ function DocSideNav(props) {
                 <ListItemText primary="Account Verification" />
                 {/* 第一次user要显示这个tooltip */}
 
-                {userInfo.verifyShowWarning ? (
+                {props.verifyShowWarning ? (
                   <Tooltip
                     disableFocusListener
                     placement="right"
