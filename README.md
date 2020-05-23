@@ -1,68 +1,73 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![mydoclogo](https://user-images.githubusercontent.com/32310896/82287189-3172a400-99d2-11ea-8f68-50942ae2f4a5.png)
 
-## Available Scripts
+By: He Chen, Yin Chen, Michelle Chen, and Eshin Ang
 
-In the project directory, you can run:
+## Web App Link
+https://mydoc-f3cd9.firebaseapp.com/
 
-### `npm start`
+## Project Description
+To maximize life-saving potential, patients require efficient access to medical information and connections to the right doctors. However, doctors’ information is scattered in Malaysia. Patients often rely on word-of-mouth or long searches on individual hospital websites to search for doctors. Moreover, these sources do not accurately reflect the service quality of doctors. MYDoc is a web platform designed to bridge this information gap in Malaysia. By gathering doctors’ information in a single web application, users can both efficiently search for doctors’ information and recommend doctors to others. Through MYDoc, we strive to simplify the healthcare-seeking process for patients in Malaysia.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project Duration
+January 2020 - June 2020
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Technology Stack
+![techstack](https://user-images.githubusercontent.com/32310896/82286369-2585e280-99d0-11ea-8fdb-4764ac76edf5.png)
 
-### `npm test`
+## Contact Information
+**MYDoc** 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Email: mydoc.eclipse@gmail.com
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**He Chen**
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+* Email: chenh57@uw.edu
+* Role: Full-stack developer
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+**Michelle Chen**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* Email: mc0504@uw.edu
+* Role: Full-stack developer
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**Yin Chen**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* Email: chen0504@uw.edu
+* Role: Full-stack developer
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Eshin Ang**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Email: eshinang@hotmail.com
+* Role: Project manager
 
-### Code Splitting
+## If you are interested in continuing the project:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+### Current Implemented Features:
+Doctors:
+* Create an account and submit verification documents (Malaysian Identity Cards, certified copy of Medical Degree, etc.) to verify doctor identity
+* List practice by completing and publishing profile
 
-### Analyzing the Bundle Size
+General users:
+* Search for doctors/hospitals by specialty, doctor name, hospital name, and condition (body map)
+* If logged in, users can report, save, “like” (recommend) or tag a doctor (using positive tags that are predefined) 
+* Read a doctor’s detailed profile information including years of practice, work location, qualifications, procedures performed, and conditions treated.
+* Learn ways to book appointments with a doctor 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+### Future Actions to take:
+* Conduct more onsite user testing to become more user-friendly
+* Optimize the website performance by improving database design
+* Recruit more doctors in Malaysia to sign up and provide their information so users can easily find them
+* Improve Search by Condition feature by having medical professionals to map more body parts, symptoms, and conditions to each specialty
 
-### Making a Progressive Web App
+### Additional Features Worth Implementing:
+* Localize the website by using locize to include Malay language
+* Book appointment through MYDoc
+* Online medical consultation 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+<br></br>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/32310896/82286940-8a8e0800-99d1-11ea-96c3-5c406dea7174.png">
+  </p>
