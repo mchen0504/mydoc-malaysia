@@ -924,34 +924,14 @@ function DocEditProfile(props) {
             <Box display="flex" mt={4} mb={3} flexWrap="wrap">
               <Box flexGrow={1} flexDirection="row" mb={1}>
                 <Typography variant="h5" color="primary">
-                  {/* <Snackbar
-                    open={open}
-                    onClose={closeSuccessMsg}
-                    // autoHideDuration={6000}
-                  >
-                                    
-                    <MuiAlert
-                      elevation={1}
-                      variant="filled"
-                      severity="success"
-                      onClose={closeSuccessMsg}
-                      style={{
-                        background: "#FF8686",
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        marginTop: "10%",
-                      }}
-                    >
-                                        Documents successfully submitted!
-                                      
-                    </MuiAlert>
-                                  
-                  </Snackbar> */}
                   {/* Back button, 手机屏幕才会出现 */}
                   <Hidden mdUp>
                     {/* <IconButton> */}
-                    <Link to="docaccount">
-                      <ArrowBackIosIcon />
+                    <Link to="account">
+                      <ArrowBackIosIcon
+                        className={classes.backIcon}
+                        fontSize="small"
+                      />
                     </Link>
                     {/* </IconButton> */}
                   </Hidden>
@@ -1577,7 +1557,8 @@ const specialties = [
   'Otorhinolaryngology',
   'Urology',
   'Paediatrics',
-  'Orthopaedics'
+  'Orthopaedics',
+  'Anaethesiology'
 ];
 
 const languageList = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];

@@ -109,15 +109,12 @@ function Tags(props) {
           userStored = "";
         } else {
           if (!res[1].addedDoctorTags[props.targetDoc.userName]) {
-
-            console.log('No stored tags before');
             userStored = "";
           } else {
             userStored = res[1].addedDoctorTags[props.targetDoc.userName];
           }
         }
 
-        console.log(res[0])
         setState({
           currentTags: res[0].data.tags ? res[0].data.tags : "",
           storedUserTags: userStored
@@ -281,7 +278,6 @@ function Tags(props) {
     };
     props.updateUserStoredDocTags(doctorNewTags);
 
-    console.log(props.targetDoc);
     const updateInfo = {
       specialty: props.targetDoc.specialty,
       hospital: props.targetDoc.Hospital,
@@ -291,8 +287,6 @@ function Tags(props) {
     props.updateDoctorTags(updateInfo);
     setOpen(false);
   }
-
-  console.log(props.tagInfo)
 
   if (renderCount == 0) {
     // loading spinner if prop data is not yet available

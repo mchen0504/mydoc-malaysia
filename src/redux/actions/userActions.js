@@ -87,11 +87,12 @@ const setAuthorizationHeader = (token) => {
 };
 
 // Used in UserMenu.js for logging out user
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = (history) => (dispatch) => {
   localStorage.removeItem("FBIdToken");
   //remove from axios header
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
+  history.push(`/`);
 };
 
 // used in App.js to fetch user data

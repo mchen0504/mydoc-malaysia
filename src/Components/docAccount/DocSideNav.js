@@ -125,7 +125,6 @@ function DocSideNav(props) {
     fetchData()
       .then((res) => {
         // if res exists (if the second async function did run), add res to returnedInfo
-        console.log(res)
         if (res) {
           returnedInfo.push(res);
         }
@@ -134,8 +133,6 @@ function DocSideNav(props) {
 
         // let credentials = returnedInfo[0].data.credentials;
         let username = returnedInfo[0].username;
-
-        console.log(username)
 
         let storedTags;
         let likes;
@@ -237,9 +234,6 @@ function DocSideNav(props) {
 
 
   let getSpecialtyData = async (searchSpecialty, searchHospital) => {
-    console.log("I have entered searching....")
-    console.log(searchSpecialty)
-    console.log(searchHospital)
     let specialtyData =
       await axios.get(proxyurl + axios.defaults.baseURL + "getdoctorusersearchinfo",
         {

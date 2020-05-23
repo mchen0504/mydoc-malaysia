@@ -95,6 +95,11 @@ const useStyles = makeStyles((theme) => ({
 function DocInfo(props) {
   const classes = useStyles();
 
+  if (props.backTo == null) {
+        props.history.push("/");
+        window.location.reload();
+      }
+
   const backToRes = () => {
     console.log('backTo:');
     // likeHistory
@@ -238,11 +243,11 @@ function DocInfo(props) {
       // the newly liked doctor's information to be added to the user's liked doctor list
       let newDocInfo = {
         hospital: props.targetDoc.Hospital,
-        languages: props.targetDoc.language,
-        likes: likeSaveInfo.numLikes,
-        name: props.targetDoc.DocName,
+        // languages: props.targetDoc.language,
+        // likes: likeSaveInfo.numLikes,
+        // name: props.targetDoc.DocName,
         specialty: props.targetDoc.specialty,
-        type: props.targetDoc.type,
+        // type: props.targetDoc.type,
         username: props.targetDoc.userName
       };
 
@@ -264,9 +269,8 @@ function DocInfo(props) {
         }
         // likedList: (likeSaveInfo.likedList.length == 0) ? [newDocInfo] : [prevState.likedList, newDocInfo],
       )
-
-
     }
+
     let updateInfo = {
       specialty: props.targetDoc.specialty,
       hospital: props.targetDoc.hospital,
@@ -617,7 +621,7 @@ if (loginOpen.userOption == "Recommend") {
             {/* 手机屏幕出现的格式：doctor's name 在照片下面 */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
-                {"Dr." + props.targetDoc["DocName"]}
+                {"Dr. " + props.targetDoc["DocName"]}
               </Typography>
             </Hidden>
 
@@ -802,7 +806,7 @@ if (loginOpen.userOption == "Recommend") {
           {/* 大屏幕会出现的格式：doctor name 在右边 */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
-              {"Dr." + props.targetDoc["DocName"]}
+              {"Dr. " + props.targetDoc["DocName"]}
             </Typography>
           </Hidden>
           <br></br>

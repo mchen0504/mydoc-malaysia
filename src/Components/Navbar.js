@@ -62,6 +62,7 @@ class Navbar extends Component {
         </Box>
       );
     }
+
     return (
       <div>
         <Box display="flex">
@@ -85,7 +86,7 @@ class Navbar extends Component {
               <Box>
                 {authenticated ? (
                   <Fragment>
-                    <UserMenu />
+                    <UserMenu {...this.props}/>
                   </Fragment>
                 ) : (
                   <Fragment>

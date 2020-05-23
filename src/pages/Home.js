@@ -13,7 +13,7 @@ class Home extends Component {
     return (
       <div>
         {/* Change */}
-        <Navbar currentPage={'Home'}/>
+        <Navbar {...this.props} currentPage={'Home'}/>
         <Header {...this.props}/>
         <Problem />
         <Solution />

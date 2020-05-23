@@ -102,6 +102,12 @@ export default function SearchResultsFilter(props) {
 
     let allDoccards = [];
     let allHosCards = [];
+
+    if (!props.keywords) {
+      props.history.push("/");
+      window.location.reload();
+    }
+
     if (display == 'doctor'){
       // // he chen 
       if (props.docInfo.length != 0 && props.docInfo != null){
@@ -183,6 +189,7 @@ export default function SearchResultsFilter(props) {
     dataInfoNotesHos = 'Hospitals related to' + props.keywords;
   }
   
+
   return (
     <Fragment>
       <Hidden smDown>

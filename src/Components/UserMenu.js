@@ -25,7 +25,7 @@ class UserMenu extends Component {
   };
 
   handleLogout = () => {
-    this.props.logoutUser();
+    this.props.logoutUser(this.props.history);
   };
 
   handleMenu = (event) => {

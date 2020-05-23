@@ -106,8 +106,6 @@ function HospTags(props) {
     // call function to get data from returned props from firebase
     getStoredData()
       .then((res) => {
-        console.log("entering......")
-        console.log(res[0])
         // set state
         let userStored;
         if (!res[1].addedHospTags) {

@@ -104,6 +104,7 @@ export default function DocInfo(props) {
     return insuranceCards;
   });
 
+  console.log(props)
   
   return (
     <Grid container spacing={0}>

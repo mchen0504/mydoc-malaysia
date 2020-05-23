@@ -84,7 +84,7 @@ export default function TopRatedDocCard(props) {
             <Box className={classes.likeBox}>
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-              {props.targetDoc.likes}
+                &nbsp;{props.targetDoc.likes}
               </Typography>
             </Box>
           </Box>

@@ -66,16 +66,27 @@ export default function HospitalCard(props) {
     }
   };
 
+  let cardImage = (
+        <div style={{ width: 200 }}>
+          <CardMedia
+            component="img"
+            className={classes.img}
+            src={props.resultData["imgSrc"]}
+          ></CardMedia>
+        </div>
+      );
+
   return (
     <Card className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* hospital logo image */}
-          <CardMedia
+          {/* <CardMedia
             component="img"
             className={classes.img}
             image={hospImg}
-          ></CardMedia>
+          ></CardMedia> */}
+          {cardImage}
         </Grid>
 
         <Grid item xs={12} sm={7}>

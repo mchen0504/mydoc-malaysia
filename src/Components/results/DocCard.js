@@ -16,13 +16,16 @@ const useStyles = makeStyles((theme) => ({
   },
 
   img: {
-    width: "60%",
-    [theme.breakpoints.only("md")]: {
-      width: "80%",
-    },
-    [theme.breakpoints.down("xs")]: {
-      width: "40%",
-    },
+    // width: "60%",
+    // [theme.breakpoints.only("md")]: {
+    //   width: "80%",
+    // },
+    // [theme.breakpoints.down("xs")]: {
+    //   width: "40%",
+    // },
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
   },
 
   imageGrid: {
@@ -71,7 +74,15 @@ export default function DocCard(props) {
     }
   };
 
-  let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
+  let cardImage = (
+        <div style={{ width: 200 }}>
+          <CardMedia
+            component="img"
+            className={classes.img}
+            src={props.resultData["imgSrc"]}
+          ></CardMedia>
+        </div>
+      );
 
   let docLikes;
   if (props.resultData["NumberOfLikes"]){
@@ -96,7 +107,7 @@ export default function DocCard(props) {
           <CardContent>
             {/* doctor details */}
             <Typography variant="h6" color="primary">
-              {"Dr." + props.resultData["DocName"]}
+              {"Dr. " + props.resultData["DocName"]}
             </Typography>
             <br></br>
             <Typography variant="subtitle1" color="textSecondary">

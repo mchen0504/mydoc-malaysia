@@ -158,7 +158,7 @@ function DocAccountVerification(props) {
               <Typography variant="h5" color="primary">
                 {/* Back button 手机屏幕才会出玄 */}
                 <Hidden mdUp>
-                  <Link to='docaccount'>
+                  <Link to='account'>
                     <ArrowBackIosIcon className={classes.backIcon} fontSize="small"/>
                   </Link>
                 </Hidden>

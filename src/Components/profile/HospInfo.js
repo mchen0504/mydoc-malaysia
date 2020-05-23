@@ -96,6 +96,7 @@ const useStyles = makeStyles((theme) => ({
 
 function HospInfo(props) {
   const classes = useStyles();
+
   const authenticated = props.authenticated;
 
   const backToRes = () => {
@@ -406,6 +407,10 @@ function HospInfo(props) {
     });
   };
 
+  if (!props.targetHos) {
+        props.history.push("/");
+        window.location.reload();
+      }
   
   const reported = likeSaveInfo.reportedList.includes(props.targetHos.name);
 
@@ -859,7 +864,7 @@ function HospInfo(props) {
 
             <Typography variant="body1" color="textPrimary">
               <strong>Hours: </strong>{" "}
-              <span>Open {props.targetHos["Hours"]}</span>
+              <span>Open {props.targetHos["hours"]}</span>
             </Typography>
 
             <Hidden smUp>

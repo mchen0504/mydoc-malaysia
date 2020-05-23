@@ -45,17 +45,17 @@ function Account(props) {
 
   const index = props.index;
   if (index == 0) {
-    rightPanel = props.storedCredentials.userType == "doctor" ? <DocEditProfile /> : <LikeHistorySaved {...props}  database = {props.database} saveLike="saved" />;
+    rightPanel = props.storedCredentials.userType == "doctor" ? <DocEditProfile /> : <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
     mobileScreen = <DocSideNav />;
   } else if (index == 1) {
     rightPanel = <DocEditProfile />;
     mobileScreen = <DocEditProfile />;
   } else if (index == 2) {
-    rightPanel = <LikeHistorySaved {...props} database = {props.database} saveLike="saved" />;
-    mobileScreen = <LikeHistorySaved{...props}  database = {props.database} saveLike="saved" />;
+    rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
+    mobileScreen = <LikeHistorySaved{...props} database={props.database} saveLike="saved" />;
   } else if (index == 3) {
-    rightPanel = <LikeHistorySaved {...props} database = {props.database} saveLike="likeHistory" />;
-    mobileScreen = <LikeHistorySaved {...props} database = {props.database} saveLike="likeHistory" />;
+    rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
+    mobileScreen = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
   } else if (index == 4) {
     rightPanel = <DocAccountVerification />;
     mobileScreen = <DocAccountVerification />;
@@ -65,23 +65,23 @@ function Account(props) {
   }
 
 
-  
+
   return (
     <div>
-      <Navbar currentPage='account'/>
+      <Navbar currentPage='account' />
       <Hidden smDown>
         <div className={classes.covidBox} style={{ position: "relative" }}>
-          {/* <CovidAlert /> */}
-          <Grid container spacing={0}>
-            <Grid item md={4} lg={3}>
-              <DocSideNav />
-            </Grid>
-            <Grid item sm={12} md={8} lg={9}>
-              {/* default large screen shows profile even if profile is not selected */}
-              {rightPanel}
-            </Grid>
-          </Grid>
+          <CovidAlert />
         </div>
+        <Grid container spacing={0}>
+          <Grid item md={4} lg={3}>
+            <DocSideNav />
+          </Grid>
+          <Grid item sm={12} md={8} lg={9}>
+            {/* default large screen shows profile even if profile is not selected */}
+            {rightPanel}
+          </Grid>
+        </Grid>
       </Hidden>
       <Hidden mdUp>{mobileScreen}</Hidden>
     </div>
