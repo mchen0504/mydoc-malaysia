@@ -16,14 +16,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   img: {
-    // width: "60%",
-    // [theme.breakpoints.only("md")]: {
-    //   width: "80%",
-    // },
-    // [theme.breakpoints.down("xs")]: {
-    //   width: "40%",
-    // },
-    width: "100%",
     height: "100%",
     objectFit: "contain",
   },
@@ -74,13 +66,13 @@ export default function DocCard(props) {
     }
   };
 
+  // let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
   let cardImage = (
-        <div style={{ width: 200 }}>
-          <CardMedia
-            component="img"
+        <div style={{ width: 150, height: 150 }}>
+          <img
             className={classes.img}
             src={props.resultData["imgSrc"]}
-          ></CardMedia>
+          ></img>
         </div>
       );
 
@@ -95,12 +87,6 @@ export default function DocCard(props) {
     <Card className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
-          {/* doctor image */}
-          {/* <CardMedia
-            component="img"
-            className={classes.img}
-            image={docImg2}
-          ></CardMedia> */}
           {cardImage}
         </Grid>
         <Grid item xs={12} sm={7}>
@@ -130,10 +116,12 @@ export default function DocCard(props) {
         <Grid item xs={12} sm={2}>
           {/* Like icon + number of likes */}
           <Box className={classes.likeBox}>
+            <div align="center">
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              { docLikes}
+              {docLikes}
             </Typography>
+            </div>
           </Box>
         </Grid>
       </Grid>

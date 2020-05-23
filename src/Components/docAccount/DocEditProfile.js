@@ -32,7 +32,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import Alert from "@material-ui/lab/Alert";
 
 import {
@@ -51,10 +51,8 @@ import {
   publish,
   getSpecProfile,
   getSpecList,
-  getCondList
+  getCondList,
 } from "../../redux/actions/userActions";
-
-
 
 const useStyles = makeStyles((theme) => ({
   anchor: {
@@ -70,8 +68,6 @@ const useStyles = makeStyles((theme) => ({
 
 // doctor edit profile
 function DocEditProfile(props) {
-  
-
   const classes = useStyles();
 
   // --------------------------- initialize states --------------------------- //
@@ -152,105 +148,145 @@ function DocEditProfile(props) {
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
   useEffect(() => {
     // if (renderCount == 0) {
-      // console.log('in the mission');
-      console.log('hi: 1');
-      getStoredData();
+    // console.log('in the mission');
+    console.log("hi: 1");
+    getStoredData();
     // }
-  },[]);
-
+  }, []);
 
   // if (res[0] && res[1] && res[2] && res[3] && Object.keys(res[0]).length > 0 && Object.keys(res[1]).length > 0 && Object.keys(res[2]).length > 0 && Object.keys(res[3]).length > 0) {
 
   let getStoredData = async () => {
-    let baseurl =   "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
+    let baseurl =
+      "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
     // let storedSearchInfo2 = await axios.get(baseurl+'getspecprofile');
     // let userInfo = props.credentials;
     // let storedSearchInfo =  props.doctorData;
     // let specialtyList =  props.specialtyList;
     // let conditionsList =  props.conditionsList;
-    let storedSearchInfoData =  await axios.get(baseurl+'getspecprofile');
-    let specialtyListData =  await axios.get(baseurl+'getspeclist');
-    let conditionsListData =  await axios.get(baseurl+'getcondlist');
-    let userInfoData = await axios.get(baseurl+'user');
+    let storedSearchInfoData = await axios.get(baseurl + "getspecprofile");
+    let specialtyListData = await axios.get(baseurl + "getspeclist");
+    let conditionsListData = await axios.get(baseurl + "getcondlist");
+    let userInfoData = await axios.get(baseurl + "user");
     let userInfo = userInfoData.data.credentials;
-        let storedSearchInfo2 =  storedSearchInfoData.data;
-    let specialtyList2 =  specialtyListData.data;
-    let conditionsList2 =  conditionsListData.data;
-    let dataSet = [userInfo, storedSearchInfo2, specialtyList2, conditionsList2]
+    let storedSearchInfo2 = storedSearchInfoData.data;
+    let specialtyList2 = specialtyListData.data;
+    let conditionsList2 = conditionsListData.data;
+    let dataSet = [
+      userInfo,
+      storedSearchInfo2,
+      specialtyList2,
+      conditionsList2,
+    ];
     const allContents = {
-      credentials : dataSet[0],
-      doctorData : dataSet[1],
-      specialtyList : dataSet[2],
-      conditionsList : dataSet[3],
+      credentials: dataSet[0],
+      doctorData: dataSet[1],
+      specialtyList: dataSet[2],
+      conditionsList: dataSet[3],
     };
 
-    if(allContents.credentials&&allContents.doctorData&&allContents.specialtyList&&allContents.conditionsList&&renderCount==0&&Object.keys(allContents.doctorData).length > 0){
-      let res = [allContents.credentials, allContents.doctorData,allContents.specialtyList,allContents.conditionsList];
+    if (
+      allContents.credentials &&
+      allContents.doctorData &&
+      allContents.specialtyList &&
+      allContents.conditionsList &&
+      renderCount == 0 &&
+      Object.keys(allContents.doctorData).length > 0
+    ) {
+      let res = [
+        allContents.credentials,
+        allContents.doctorData,
+        allContents.specialtyList,
+        allContents.conditionsList,
+      ];
       window.scrollTo(0, 0);
-        // data -> from doctor account
-        console.log('hi here');
-        console.log(allContents);
-        const userInfo = res[0].profile;
+      // data -> from doctor account
+      console.log("hi here");
+      console.log(allContents);
+      const userInfo = res[0].profile;
 
-        // data -> from specialty data
-        const searchInfo = res[1];
+      // data -> from specialty data
+      const searchInfo = res[1];
 
-        const apptThings = res[1].appointment;
+      const apptThings = res[1].appointment;
 
-        // set state
-        setAllState({
-          ...allState,
-          // personal
-          firstName: userInfo.firstName,
-          lastName: userInfo.lastName,
-          gender: userInfo.gender,
-          yearsOfPractice: searchInfo.yearsOfPractice,
+      // set state
+      setAllState({
+        ...allState,
+        // personal
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        gender: userInfo.gender,
+        yearsOfPractice: searchInfo.yearsOfPractice,
 
-          // work
-          hospital: searchInfo.hospital,
-          removedHospital: searchInfo.hospital,
-          type: searchInfo.type,
-          phone: searchInfo.phone,
-          buildingInfo: userInfo.buildingInfo,
-          street: userInfo.street,
-          city: userInfo.city,
-          state: userInfo.state,
-          postalCode: userInfo.postalCode,
+        // work
+        hospital: searchInfo.hospital,
+        removedHospital: searchInfo.hospital,
+        type: searchInfo.type,
+        phone: searchInfo.phone,
+        buildingInfo: userInfo.buildingInfo,
+        street: userInfo.street,
+        city: userInfo.city,
+        state: userInfo.state,
+        postalCode: userInfo.postalCode,
 
-          // appt
-          call: apptThings.call.status,
-          online: apptThings.online.status,
-          email: apptThings.email.status,
-          onsite: apptThings.onsite.status,
+        // appt
+        call: apptThings.call.status,
+        online: apptThings.online.status,
+        email: apptThings.email.status,
+        onsite: apptThings.onsite.status,
 
-          callNumber: apptThings.call.content,
-          onlineLink: apptThings.online.content,
-          emailAddress: apptThings.email.content,
+        callNumber: apptThings.call.content,
+        onlineLink: apptThings.online.content,
+        emailAddress: apptThings.email.content,
 
-          // expertise
-          specialty: searchInfo.specialty,
-          removedSpecialty: searchInfo.specialty,
-          qualifications: searchInfo.qualifications,
-          procedures: searchInfo.procedures,
-          conditions: searchInfo.conditions,
-          removedConditions: searchInfo.conditions,
-          languages: searchInfo.languages,
+        // expertise
+        specialty: searchInfo.specialty,
+        removedSpecialty: searchInfo.specialty,
+        qualifications: searchInfo.qualifications,
+        procedures: searchInfo.procedures,
+        conditions: searchInfo.conditions,
+        removedConditions: searchInfo.conditions,
+        languages: searchInfo.languages,
 
-          specOrNot: userInfo.specialty,
-          hospOrNot: userInfo.hospital,
-        });
+        specOrNot: userInfo.specialty,
+        hospOrNot: userInfo.hospital,
+      });
 
-        setList({
-          specialtyList: res[2],
-          conditionsList: res[3],
-        });
+      setList({
+        specialtyList: res[2],
+        conditionsList: res[3],
+      });
 
-        setPublish(searchInfo.publish);
-        setRenderCount(1);
-    } else if (allContents.credentials&&allContents.doctorData&&allContents.specialtyList&&allContents.conditionsList&&renderCount==0){
+      setPublish(searchInfo.publish);
+      setRenderCount(1);
+    } else if (
+      allContents.credentials &&
+      allContents.doctorData &&
+      allContents.specialtyList &&
+      allContents.conditionsList &&
+      renderCount == 0 &&
+      Object.keys(allContents.specialtyList).length > 0
+    ) {
+      let res = [
+        allContents.specialtyList,
+        allContents.conditionsList,
+      ];
+      setList({
+        specialtyList: res[0],
+        conditionsList: res[1],
+      });
+      setRenderCount(1);
+    } else if (
+      allContents.credentials &&
+      allContents.doctorData &&
+      allContents.specialtyList &&
+      allContents.conditionsList &&
+      renderCount == 0
+    ) {
       setRenderCount(1);
     }
-    
+
     return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
 
     // return [userInfo, storedSearchInfo];
@@ -271,6 +307,8 @@ function DocEditProfile(props) {
   // };
 
   // -------------------- functions to change state ------------------------- //
+
+  console.log(list.specialtyList);
 
   // change publish status
   const handlePublishChange = (event) => {
@@ -628,9 +666,6 @@ function DocEditProfile(props) {
     }
   };
 
-
-
-
   // send profile info to firebase after pressing "submit" button
 
   const sendProfile = (event) => {
@@ -649,12 +684,16 @@ function DocEditProfile(props) {
       if (Object.keys(specialtyList).includes(currentSpec)) {
         specialtyList[currentSpec]++;
       } else {
-        specialtyList[currentSpec] = 1;
+        if (currentSpec != "") {
+          specialtyList[currentSpec] = 1;
+        }
       }
       if (specialtyList[removedSpec] > 1) {
         specialtyList[removedSpec]--;
       } else {
-        specialtyList[removedSpec] = 0;
+        if (removedSpec != "") {
+          specialtyList[removedSpec] = 0;
+        }
       }
     }
 
@@ -701,7 +740,10 @@ function DocEditProfile(props) {
         hospital: removedHospital,
         specialty: removedSpec,
       };
-      props.deleteProfileInSpec(deleteInfo);
+      console.log(deleteInfo);
+      if (deleteInfo.hospital != "" && deleteInfo.specialty != "") {
+        props.deleteProfileInSpec(deleteInfo);
+      }
     }
 
     // ------------------  data to send  -------------------------- //
@@ -789,13 +831,14 @@ function DocEditProfile(props) {
       conditionsList: conditionsList,
     };
 
+    console.log("spec: ", specListData);
+    console.log("cond: ", condListData);
+
     // to user account
     props.sendAccountProfile(accountData);
 
-
     // to account in specialty
     props.sendProfileToSpec(specData);
-
 
     // send specialty
     props.sendSpecList(specListData);
@@ -807,12 +850,11 @@ function DocEditProfile(props) {
       ...allState,
       specOrNot: allState.specialty,
       hospOrNot: allState.hospital,
-    })
+    });
 
     window.scrollTo(0, 0);
     setOpen(true);
 
-    
     // // wait for data sent to firebase before reloading the window
     // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -826,14 +868,6 @@ function DocEditProfile(props) {
     // sessionStorage.setItem("reloading", "true");
     // // reload();
   };
-
-
-
-
-
-
-
-
 
   // -------------------------  errors --------------------------------- //
 
@@ -949,10 +983,11 @@ function DocEditProfile(props) {
                 <span>Publish your profile</span>
               </Box>
             </Box>
-             {/* success message after done submitting */}
-             {open ? (
+            {/* success message after done submitting */}
+            {open ? (
               <Alert style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                Successfully submitted! If you haven't published your profile, you can do it now!
+                Successfully submitted! If you haven't published your profile,
+                you can do it now!
               </Alert>
             ) : (
               ""
@@ -1514,7 +1549,7 @@ const mapActionsToProps = {
   publish,
   getSpecProfile,
   getSpecList,
-  getCondList
+  getCondList,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(DocEditProfile);
@@ -1522,11 +1557,12 @@ export default connect(mapStateToProps, mapActionsToProps)(DocEditProfile);
 // ---------------  autocomplete lists (need to add more later) ---------------- //
 
 const hospitals = [
-"Pantai Hospital Kuala Lumpur", 
-'Hospital Kuala Lumpur',
-'Tung Shin Hospital',
-'University Malaya Medical Centre',
-'Prince Court Medical Centre'];
+  "Pantai Hospital Kuala Lumpur",
+  "Hospital Kuala Lumpur",
+  "Tung Shin Hospital",
+  "University Malaya Medical Centre",
+  "Prince Court Medical Centre",
+];
 
 const states = [
   "Kuala Lumpur",
@@ -1554,11 +1590,11 @@ const specialties = [
   "Gastroenterology",
   "Neurology",
   "Obstetrics & Gynecology",
-  'Otorhinolaryngology',
-  'Urology',
-  'Paediatrics',
-  'Orthopaedics',
-  'Anaethesiology'
+  "Otorhinolaryngology",
+  "Urology",
+  "Paediatrics",
+  "Orthopaedics",
+  "Anaethesiology",
 ];
 
 const languageList = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];

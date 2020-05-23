@@ -453,12 +453,10 @@ function App() {
       let userKeyWords = keywords.replace(/\s/g,'').toLowerCase();
       let newDocData = [];
       let newHosData = [];
-      console.log("about to enter......")
       getNewDocAndHospital(rootData, userKeyWords)
       .then((res)=>{
         newDocData = res.newDocData;
         newHosData = res.newHosData;
-        console.log("Looking againnnnnnnnn")
       }).then(()=>{
         sethospitalInfo(newHosData);
         setDocInfo(newDocData);

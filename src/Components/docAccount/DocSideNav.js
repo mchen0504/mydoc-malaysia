@@ -283,12 +283,14 @@ function DocSideNav(props) {
 
         // if the user has specialty stored in file (the user is a doctor and has submitted their profile)
         if (userInfo.specialty) {
+          console.log(userInfo.specialty)
           const updateInfo = {
             specialty: userInfo.specialty,
             hospital: userInfo.hospital,
             username: userInfo.username,
             imgSrc: imgSrc
           }
+          console.log(updateInfo)
           props.updateDoctorProfilePic(updateInfo);
         }
 

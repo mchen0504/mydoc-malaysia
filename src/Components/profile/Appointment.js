@@ -48,8 +48,8 @@ export default function Appointment(props) {
   // create grid based on appointment list
   let appointment = props.targetDoc['appointment'];
   let appointmentList = [];
-  for (let appointmentType in appointment){
-    if(appointmentType == 'email' && appointment[appointmentType]['status'] == true){
+  for (let appointmentType in appointment) {
+    if (appointmentType == 'email' && appointment[appointmentType]['status'] == true) {
       appointmentList.push(<Grid item xs={6} sm={2}>
         <Box
           display="flex"
@@ -60,11 +60,19 @@ export default function Appointment(props) {
         >
           <img src={emailIcon} className={classes.icon} alt="emailicon"></img>
           <br></br>
-          <Link style={{ textDecoration: "underline" }}> <a href={appointment[appointmentType]['content']} target="_blank">Email</a></Link>
+          <Link style={{ textDecoration: "underline" }}>
+            <a
+              href={appointment[appointmentType]['content']}
+              target="_blank"
+              style={{ color: "#003367" }}
+            >
+              Email
+           </a>
+          </Link>
         </Box>
       </Grid>)
     }
-    if(appointmentType == 'online' && appointment[appointmentType]['status'] == true){
+    if (appointmentType == 'online' && appointment[appointmentType]['status'] == true) {
       appointmentList.push(
         <Grid item xs={6} sm={2}>
           <Box
@@ -80,53 +88,69 @@ export default function Appointment(props) {
               alt="onlineicon"
             ></img>
             <br></br>
-            <Link style={{ textDecoration: "underline" }}> <a href={appointment[appointmentType]['content']} target="_blank">Online</a></Link>
+            <Link style={{ textDecoration: "underline" }}>
+              <a
+                href={appointment[appointmentType]['content']}
+                target="_blank"
+                style={{ color: "#003367" }}
+              >
+                Online
+              </a>
+            </Link>
           </Box>
         </Grid>)
     }
 
-    if(appointmentType == 'onsite' && appointment[appointmentType]['status'] == true){
-      appointmentList.push( 
-      <Grid item xs={6} sm={2}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          mb={2}
-        >
-          <img
-            src={onsiteIcon}
-            className={classes.icon}
-            alt="onsiteicon"
-          ></img>
-          <br></br>
+    if (appointmentType == 'onsite' && appointment[appointmentType]['status'] == true) {
+      appointmentList.push(
+        <Grid item xs={6} sm={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            mb={2}
+          >
+            <img
+              src={onsiteIcon}
+              className={classes.icon}
+              alt="onsiteicon"
+            ></img>
+            <br></br>
 
-          <Typography variant="body1" color="primary">
-            On site
+            <Typography variant="body1" color="primary">
+              On site
           </Typography>
-        </Box>
-      </Grid>
+          </Box>
+        </Grid>
       )
     }
 
-    if(appointmentType == 'call' && appointment[appointmentType]['status'] == true){
+    if (appointmentType == 'call' && appointment[appointmentType]['status'] == true) {
       appointmentList.push(
-      <Grid item xs={6} sm={2}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          mb={2}
-        >
-          <img src={phoneIcon} className={classes.icon} alt="phoneicon"></img>
-          <br></br>
-      <Link style={{ textDecoration: "underline" }} ><a href={appointment[appointmentType]['content']} target="_blank">{appointment['call']['content']}</a></Link>
-        </Box>
-      </Grid>)
+        <Grid item xs={6} sm={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            mb={2}
+          >
+            <img src={phoneIcon} className={classes.icon} alt="phoneicon"></img>
+            <br></br>
+            <Link style={{ textDecoration: "underline" }} >
+              <a
+                href={appointment[appointmentType]['content']}
+                target="_blank"
+                style={{ color: "#003367" }}
+              >
+                Call
+              </a>
+            </Link>
+          </Box>
+        </Grid>)
     }
-  } 
+  }
 
 
   return (

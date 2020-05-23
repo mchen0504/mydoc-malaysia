@@ -18,14 +18,11 @@ const useStyles = makeStyles((theme) => ({
   },
 
   img: {
-    width: "80%",
-    [theme.breakpoints.only("md")]: {
-      width: "85%",
-    },
-    [theme.breakpoints.down("xs")]: {
-      width: "50%",
-    },
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
   },
+
   imageGrid: {
     display: "flex",
     flexDirection: "row",
@@ -67,25 +64,18 @@ export default function HospitalCard(props) {
   };
 
   let cardImage = (
-        <div style={{ width: 200 }}>
-          <CardMedia
-            component="img"
-            className={classes.img}
-            src={props.resultData["imgSrc"]}
-          ></CardMedia>
-        </div>
-      );
+    <div style={{ width: 150, height: 150 }}>
+      <img
+        className={classes.img}
+        src={props.resultData["imgSrc"]}
+      ></img>
+    </div>
+  );
 
   return (
     <Card className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
-          {/* hospital logo image */}
-          {/* <CardMedia
-            component="img"
-            className={classes.img}
-            image={hospImg}
-          ></CardMedia> */}
           {cardImage}
         </Grid>
 
@@ -116,10 +106,12 @@ export default function HospitalCard(props) {
         <Grid item xs={12} sm={2}>
           {/* like icon + number of likes */}
           <Box className={classes.likeBox}>
+          <div align="center">
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
               {props.resultData["likes"]}
             </Typography>
+            </div>
           </Box>
         </Grid>
       </Grid>
