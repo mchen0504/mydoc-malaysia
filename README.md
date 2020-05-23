@@ -65,7 +65,6 @@ General users:
 * Online medical consultation 
 
 <br></br>
-<br></br>
 <p align="center">
     <img src="https://user-images.githubusercontent.com/32310896/82286940-8a8e0800-99d1-11ea-96c3-5c406dea7174.png">
   </p>
