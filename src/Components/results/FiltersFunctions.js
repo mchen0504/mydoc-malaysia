@@ -43,7 +43,7 @@ export function Languages(props) {
     Tamil: false,
     Cantonese: false,
   });
-  const [changeLanguage, setChangeLanguage] = React.useState(false);
+  const [changeLanguage, setChangeLanguage] = React.useState(true);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -58,6 +58,7 @@ export function Languages(props) {
           languagesList.push(key);
         }
       }
+      console.log(languagesList);
       props.filterLanguageList(languagesList) 
     }
     return setChangeLanguage(false);

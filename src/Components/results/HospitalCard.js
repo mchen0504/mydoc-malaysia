@@ -57,6 +57,7 @@ export default function HospitalCard(props) {
   const classes = useStyles();
 
   const handleClick = () => {
+    props.setProfileBackToDestination('resultsPage')
     props.updateTargetHos(props.resultData);
     if (props.history != null) {
       props.history.push("/hospprofile");

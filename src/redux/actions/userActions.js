@@ -92,7 +92,7 @@ export const logoutUser = (history) => (dispatch) => {
   //remove from axios header
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
-  history.push(`/`);
+  // history.push(`/`);
 };
 
 // used in App.js to fetch user data

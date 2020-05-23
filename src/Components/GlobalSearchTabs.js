@@ -48,16 +48,7 @@ const filterConditionOptions = createFilterOptions({
 //   { specialty: "Gastroenterology" },
 // ];
 // doctor name options
-const docNames = [
-  { name: "Alex Leow" },
-  { name: "Alex Tan" },
-  { name: "Bryan Lee" },
-];
-// hospital options
-const hospNames = [
-  { hospName: "Pantai Hospital Kuala Lumpur" },
-  { hospName: "Sunway Medical" },
-];
+
 // Conditions options
 // const conditions = [{ condition: "A" }, { condition: "B" }];
 
@@ -145,6 +136,33 @@ export default function GlobalSearchTabs(props) {
   const [keyword, setkeyword] = React.useState('');
   let specialties = props.specialtyListForInput;
   let conditions = props.conditionListForInput;
+
+    // He Chen 2020 5/22
+    let docNames = [];
+    let hospNames = [];
+  
+    const getDocHosNameList = () => {
+      // console.log(props.database === undefined);
+      let allInfo = props.database;
+      for (let spec in allInfo){
+        let targetSpec = allInfo[spec];
+        for (let hos in targetSpec.hospitals){
+          let hospital = targetSpec.hospitals[hos];
+          hospNames.push({hospName : hospital.name});
+          let doctorsList = hospital.doctors;
+          for (let docId in doctorsList){
+            docNames.push({name:doctorsList[docId].name});
+          }
+        }
+      }
+      docNames = new Set(docNames.map(e => JSON.stringify(e)));
+      docNames = Array.from(docNames).map(e => JSON.parse(e));
+      hospNames = new Set(hospNames.map(e => JSON.stringify(e)));
+      hospNames = Array.from(hospNames).map(e => JSON.parse(e));
+    }
+  
+    getDocHosNameList();
+
   const handleSearchMethodChange = (event, newValue) => {
     let method = '';
     if(newValue == 0){
@@ -159,6 +177,8 @@ export default function GlobalSearchTabs(props) {
     setValue(newValue);
     props.getSearchMethod(method);
   };
+
+
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     

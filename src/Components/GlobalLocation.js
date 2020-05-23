@@ -99,6 +99,8 @@ export default function Location() {
         renderInput={(params) => (
           <TextField
             {...params}
+            defaultValue = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
+            placeholder = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
             label="Add city, state, or postal code"
             onChange={handleChange}
             variant="outlined" //changed from filled to outlined
