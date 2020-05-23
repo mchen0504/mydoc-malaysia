@@ -77,68 +77,73 @@ export default function SearchResultsFilter(props) {
     setPage(value);
   };
 
-    // create cards for doctors based on results
-    let pageNavCount;
-    if (display == 'doctor'){
-      pageNavCount = Math.ceil(props.docInfo.length / maxPage);
+  if (!props.keywords) {
+    props.history.push("/");
+    window.location.reload();
+  }
+
+  // create cards for doctors based on results
+  let pageNavCount;
+  if (display == 'doctor') {
+    pageNavCount = Math.ceil(props.docInfo.length / maxPage);
+  } else {
+    pageNavCount = Math.ceil(props.hospitalInfo.length / maxPage)
+  }
+  // find the index of the first card in the page
+  let cardStartIndex = (page - 1) * maxPage;
+  let cardEndIndex = 0;
+  // find the index of the last card in the page
+  if (display == 'doctor') {
+    if (cardStartIndex + maxPage >= props.docInfo.length) {
+      cardEndIndex = props.docInfo.length;
     } else {
-      pageNavCount = Math.ceil(props.hospitalInfo.length / maxPage)
+      cardEndIndex = maxPage + cardStartIndex;
     }
-    // find the index of the first card in the page
-    let cardStartIndex = (page - 1)*maxPage;
-    let cardEndIndex = 0;
-    // find the index of the last card in the page
-    if (display == 'doctor'){
-      if (cardStartIndex + maxPage >= props.docInfo.length){
-        cardEndIndex = props.docInfo.length;
-      } else {
-        cardEndIndex = maxPage + cardStartIndex;
-      }
+  } else {
+    if (cardStartIndex + maxPage >= props.hospitalInfo.length) {
+      cardEndIndex = props.hospitalInfo.length;
     } else {
-      if (cardStartIndex + maxPage >=  props.hospitalInfo.length){
-        cardEndIndex = props.hospitalInfo.length;
-      } else {
-        cardEndIndex = maxPage + cardStartIndex;
-      }
+      cardEndIndex = maxPage + cardStartIndex;
     }
-    
-    // He Chen Changed 2020
-    let allDoccards = [];
-    let allHosCards = [];
-    if (display == 'doctor'){
-      // // he chen 
-      if (props.docInfo.length != 0 && props.docInfo != null){
-        for (let i = cardStartIndex; i < cardEndIndex; i ++){
-          let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData = {props.docInfo[i]} key = {i}/>
-          allDoccards.push(component);
-        }
-      } else {
-        let component;
-        if (props.searchingState == 'in-progress'){
-          component =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
-        } else {
-          component = <Empty/>;
-        }
+  }
+
+  // He Chen Changed 2020
+  let allDoccards = [];
+  let allHosCards = [];
+  if (display == 'doctor') {
+    // // he chen 
+    if (props.docInfo.length != 0 && props.docInfo != null) {
+      for (let i = cardStartIndex; i < cardEndIndex; i++) {
+        let component = <DocCard {...props} updateTargetDoc={props.updateTargetDoc} resultData={props.docInfo[i]} key={i} />
         allDoccards.push(component);
       }
     } else {
-    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
-      for (let i = cardStartIndex; i < cardEndIndex; i ++){
-        let component =  <HospitalCard {...props} resultData = {props.hospitalInfo[i]} key = {i} updateTargetHos={props.updateTargetHos}/>
+      let component;
+      if (props.searchingState == 'in-progress') {
+        component = <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
+      } else {
+        component = <Empty />;
+      }
+      allDoccards.push(component);
+    }
+  } else {
+    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null) {
+      for (let i = cardStartIndex; i < cardEndIndex; i++) {
+        let component = <HospitalCard {...props} resultData={props.hospitalInfo[i]} key={i} updateTargetHos={props.updateTargetHos} />
         allHosCards.push(component);
       }
     } else {
-        let component;
-        if (props.searchingState == 'in-progress'){
-          component =  <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
-        } else {
-          component = <Empty/>;
-        }
-        allHosCards.push(component);
+      let component;
+      if (props.searchingState == 'in-progress') {
+        component = <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />;
+      } else {
+        component = <Empty />;
       }
+      allHosCards.push(component);
     }
-    console.log(allHosCards);
-    // create cards for doctors based on Hospital
+  }
+  console.log(allHosCards);
+  // create cards for doctors based on Hospital
   //   let allHosCards = [];
   //   if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
   //     let key = 0;
@@ -153,38 +158,38 @@ export default function SearchResultsFilter(props) {
   // }
 
   let docHosbuttonGroup = [];
-  if (props.searchMethod != 'Doctor'){
+  if (props.searchMethod != 'Doctor') {
     docHosbuttonGroup = <ToggleButtonGroup
-                      value={display}
-                      exclusive
-                      onChange={handleDisplay}
-                    >
-                      <ToggleButton value="doctor" color="primary">
-                        <Typography
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                        >
-                          Doctor
+      value={display}
+      exclusive
+      onChange={handleDisplay}
+    >
+      <ToggleButton value="doctor" color="primary">
+        <Typography
+          color="primary"
+          style={{ textTransform: "none" }}
+        >
+          Doctor
                         </Typography>
-                      </ToggleButton>
-                      <ToggleButton value="hospital">
-                        <Typography
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                        >
-                          Hospital
+      </ToggleButton>
+      <ToggleButton value="hospital">
+        <Typography
+          color="primary"
+          style={{ textTransform: "none" }}
+        >
+          Hospital
                         </Typography>
-                      </ToggleButton>
-                    </ToggleButtonGroup>
+      </ToggleButton>
+    </ToggleButtonGroup>
   }
 
   let dataInfoNotesDoc = 'Display results by doctors';
   let dataInfoNotesHos = 'Display results by hospitals';
-  if (props.searchMethod == 'Hospital'){
+  if (props.searchMethod == 'Hospital') {
     dataInfoNotesDoc = 'Doctors related to ' + '"' + props.keywords + '"';
     dataInfoNotesHos = 'Hospitals related to' + props.keywords;
   }
-  
+
 
   return (
     <Fragment>
@@ -208,15 +213,15 @@ export default function SearchResultsFilter(props) {
               >
                 <br></br>
                 <br></br>
-                <HospitalType filterHosType={props.filterHosType}/>
+                <HospitalType filterHosType={props.filterHosType} />
                 <br></br>
                 <br></br>
-                <Languages filterLanguageList={props.filterLanguageList}/>
+                <Languages filterLanguageList={props.filterLanguageList} />
                 <br></br>
                 <br></br>
                 {/* If display by doctor, filter sidebar will show years of practice;
             if display by hospital, filter sidebar will show location */}
-                {display === "doctor" ? <YearsOfPractice filterYear={props.filterYear}/> : <Location filterDrivingTime={props.filterDrivingTime}/>}
+                {display === "doctor" ? <YearsOfPractice filterYear={props.filterYear} /> : <Location filterDrivingTime={props.filterDrivingTime} />}
               </Box>
             </div>
           </Drawer>
@@ -242,20 +247,20 @@ export default function SearchResultsFilter(props) {
                     {dataInfoNotesDoc}
                   </Typography>
                 ) : (
-                  <Typography
-                    style={{ marginLeft: 30, marginTop: 30, marginBottom: 30 }}
-                    variant="h6"
-                    color="primary"
-                  >
-                    {dataInfoNotesHos}
-                  </Typography>
-                )}
+                    <Typography
+                      style={{ marginLeft: 30, marginTop: 30, marginBottom: 30 }}
+                      variant="h6"
+                      color="primary"
+                    >
+                      {dataInfoNotesHos}
+                    </Typography>
+                  )}
               </Grid>
               <Grid item sm={3} lg={2}>
                 {/* Display by Doctor/Hospital buttons */}
                 <Fragment>
                   <div className={classes.toggleContainer}>
-                  {docHosbuttonGroup}
+                    {docHosbuttonGroup}
                   </div>
                 </Fragment>
               </Grid>
@@ -267,10 +272,10 @@ export default function SearchResultsFilter(props) {
                   {allDoccards}
                 </Fragment>
               ) : (
-                <Fragment>
-                  {allHosCards}
-                </Fragment>
-              )}
+                  <Fragment>
+                    {allHosCards}
+                  </Fragment>
+                )}
             </div>
             {/* For pages at bottom */}
             <Box display="flex" justifyContent="center">
@@ -296,7 +301,7 @@ export default function SearchResultsFilter(props) {
           </Grid>
           <Grid item xs={5} align="right">
             <div className={classes.toggleContainer}>
-            {docHosbuttonGroup}
+              {docHosbuttonGroup}
             </div>
           </Grid>
           <Grid item xs={1}></Grid>
@@ -314,10 +319,10 @@ export default function SearchResultsFilter(props) {
               {allDoccards}
             </Fragment>
           ) : (
-            <Fragment>
-             {allHosCards}
-            </Fragment>
-          )}
+              <Fragment>
+                {allHosCards}
+              </Fragment>
+            )}
         </Box>
         <Box display="flex" justifyContent="center">
           <Pagination

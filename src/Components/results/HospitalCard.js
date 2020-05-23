@@ -73,6 +73,8 @@ export default function HospitalCard(props) {
     </div>
   );
 
+  let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
+
   return (
     <Card className={classes.root} onClick={handleClick}>
       <Grid container spacing={0}>
@@ -110,7 +112,7 @@ export default function HospitalCard(props) {
           <div align="center">
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              {props.resultData["likes"]}
+              {hospLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
             </Typography>
             </div>
           </Box>

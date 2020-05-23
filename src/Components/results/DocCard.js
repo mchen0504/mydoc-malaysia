@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   img: {
+    width: "100%",
     height: "100%",
     objectFit: "contain",
   },
@@ -119,7 +120,7 @@ export default function DocCard(props) {
             <div align="center">
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              {docLikes}
+              {docLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
             </Typography>
             </div>
           </Box>

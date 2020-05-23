@@ -239,7 +239,7 @@ function DocSideNav(props) {
         {
           params: {
             specialty: searchSpecialty,
-            hospital: searchHospital
+            hospital: searchHospital.replace(/\s+/g, "")
           }
         });
     return specialtyData;
