@@ -2,6 +2,9 @@
 
 By: He Chen, Yin Chen, Michelle Chen, and Eshin Ang
 
+## Web App Link
+https://mydoc-f3cd9.firebaseapp.com/
+
 ## Project Description
 To maximize life-saving potential, patients require efficient access to medical information and connections to the right doctors. However, doctors’ information is scattered in Malaysia. Patients often rely on word-of-mouth or long searches on individual hospital websites to search for doctors. Moreover, these sources do not accurately reflect the service quality of doctors. MYDoc is a web platform designed to bridge this information gap in Malaysia. By gathering doctors’ information in a single web application, users can both efficiently search for doctors’ information and recommend doctors to others. Through MYDoc, we strive to simplify the healthcare-seeking process for patients in Malaysia.
 
