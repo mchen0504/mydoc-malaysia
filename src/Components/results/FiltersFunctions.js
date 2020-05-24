@@ -50,23 +50,22 @@ export function Languages(props) {
     setChangeLanguage(true);
   };
 
-  useEffect(()=>{
-    if(changeLanguage){
+  useEffect(() => {
+    if (changeLanguage) {
       let languagesList = [];
-      for (let key in state){
-        if(state[key]){
+      for (let key in state) {
+        if (state[key]) {
           languagesList.push(key);
         }
       }
-      console.log(languagesList);
-      props.filterLanguageList(languagesList) 
+      props.filterLanguageList(languagesList)
     }
     return setChangeLanguage(false);
 
   });
 
   const { English, Malay, Mandarin, Tamil, Cantonese } = state;
-  
+
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend">Languages</FormLabel>
@@ -136,24 +135,24 @@ export function YearsOfPractice(props) {
     setYearChange(true);
   };
 
-  useEffect(()=>{
-    if(yearChange){
+  useEffect(() => {
+    if (yearChange) {
       let yearRangeTrans = {
-        oneyear: [0,1],
-        onetofive: [1,5],
-        sixtoten: [6,10],
-        eleventotwenty: [11,20],
-        twenty: [20,100],
+        oneyear: [0, 1],
+        onetofive: [1, 5],
+        sixtoten: [6, 10],
+        eleventotwenty: [11, 20],
+        twenty: [20, 100],
       };
-      let yearRange = [1000,-1];
-      for (let key in state){
-        if(state[key]){
+      let yearRange = [1000, -1];
+      for (let key in state) {
+        if (state[key]) {
           let min = yearRangeTrans[key][0];
           let max = yearRangeTrans[key][1];
-          if(yearRange[0] >= min){
+          if (yearRange[0] >= min) {
             yearRange[0] = min;
           }
-          if (yearRange[1] <= max){
+          if (yearRange[1] <= max) {
             yearRange[1] = max;
           }
         }
@@ -230,26 +229,24 @@ export function Location(props) {
 
   const [timeDomain, settimeDomain] = React.useState(true);
 
-  useEffect(()=>{
-    if(timeDomain){
-      console.log(state);
+  useEffect(() => {
+    if (timeDomain) {
       let timeRangeTrans = {
-        lessThan30mins: [0,0.5],
-        between30minsTo1hour: [0.5,1],
-        between1hourTo2hours: [1,2],
-        between2hoursTo3hours: [2,3],
-        over3hours: [3,1000],
+        lessThan30mins: [0, 0.5],
+        between30minsTo1hour: [0.5, 1],
+        between1hourTo2hours: [1, 2],
+        between2hoursTo3hours: [2, 3],
+        over3hours: [3, 1000],
       };
-      let timeRange = [1000,-1];
-      console.log(timeRangeTrans);
-      for (let key in state){
-        if(state[key]){
+      let timeRange = [1000, -1];
+      for (let key in state) {
+        if (state[key]) {
           let min = timeRangeTrans[key][0];
           let max = timeRangeTrans[key][1];
-          if(timeRange[0] >= min){
+          if (timeRange[0] >= min) {
             timeRange[0] = min;
           }
-          if (timeRange[1] <= max){
+          if (timeRange[1] <= max) {
             timeRange[1] = max;
           }
         }
@@ -320,6 +317,6 @@ export function Location(props) {
           label="> 3hours"
         />
       </FormGroup>
-  </FormControl>
+    </FormControl>
   );
 }

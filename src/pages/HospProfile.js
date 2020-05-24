@@ -21,7 +21,6 @@ class HospProfile extends Component {
     // he chen 
     const backToPage = this.props.profileBackToDestination
     const { classes } = this.props;
-    console.log(this.props.targetHos);
     return (
       <div>
         <Navbar currentPage='HosProfile' {...this.props}/>

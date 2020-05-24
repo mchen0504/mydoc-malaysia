@@ -6,10 +6,10 @@ import {
   SET_UNAUTHENTICATED,
   LOADING_USER,
 
-  // 新加5/14
-  GET_PROFILE,
-  GET_SPECIALTY,
-  GET_CONDITION,
+    // 新加5/14
+    GET_PROFILE,
+    GET_SPECIALTY,
+    GET_CONDITION,
 } from "../types";
 import axios from "axios";
 
@@ -93,14 +93,14 @@ export const logoutUser = (history) => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
   if (
-    window.location.pathname == "/account" ||
-    window.location.pathname == "/profile" ||
-    window.location.pathname == "/saved" ||
-    window.location.pathname == "/likehistory" ||
-    window.location.pathname == "/accountverification"
-  ) {
-    window.location.replace("/login");
-  }
+        window.location.pathname == "/account" ||
+        window.location.pathname == "/profile" ||
+        window.location.pathname == "/saved" ||
+        window.location.pathname == "/likehistory" ||
+        window.location.pathname == "/accountverification"
+      ) {
+        window.location.replace("/login");
+      }
 };
 
 // used in App.js to fetch user data
@@ -269,7 +269,6 @@ export const getSpecProfile = () => (dispatch) => {
   axios
     .get("/getspecprofile")
     .then((res) => {
-      console.log('load specprofile data!!')
       dispatch({
         type: GET_PROFILE /* use in userReducer.js */,
         payload: res.data,
@@ -315,15 +314,15 @@ export const reportHospital = (data) => (dispatch) => {
 
 // send doctors reported to user account
 export const sendReportedDoctors = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
-  axios.post("/sendreporteddoctors", data).catch((err) => console.log(err));
-};
+    dispatch({ type: LOADING_USER });
+    axios.post("/sendreporteddoctors", data).catch((err) => console.log(err));
+  };
 
 // send hospitals reported to user account
 export const sendReportedHospitals = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
-  axios.post("/sendreportedhospitals", data).catch((err) => console.log(err));
-};
+    dispatch({ type: LOADING_USER });
+    axios.post("/sendreportedhospitals", data).catch((err) => console.log(err));
+  };
 
 
 

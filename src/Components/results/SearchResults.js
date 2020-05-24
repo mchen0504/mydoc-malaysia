@@ -142,20 +142,7 @@ export default function SearchResultsFilter(props) {
       allHosCards.push(component);
     }
   }
-  console.log(allHosCards);
-  // create cards for doctors based on Hospital
-  //   let allHosCards = [];
-  //   if (props.hospitalInfo.length != 0 && props.hospitalInfo != null){
-  //     let key = 0;
-  //     allHosCards = props.hospitalInfo.map((msgString) => {
-  //         let component = <HospitalCard {...props} resultData = {msgString} key = {key} updateTargetHos={props.updateTargetHos}/>
-  //         key ++;
-  //         return component; //add this new component to resulting array
-  //     })
-  // } else {
-  //   let component = <Empty/>
-  //   allHosCards.push(component);
-  // }
+
 
   let docHosbuttonGroup = [];
   if (props.searchMethod != 'Doctor') {

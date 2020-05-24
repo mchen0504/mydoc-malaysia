@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
 
   img: {
     width: "100%",
-    height: "100%",
-    objectFit: "contain",
+    height: "100%",
+    objectFit: "contain",
   },
 
   imageGrid: {
@@ -69,16 +69,13 @@ export default function DocCard(props) {
 
   // let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
   let cardImage = (
-        <div style={{ width: 150, height: 150 }}>
-          <img
-            className={classes.img}
-            src={props.resultData["imgSrc"]}
-          ></img>
-        </div>
-      );
+    <div style={{ width: 150, height: 150 }}>
+      <img className={classes.img} src={props.resultData["imgSrc"]}></img>
+    </div>
+  );
 
   let docLikes;
-  if (props.resultData["NumberOfLikes"]){
+  if (props.resultData["NumberOfLikes"]) {
     docLikes = props.resultData["NumberOfLikes"];
   } else {
     docLikes = 0;
@@ -118,10 +115,10 @@ export default function DocCard(props) {
           {/* Like icon + number of likes */}
           <Box className={classes.likeBox}>
             <div align="center">
-            <FavoriteIcon style={{ color: "red" }} />
-            <Typography variant="body2" color="primary">
-              {docLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
-            </Typography>
+              <FavoriteIcon style={{ color: "red" }} />
+              <Typography variant="body2" color="primary">
+                {docLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+              </Typography>
             </div>
           </Box>
         </Grid>

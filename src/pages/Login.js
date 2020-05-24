@@ -89,7 +89,6 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    // this.props.loginUser(userData, this.props.history);
     this.getStoredData(userData);
   };
 
@@ -102,11 +101,6 @@ class Login extends Component {
 
   getStoredData = async (userData) => {
     await this.props.loginUser(userData, this.props.history);
-    // console.log(2)
-    // await this.props.getSpecProfile();
-    // console.log(3)
-    // await this.props.getSpecList();
-    // await this.props.getCondList();
   };
 
 

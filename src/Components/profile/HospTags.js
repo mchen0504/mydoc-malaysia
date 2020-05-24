@@ -111,10 +111,10 @@ function HospTags(props) {
         if (!res[1].addedHospTags) {
           userStored = "";
         } else {
-          if (!res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')]) {
+          if (!res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g, '')]) {
             userStored = "";
           } else {
-            userStored = res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g,'')];
+            userStored = res[1].addedHospTags[props.targetHos.HospitalName.replace(/\s/g, '')];
           }
         }
         setState({
@@ -132,15 +132,13 @@ function HospTags(props) {
   let getStoredData = async () => {
     let [storedSearchInfo, userStoredCredentials] =
       await Promise.all([axios.get(proxyurl + axios.defaults.baseURL + "hospsearchinfo",
-      {
-        params: {
-          specialty: props.targetHos.relatedSpecialty,
-          hospital: props.targetHos.HospitalName.replace(/\s+/g, ""),
-        }
-      }), props.storedCredentials]);
+        {
+          params: {
+            specialty: props.targetHos.relatedSpecialty,
+            hospital: props.targetHos.HospitalName.replace(/\s+/g, ""),
+          }
+        }), props.storedCredentials]);
     return [storedSearchInfo, userStoredCredentials];
-    // let storedCredentials = await props.storedCredentials;
-    // return storedCredentials;
   }
 
   const [open, setOpen] = React.useState(false);
@@ -275,7 +273,7 @@ function HospTags(props) {
     };
     props.updateUserStoredHospTags(hospitalNewTags);
 
-    
+
     const updateInfo = {
       specialty: props.targetHos.RelateSpecialty,
       hospital: props.targetHos.HospitalName,

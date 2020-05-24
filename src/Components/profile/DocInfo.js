@@ -14,14 +14,11 @@ import axios from "axios";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
-import ErrorIcon from '@material-ui/icons/Error';
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
-import ShareOutlinedIcon from "@material-ui/icons/ShareOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
-import EditIcon from '@material-ui/icons/Edit';
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -96,20 +93,18 @@ function DocInfo(props) {
   const classes = useStyles();
 
   if (props.backTo == null) {
-        props.history.push("/");
-        window.location.reload();
-      }
+    props.history.push("/");
+    window.location.reload();
+  }
 
   const backToRes = () => {
-    console.log('backTo:');
     // likeHistory
-    console.log(props.backTo);
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
         props.history.push("/results");
       } else if (props.backTo == "hospprofile") {
         props.history.push("/hospprofile");
-      } else if (props.backTo == "likeHistory"){
+      } else if (props.backTo == "likeHistory") {
         props.history.push("/likehistory");
       } else {
         props.history.push("/saved");
@@ -141,9 +136,7 @@ function DocInfo(props) {
 
   // only get called once in the first render
   useEffect(() => {
-    // if (renderCount == 0) {
-      displayStoredData();
-    // }
+    displayStoredData();
   }, []);
 
   const displayStoredData = () => {
@@ -159,7 +152,7 @@ function DocInfo(props) {
           if (res.likeHistory.doctors) {
             listOfLikes = res.likeHistory.doctors;
             // if the user has liked this particular doctor before
-            const index = res.likeHistory.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
+            const index = res.likeHistory.doctors.findIndex(doctor => doctor.username.replace(/\s/g, '').toLowerCase() == props.targetDoc.userName.replace(/\s/g, '').toLowerCase())
             if (index != -1) {
               liked = true;
             }
@@ -179,7 +172,7 @@ function DocInfo(props) {
           if (res.saved.doctors) {
             listOfSaves = res.saved.doctors;
             // if the user has saved this particular doctor before
-            const index = res.saved.doctors.findIndex(doctor => doctor.username.replace(/\s/g,'').toLowerCase() == props.targetDoc.userName.replace(/\s/g,'').toLowerCase())
+            const index = res.saved.doctors.findIndex(doctor => doctor.username.replace(/\s/g, '').toLowerCase() == props.targetDoc.userName.replace(/\s/g, '').toLowerCase())
             if (index != -1) {
               saved = true;
             }
@@ -197,16 +190,12 @@ function DocInfo(props) {
           savedList: listOfSaves,
 
           reportedList: res.reportedDoctors ? res.reportedDoctors : [],
-          // numReports: res[0].report ? res[0].report.reportCount : 0,
           numReports: props.targetDoc.report ? props.targetDoc.report.reportCount : 0,
-
-          // reportReasonsList: res[0].report ? res[0].report.reportReasons : [],
           reportReasonsList: props.targetDoc.report ? props.targetDoc.report.reportReasons : [],
 
           oneReason: ""
         });
 
-        // setRenderCount(1);
       }).catch((error) => {
         console.error(error);
       })
@@ -214,8 +203,6 @@ function DocInfo(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    // let [storedSearchInfo, userStoredCredentials] =
-    //   await Promise.all([props.searchInfo, props.storedCredentials]);
     let storedCredentials = await props.storedCredentials;
     return storedCredentials;
   }
@@ -243,11 +230,7 @@ function DocInfo(props) {
       // the newly liked doctor's information to be added to the user's liked doctor list
       let newDocInfo = {
         hospital: props.targetDoc.Hospital,
-        // languages: props.targetDoc.language,
-        // likes: likeSaveInfo.numLikes,
-        // name: props.targetDoc.DocName,
         specialty: props.targetDoc.specialty,
-        // type: props.targetDoc.type,
         username: props.targetDoc.userName
       };
 
@@ -261,13 +244,7 @@ function DocInfo(props) {
           return ({
             ...prevState
           })
-          // return{
-          // //   ...likeSaveInfo,
-          // // hasLiked: true,
-          // // numLikes: newLikes
-          // }
         }
-        // likedList: (likeSaveInfo.likedList.length == 0) ? [newDocInfo] : [prevState.likedList, newDocInfo],
       )
     }
 
@@ -277,57 +254,45 @@ function DocInfo(props) {
       username: props.targetDoc.userName,
       likes: likeSaveInfo.numLikes
     }
-    toggleLike(likeSaveInfo.likedList,updateInfo );
+    toggleLike(likeSaveInfo.likedList, updateInfo);
     updateLocalDocList(updateInfo);
 
   }
 
-  // triggered if the like button is pressed (which sets state)
-  // useEffect(() => {
-  //   if (renderCount == 1) {
-  //     return toggleLike();
-  //   }
-  // }, [likeSaveInfo.hasLiked, likeSaveInfo.likedList]);
-
 
   const toggleLike = (targetList, numberOfLikeInfoParam) => {
 
-        let url = "https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/postLikeInfo";
-        let  proxyurl = "https://cors-anywhere.herokuapp.com/";
-        let params = {
-          userName:likeSaveInfo.username,
-          likedList:targetList
-        }
-        axios.post(proxyurl+url, params)
-        .then((res)=>{
-          props.updateDoctorLikes(numberOfLikeInfoParam);
-        })
-        .catch(error=>console.log(error))
-
-        // props.changeDocLikeStatus(likeSaveInfo.likedList);
+    let url = "https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/postLikeInfo";
+    let proxyurl = "https://cors-anywhere.herokuapp.com/";
+    let params = {
+      userName: likeSaveInfo.username,
+      likedList: targetList
+    }
+    axios.post(proxyurl + url, params)
+      .then((res) => {
+        props.updateDoctorLikes(numberOfLikeInfoParam);
+      })
+      .catch(error => console.log(error))
   }
 
-  const updateLocalDocList = (updateInfo)=>{
+  const updateLocalDocList = (updateInfo) => {
     // set location target list location
-    console.log('local list');
     let newDocList = [];
-    for (let doc in props.docInfo){
+    for (let doc in props.docInfo) {
       let docItem = props.docInfo[doc];
-      if (docItem.DocName == props.targetDoc.DocName){
+      if (docItem.DocName == props.targetDoc.DocName) {
         docItem.NumberOfLikes = likeSaveInfo.numLikes;
         docItem.likes = likeSaveInfo.numLikes;
       }
       newDocList.push(docItem);
     }
-    console.log(newDocList);
     props.setDocInfo(newDocList);
 
     // set database
     let newDatabase;
     newDatabase = props.database;
-    let hospitalId = updateInfo['hospital'].replace(/\s/g,'')
-    let docID = updateInfo['username'].replace(/\s/g,'')
-    console.log(newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['doctors'][docID]['likes']);
+    let hospitalId = updateInfo['hospital'].replace(/\s/g, '')
+    let docID = updateInfo['username'].replace(/\s/g, '')
     newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['doctors'][docID]['likes'] = likeSaveInfo.numLikes;
     newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['doctors'][docID]['NumberOfLikes'] = likeSaveInfo.numLikes;
     props.setDatabase(newDatabase);
@@ -361,7 +326,6 @@ function DocInfo(props) {
       // the newly saved doctor's information to be added to the user's saved doctor list
       let newDocInfo = {
         hospital: props.targetDoc.Hospital,
-        // imgSrc: props.targetDoc.imgSrc,
         languages: props.targetDoc.language,
         likes: likeSaveInfo.numLikes,
         name: props.targetDoc.DocName,
@@ -371,12 +335,6 @@ function DocInfo(props) {
       };
       likeSaveInfo.savedList.push(newDocInfo);
 
-      // setState(prevState => ({
-      //   // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-      //   ...likeSaveInfo,
-      //   prevState.hasSaved = true;
-
-      // }))
 
       setState(
         // add to the list if the list contains other doctors, otherwise use this doctor to start a list
@@ -391,22 +349,6 @@ function DocInfo(props) {
     props.changeDocSaveStatus(likeSaveInfo.savedList);
   }
 
-  // triggered if the save button is pressed (which sets state)
-  // useEffect(() => {
-  //   if (renderCount == 1) {
-  //     return toggleSave();
-  //   }
-  // }, [likeSaveInfo.hasSaved, likeSaveInfo.savedList]);
-
-
-  // const toggleSave = () => {
-  //   waitSaveUpdate()
-  //     .then((res) => {
-  //       props.changeDocSaveStatus(res);
-  //     }).catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
 
   let waitSaveUpdate = async () => {
     let savedList = await likeSaveInfo.savedList;
@@ -421,7 +363,7 @@ function DocInfo(props) {
 
 
   // -------------------------------------------------------------------- //
-    // ----------------------------Report---------------------------------------- //
+  // ----------------------------Report---------------------------------------- //
   // 新加 5/14
   //report弹窗：填的表
   const [reportOpen, setReportOpen] = React.useState(false);
@@ -444,7 +386,7 @@ function DocInfo(props) {
 
 
   const reported = likeSaveInfo.reportedList.includes(props.targetDoc.userName);
-// reportedList
+  // reportedList
   // send report to database
   const submitReport = () => {
     const oneReason = likeSaveInfo.oneReason;
@@ -514,33 +456,31 @@ function DocInfo(props) {
   };
 
 
-let Icon = FavoriteIcon;
+  let Icon = FavoriteIcon;
 
-if (loginOpen.userOption == "Recommend") {
-  Icon = FavoriteIcon;
-} else if (loginOpen.userOption == "Save") {
-  Icon = BookmarkBorderOutlinedIcon;
-} else if (loginOpen.userOption == "Report") {
-  Icon = ErrorOutlineOutlinedIcon;
-} else {
-  Icon = EditOutlinedIcon;
-}
+  if (loginOpen.userOption == "Recommend") {
+    Icon = FavoriteIcon;
+  } else if (loginOpen.userOption == "Save") {
+    Icon = BookmarkBorderOutlinedIcon;
+  } else if (loginOpen.userOption == "Report") {
+    Icon = ErrorOutlineOutlinedIcon;
+  } else {
+    Icon = EditOutlinedIcon;
+  }
 
   // He Chen
   let returnPageDesc;
-  if (props.backTo == "resultsPage"){
+  if (props.backTo == "resultsPage") {
     returnPageDesc = "Result Page";
   } else if (props.backTo == "hospprofile") {
     returnPageDesc = "Hospital Profile";
-  } else if (props.backTo == "likeHistory"){
+  } else if (props.backTo == "likeHistory") {
     returnPageDesc = "Like History";
   } else {
     returnPageDesc = "Saved";
   }
 
 
-
-  console.log(props.targetDoc)
 
   return (
     <div>
@@ -641,86 +581,86 @@ if (loginOpen.userOption == "Recommend") {
               </Button>
               ) : (
                   // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的 （这里新的东西比原来长很多 麻烦小心对一下位置）
-                <Fragment>
-                  <Button
-                    startIcon={<ErrorOutlineOutlinedIcon />}
-                    style={{ textTransform: "none" }}
-                    color="primary"
-                    onClick={() => handleLoginOpen("Report")}
-                  >
-                    Report
+                  <Fragment>
+                    <Button
+                      startIcon={<ErrorOutlineOutlinedIcon />}
+                      style={{ textTransform: "none" }}
+                      color="primary"
+                      onClick={() => handleLoginOpen("Report")}
+                    >
+                      Report
                 </Button>
 
-                  {/* login dialog asking user to sign in if they want to report, save, or like */}
-                  <Dialog
-                    fullWidth="true"
-                    maxWidth="sm"
-                    open={loginOpen.open}
-                    onClose={handleLoginClose}
-                  >
-                    <Box display="flex" alignItems="center">
-                      <Box flexGrow={1}>
-                        <DialogTitle>{loginOpen.userOption} a Doctor</DialogTitle>
+                    {/* login dialog asking user to sign in if they want to report, save, or like */}
+                    <Dialog
+                      fullWidth="true"
+                      maxWidth="sm"
+                      open={loginOpen.open}
+                      onClose={handleLoginClose}
+                    >
+                      <Box display="flex" alignItems="center">
+                        <Box flexGrow={1}>
+                          <DialogTitle>{loginOpen.userOption} a Doctor</DialogTitle>
+                        </Box>
+                        <Box>
+                          <DialogActions>
+                            <IconButton
+                              size="small"
+                              onClick={handleLoginClose}
+                              color="primary"
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogActions>
+                        </Box>
                       </Box>
-                      <Box>
-                        <DialogActions>
-                          <IconButton
-                            size="small"
-                            onClick={handleLoginClose}
-                            color="primary"
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        </DialogActions>
-                      </Box>
-                    </Box>
-                    <DialogContent>
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <Icon style={{ color: "red" }} />
-                        <br></br>
-                        <Typography variant="body1" align="center">
-                          You need to sign in to {loginOpen.userOption.toLowerCase()} this doctor
+                      <DialogContent>
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Icon style={{ color: "red" }} />
+                          <br></br>
+                          <Typography variant="body1" align="center">
+                            You need to sign in to {loginOpen.userOption.toLowerCase()} this doctor
                         </Typography>
-                      </Box>
-                      <Box display="flex" mt={2} mb={2}>
-                        <Button
-                          className={classes.signUpInButton}
-                          variant="contained"
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                          fullWidth
-                          component={Link}
-                          to="/login"
-                        >
-                          Log in
+                        </Box>
+                        <Box display="flex" mt={2} mb={2}>
+                          <Button
+                            className={classes.signUpInButton}
+                            variant="contained"
+                            color="primary"
+                            style={{ textTransform: "none" }}
+                            fullWidth
+                            component={Link}
+                            to="/login"
+                          >
+                            Log in
                         </Button>
-                      </Box>
+                        </Box>
 
-                      <Box display="flex" mb={2}>
-                        <Button
-                          className={classes.signUpInButton}
-                          variant="outlined"
-                          color="primary"
-                          style={{ textTransform: "none" }}
-                          fullWidth
-                          component={Link}
-                          to="/signup"
-                        >
-                          Sign up
+                        <Box display="flex" mb={2}>
+                          <Button
+                            className={classes.signUpInButton}
+                            variant="outlined"
+                            color="primary"
+                            style={{ textTransform: "none" }}
+                            fullWidth
+                            component={Link}
+                            to="/signup"
+                          >
+                            Sign up
                         </Button>
-                      </Box>
-                    </DialogContent>
-                  </Dialog>
+                        </Box>
+                      </DialogContent>
+                    </Dialog>
 
-                </Fragment>
-              )}
+                  </Fragment>
+                )}
 
-                {/* report dialogue 新加的 5/10/2020 */}
+              {/* report dialogue 新加的 5/10/2020 */}
               <Dialog
                 fullWidth="true"
                 maxWidth="sm"
@@ -786,16 +726,16 @@ if (loginOpen.userOption == "Recommend") {
                   Save
               </Button>
               ) : (
-                <Fragment>
-                  <Button
-                    startIcon={<SaveIcon />}
-                    style={{ textTransform: "none" }}
-                    color="primary"
-                    onClick={() => handleLoginOpen("Save")}
-                  >
-                    Save
+                  <Fragment>
+                    <Button
+                      startIcon={<SaveIcon />}
+                      style={{ textTransform: "none" }}
+                      color="primary"
+                      onClick={() => handleLoginOpen("Save")}
+                    >
+                      Save
                 </Button>
-              </Fragment>
+                  </Fragment>
                 )}
 
             </Box>
@@ -854,7 +794,6 @@ if (loginOpen.userOption == "Recommend") {
               </Typography>
             </Box>
           </Box>
-          {console.log(props.targetDoc)}
 
           <DocTags tagInfo={props.targetDoc["tags"]} targetDoc={props.targetDoc} handleLoginOpen={handleLoginOpen} />
         </Grid>

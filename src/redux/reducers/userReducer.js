@@ -4,10 +4,10 @@ import {
   SET_UNAUTHENTICATED,
   LOADING_USER,
 
-    // 新加5/14
-    GET_PROFILE,
-    GET_SPECIALTY,
-    GET_CONDITION,
+  // 新加5/14
+  GET_PROFILE,
+  GET_SPECIALTY,
+  GET_CONDITION,
 } from "../types";
 
 // initial state; when user is not logged in!
@@ -48,25 +48,25 @@ export default function (state = initialState, action) {
         loading: true,
       };
 
-          // -------------------- ------------------------- //
+    // -------------------- ------------------------- //
 
     // 新加5/14
     // GET
     case GET_PROFILE:
-    return {
-      ...state,
-      doctorData: action.payload,
-    };
-  case GET_SPECIALTY:
-    return {
-      ...state,
-      specialtyList: action.payload,
-    };
-  case GET_CONDITION:
-    return {
-      ...state,
-      conditionsList: action.payload,
-    };
+      return {
+        ...state,
+        doctorData: action.payload,
+      };
+    case GET_SPECIALTY:
+      return {
+        ...state,
+        specialtyList: action.payload,
+      };
+    case GET_CONDITION:
+      return {
+        ...state,
+        conditionsList: action.payload,
+      };
     default:
       return state;
   }

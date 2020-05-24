@@ -41,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
 export default function TopRatedDocCard(props) {
   const classes = useStyles();
 
+  const likes = props.targetDoc.likes ? props.targetDoc.likes : 0;
+
   const handleOnclick = ()=>{
     props.setProfileBackToDestination("hospprofile");
     props.updateTargetDoc(props.targetDoc);
@@ -84,7 +86,7 @@ export default function TopRatedDocCard(props) {
             <Box className={classes.likeBox}>
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                &nbsp;{props.targetDoc.likes}
+                &nbsp;{likes}
               </Typography>
             </Box>
           </Box>

@@ -138,9 +138,6 @@ function Tags(props) {
         }
       }), props.storedCredentials]);
     return [storedSearchInfo, userStoredCredentials];
-
-    // let storedCredentials = await props.storedCredentials;
-    // return storedCredentials;
   }
 
 

@@ -64,10 +64,7 @@ export default function HospitalCard(props) {
 
   let cardImage = (
     <div style={{ width: 150, height: 150 }}>
-      <img
-        className={classes.img}
-        src={props.resultData["imgSrc"]}
-      ></img>
+      <img className={classes.img} src={props.resultData["imgSrc"]}></img>
     </div>
   );
 
@@ -107,11 +104,11 @@ export default function HospitalCard(props) {
         <Grid item xs={12} sm={2}>
           {/* like icon + number of likes */}
           <Box className={classes.likeBox}>
-          <div align="center">
-            <FavoriteIcon style={{ color: "red" }} />
-            <Typography variant="body2" color="primary">
-              {hospLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
-            </Typography>
+            <div align="center">
+              <FavoriteIcon style={{ color: "red" }} />
+              <Typography variant="body2" color="primary">
+                {hospLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+              </Typography>
             </div>
           </Box>
         </Grid>

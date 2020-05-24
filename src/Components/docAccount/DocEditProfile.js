@@ -14,9 +14,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import RemoveIcon from "@material-ui/icons/RemoveCircleOutlineSharp";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import axios from "axios";
 
 import Radio from "@material-ui/core/Radio";
@@ -26,13 +23,11 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { useSelector } from "react-redux";
 import Alert from "@material-ui/lab/Alert";
 
 import {
@@ -147,23 +142,13 @@ function DocEditProfile(props) {
   // get data
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
   useEffect(() => {
-    // if (renderCount == 0) {
-    // console.log('in the mission');
-    console.log("hi: 1");
     getStoredData();
-    // }
   }, []);
 
-  // if (res[0] && res[1] && res[2] && res[3] && Object.keys(res[0]).length > 0 && Object.keys(res[1]).length > 0 && Object.keys(res[2]).length > 0 && Object.keys(res[3]).length > 0) {
 
   let getStoredData = async () => {
     let baseurl =
       "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
-    // let storedSearchInfo2 = await axios.get(baseurl+'getspecprofile');
-    // let userInfo = props.credentials;
-    // let storedSearchInfo =  props.doctorData;
-    // let specialtyList =  props.specialtyList;
-    // let conditionsList =  props.conditionsList;
     let storedSearchInfoData = await axios.get(baseurl + "getspecprofile");
     let specialtyListData = await axios.get(baseurl + "getspeclist");
     let conditionsListData = await axios.get(baseurl + "getcondlist");
@@ -201,8 +186,6 @@ function DocEditProfile(props) {
       ];
       window.scrollTo(0, 0);
       // data -> from doctor account
-      console.log("hi here");
-      console.log(allContents);
       const userInfo = res[0].profile;
 
       // data -> from specialty data
@@ -288,27 +271,9 @@ function DocEditProfile(props) {
     }
 
     return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
-
-    // return [userInfo, storedSearchInfo];
   };
 
-  // submit success snackbar
-  // const [open, setOpen] = React.useState(false);
-
-  // const openSuccessMsg = () => {
-  //   setOpen(true);
-  // };
-
-  // const closeSuccessMsg = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // };
-
   // -------------------- functions to change state ------------------------- //
-
-  console.log(list.specialtyList);
 
   // change publish status
   const handlePublishChange = (event) => {
@@ -740,7 +705,6 @@ function DocEditProfile(props) {
         hospital: removedHospital,
         specialty: removedSpec,
       };
-      console.log(deleteInfo);
       if (deleteInfo.hospital != "" && deleteInfo.specialty != "") {
         props.deleteProfileInSpec(deleteInfo);
       }
@@ -831,8 +795,6 @@ function DocEditProfile(props) {
       conditionsList: conditionsList,
     };
 
-    console.log("spec: ", specListData);
-    console.log("cond: ", condListData);
 
     // to user account
     props.sendAccountProfile(accountData);
@@ -855,19 +817,6 @@ function DocEditProfile(props) {
     window.scrollTo(0, 0);
     setOpen(true);
     props.setProfileWarning(false);
-
-    // // wait for data sent to firebase before reloading the window
-    // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
-    // // open submit success message
-    // // openSuccessMsg();
-
-    // const reload = async () => {
-    //   await delay(3000);
-    //   window.location.reload();
-    // };
-    // sessionStorage.setItem("reloading", "true");
-    // // reload();
   };
 
   // -------------------------  errors --------------------------------- //
@@ -942,12 +891,12 @@ function DocEditProfile(props) {
   if (renderCount == 0) {
     return (
       <div>
-          
+
         <CircularProgress
           color="secondary"
           style={{ marginLeft: "45%", marginTop: "10%" }}
         />
-            
+
       </div>
     );
   } else {
@@ -991,8 +940,8 @@ function DocEditProfile(props) {
                 you can do it now!
               </Alert>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             <Typography variant="body1">
               Please fill out the profile to the best of your ability. The more
@@ -1098,8 +1047,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             <br></br>
             {/* Hospital type */}
@@ -1138,8 +1087,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             <br></br>
             {/* Work phone number */}
@@ -1230,8 +1179,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             <TextField
               required
@@ -1396,8 +1345,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             {/* Qualifications */}
             <TextField
@@ -1443,8 +1392,8 @@ function DocEditProfile(props) {
                 *Required & alphabetical letters only
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             {/* Add condition */}
 
@@ -1477,8 +1426,8 @@ function DocEditProfile(props) {
                 *Required & alphabetical letters only
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             {/* Languages */}
             <Autocomplete
@@ -1507,8 +1456,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-              ""
-            )}
+                ""
+              )}
             <br></br>
             <br></br>
             <br></br>
@@ -1585,17 +1534,11 @@ const states = [
 ];
 
 const specialties = [
-  "General Surgery",
   "Cardiology",
   "Ophthalmology",
   "Gastroenterology",
   "Neurology",
   "Obstetrics & Gynecology",
-  "Otorhinolaryngology",
-  "Urology",
-  "Paediatrics",
-  "Orthopaedics",
-  "Anaethesiology",
 ];
 
 const languageList = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];

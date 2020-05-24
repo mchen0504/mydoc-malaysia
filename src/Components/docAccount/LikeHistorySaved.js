@@ -10,8 +10,6 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from "react-router-dom";
 
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import axios from "axios";
 
 import savedLikeNoResultsFound from "../../img/savedLikeNoResultsFound.png";
@@ -99,14 +97,7 @@ function LikeHistorySaved(props) {
 
   const [renderCount, setRenderCount] = React.useState(0);
 
-  // const [saveLike, setSaveLike] = React.useState({
-  //   doctors: [],
-  //   hospitals: []
-  // })
-
   const [databaseInfo, setDatabase] = React.useState({})
-
-  // const indicator = "";
 
   useEffect(() => {
     displayStoredCredentials();
@@ -185,11 +176,6 @@ function LikeHistorySaved(props) {
         setDoctorCards(docCardsList);
         setHospitalCards(hosCardsList);
         setRenderCount(1);
-        // setSaveLike({
-        //   doctors: likedDoctors,
-        //   hospitals: likedHospitals
-        // });
-
       })
       .catch((error) => {
         console.error(error);
@@ -203,17 +189,6 @@ function LikeHistorySaved(props) {
     return [userStoredCredentials, databaseInfo];
   }
 
-
-  let getSpecialtyData = async (searchSpecialty) => {
-    let data =
-      await axios.get(axios.defaults.baseURL + "getallsearchdata",
-        {
-          params: {
-            specialty: searchSpecialty
-          }
-        })
-    return data;
-  }
 
   if (renderCount === 0) {
     return (
@@ -327,16 +302,9 @@ function DocCard(props) {
   }
 
 
-  // const handleClick = () => {
-  //   props.updateTargetDoc(props.resultData);
-  //   if (props.history != null) {
-  //     props.history.push("/docprofile");
-  //   }
-  // };
-
 
   return (
-    <Card className={classes.root} onClick={clickDoctorCard}>
+    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={clickDoctorCard}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* doctor image */}
@@ -429,7 +397,7 @@ function HospitalCard(props) {
 
 
   return (
-    <Card className={classes.root} onClick={clickHospitalCard}>
+    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={clickHospitalCard}>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* hospital logo image */}
@@ -480,25 +448,4 @@ function HospitalCard(props) {
 
 
 
-
-
-
-
-
-// LikeHistorySaved.propTypes = {
-//   // updateVerification: PropTypes.func.isRequired,
-//   // getAllSearchData: PropTypes.func.isRequired
-// };
-
-// const mapStateToProps = (state) => ({
-//   storedCredentials: state.user.credentials,
-//   // searchData: state.data.searchData
-// });
-
-// const mapActionsToProps = {
-//   // updateVerification,
-//   // getAllSearchData
-// };
-
-// export default connect(mapStateToProps, mapActionsToProps)(LikeHistorySaved);
 export default LikeHistorySaved;

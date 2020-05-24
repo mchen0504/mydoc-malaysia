@@ -16,7 +16,6 @@ import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
-import ShareOutlinedIcon from "@material-ui/icons/ShareOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -100,16 +99,12 @@ function HospInfo(props) {
   const backToRes = () => {
     if (props.history != null) {
       if (props.backTo == "resultsPage") {
-        console.log(1);
         props.history.push("/results");
       } else if (props.backTo == "hospprofile") {
-        console.log(2);
         props.history.push("/results");
       } else if (props.backTo == "likeHistory"){
-        console.log(3);
         props.history.push("/likehistory");
       } else {
-        console.log(4);
         props.history.push("/saved");
       }
     }
@@ -219,10 +214,6 @@ function HospInfo(props) {
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
-    // let [storedSearchInfo, userStoredCredentials] =
-    //   await Promise.all([props.searchInfo, props.storedCredentials]);
-    // return [storedSearchInfo, userStoredCredentials];
-
     let storedCredentials = await props.storedCredentials;
     return storedCredentials;
   }
@@ -359,13 +350,6 @@ function HospInfo(props) {
     }
     toggleSave();
   }
-
-  // triggered if the save button is pressed (which sets state)
-  // useEffect(() => {
-  //   if (renderCount == 1) {
-  //     return toggleSave();
-  //   }
-  // }, [likeSaveInfo.hasSaved, likeSaveInfo.savedList]);
 
 
   const toggleSave = () => {
