@@ -108,7 +108,7 @@ export default function DocCard(props) {
             </Typography>
             <br></br>
             {/* private tag */}
-            <Chip color="secondary" size="small" label="Private"></Chip>
+            <Chip color="secondary" size="small" label={props.resultData["Type"]}></Chip>
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={2}>

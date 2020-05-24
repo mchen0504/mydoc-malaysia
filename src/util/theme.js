@@ -41,7 +41,7 @@ export default {
     },
     button: {
       marginTop: 12,
-      fontFamily: "'Montserrat', sans-serif",
+      fontFamily: "'Roboto', sans-serif",
       textTransform: "none",
       marginBottom: 30,
       position: "relative",

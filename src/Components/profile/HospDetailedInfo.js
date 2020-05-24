@@ -154,7 +154,7 @@ export default function DocInfo(props) {
             <Typography variant="h6" color="primary">
               Conditions
             </Typography>
-            <Divider className={classes.divider} style={{ width: 200 }} />
+            <Divider className={classes.divider} style={{ width: 100 }} />
             <Typography variant="body1">{conditionsDesc}</Typography>
           </Box>
           <Hidden smUp>

@@ -62,7 +62,7 @@ export default function Appointment(props) {
           <br></br>
           <Link style={{ textDecoration: "underline" }}>
             <a
-              href={appointment[appointmentType]['content']}
+              href={"mailto:" + appointment[appointmentType]['content']}
               target="_blank"
               style={{ color: "#003367" }}
             >
@@ -140,7 +140,7 @@ export default function Appointment(props) {
             <br></br>
             <Link style={{ textDecoration: "underline" }} >
               <a
-                href={appointment[appointmentType]['content']}
+                href={"tel:" + appointment[appointmentType]['content']}
                 target="_blank"
                 style={{ color: "#003367" }}
               >
