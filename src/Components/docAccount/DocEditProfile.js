@@ -145,132 +145,132 @@ function DocEditProfile(props) {
     getStoredData();
   }, []);
 
-
   let getStoredData = async () => {
-    let baseurl =
-      "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
-    let storedSearchInfoData = await axios.get(baseurl + "getspecprofile");
-    let specialtyListData = await axios.get(baseurl + "getspeclist");
-    let conditionsListData = await axios.get(baseurl + "getcondlist");
-    let userInfoData = await axios.get(baseurl + "user");
-    let userInfo = userInfoData.data.credentials;
-    let storedSearchInfo2 = storedSearchInfoData.data;
-    let specialtyList2 = specialtyListData.data;
-    let conditionsList2 = conditionsListData.data;
-    let dataSet = [
-      userInfo,
-      storedSearchInfo2,
-      specialtyList2,
-      conditionsList2,
-    ];
-    const allContents = {
-      credentials: dataSet[0],
-      doctorData: dataSet[1],
-      specialtyList: dataSet[2],
-      conditionsList: dataSet[3],
-    };
-
-    if (
-      allContents.credentials &&
-      allContents.doctorData &&
-      allContents.specialtyList &&
-      allContents.conditionsList &&
-      renderCount == 0 &&
-      Object.keys(allContents.doctorData).length > 0
-    ) {
-      let res = [
-        allContents.credentials,
-        allContents.doctorData,
-        allContents.specialtyList,
-        allContents.conditionsList,
+    // let baseurl =
+    //   "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
+    try {
+      let storedSearchInfoData = await axios.get("/profile");
+      let specialtyListData = await axios.get("/specialtylist");
+      let conditionsListData = await axios.get("conditionlist");
+      let userInfoData = await axios.get("/user");
+      let userInfo = userInfoData.data.credentials;
+      let storedSearchInfo2 = storedSearchInfoData.data;
+      let specialtyList2 = specialtyListData.data;
+      let conditionsList2 = conditionsListData.data;
+      let dataSet = [
+        userInfo,
+        storedSearchInfo2,
+        specialtyList2,
+        conditionsList2,
       ];
-      window.scrollTo(0, 0);
-      // data -> from doctor account
-      const userInfo = res[0].profile;
+      const allContents = {
+        credentials: dataSet[0],
+        doctorData: dataSet[1],
+        specialtyList: dataSet[2],
+        conditionsList: dataSet[3],
+      };
 
-      // data -> from specialty data
-      const searchInfo = res[1];
+      if (
+        allContents.credentials &&
+        allContents.doctorData &&
+        allContents.specialtyList &&
+        allContents.conditionsList &&
+        renderCount === 0 &&
+        Object.keys(allContents.doctorData).length > 0
+      ) {
+        let res = [
+          allContents.credentials,
+          allContents.doctorData,
+          allContents.specialtyList,
+          allContents.conditionsList,
+        ];
+        window.scrollTo(0, 0);
+        // data -> from doctor account
+        const userInfo = res[0].profile;
 
-      const apptThings = res[1].appointment;
+        // data -> from specialty data
+        const searchInfo = res[1];
 
-      // set state
-      setAllState({
-        ...allState,
-        // personal
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-        gender: userInfo.gender,
-        yearsOfPractice: searchInfo.yearsOfPractice,
+        const apptThings = res[1].appointment;
 
-        // work
-        hospital: searchInfo.hospital,
-        removedHospital: searchInfo.hospital,
-        type: searchInfo.type,
-        phone: searchInfo.phone,
-        buildingInfo: userInfo.buildingInfo,
-        street: userInfo.street,
-        city: userInfo.city,
-        state: userInfo.state,
-        postalCode: userInfo.postalCode,
+        // set state
+        setAllState({
+          ...allState,
+          // personal
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          gender: userInfo.gender,
+          yearsOfPractice: searchInfo.yearsOfPractice,
 
-        // appt
-        call: apptThings.call.status,
-        online: apptThings.online.status,
-        email: apptThings.email.status,
-        onsite: apptThings.onsite.status,
+          // work
+          hospital: searchInfo.hospital,
+          removedHospital: searchInfo.hospital,
+          type: searchInfo.type,
+          phone: searchInfo.phone,
+          buildingInfo: userInfo.buildingInfo,
+          street: userInfo.street,
+          city: userInfo.city,
+          state: userInfo.state,
+          postalCode: userInfo.postalCode,
 
-        callNumber: apptThings.call.content,
-        onlineLink: apptThings.online.content,
-        emailAddress: apptThings.email.content,
+          // appt
+          call: apptThings.call.status,
+          online: apptThings.online.status,
+          email: apptThings.email.status,
+          onsite: apptThings.onsite.status,
 
-        // expertise
-        specialty: searchInfo.specialty,
-        removedSpecialty: searchInfo.specialty,
-        qualifications: searchInfo.qualifications,
-        procedures: searchInfo.procedures,
-        conditions: searchInfo.conditions,
-        removedConditions: searchInfo.conditions,
-        languages: searchInfo.languages,
+          callNumber: apptThings.call.content,
+          onlineLink: apptThings.online.content,
+          emailAddress: apptThings.email.content,
 
-        specOrNot: userInfo.specialty,
-        hospOrNot: userInfo.hospital,
-      });
+          // expertise
+          specialty: searchInfo.specialty,
+          removedSpecialty: searchInfo.specialty,
+          qualifications: searchInfo.qualifications,
+          procedures: searchInfo.procedures,
+          conditions: searchInfo.conditions,
+          removedConditions: searchInfo.conditions,
+          languages: searchInfo.languages,
 
-      setList({
-        specialtyList: res[2],
-        conditionsList: res[3],
-      });
+          specOrNot: userInfo.specialty,
+          hospOrNot: userInfo.hospital,
+        });
 
-      setPublish(searchInfo.publish);
-      setRenderCount(1);
-    } else if (
-      allContents.credentials &&
-      allContents.doctorData &&
-      allContents.specialtyList &&
-      allContents.conditionsList &&
-      renderCount == 0 &&
-      Object.keys(allContents.specialtyList).length > 0
-    ) {
-      let res = [
-        allContents.specialtyList,
-        allContents.conditionsList,
-      ];
-      setList({
-        specialtyList: res[0],
-        conditionsList: res[1],
-      });
-      setRenderCount(1);
-    } else if (
-      allContents.credentials &&
-      allContents.doctorData &&
-      allContents.specialtyList &&
-      allContents.conditionsList &&
-      renderCount == 0
-    ) {
-      setRenderCount(1);
+        setList({
+          specialtyList: res[2],
+          conditionsList: res[3],
+        });
+
+        setPublish(searchInfo.publish);
+        setRenderCount(1);
+      } else if (
+        allContents.credentials &&
+        allContents.doctorData &&
+        allContents.specialtyList &&
+        allContents.conditionsList &&
+        renderCount === 0 &&
+        Object.keys(allContents.specialtyList).length > 0
+      ) {
+        let res = [allContents.specialtyList, allContents.conditionsList];
+        setList({
+          specialtyList: res[0],
+          conditionsList: res[1],
+        });
+        setRenderCount(1);
+      } else if (
+        allContents.credentials &&
+        allContents.doctorData &&
+        allContents.specialtyList &&
+        allContents.conditionsList &&
+        renderCount === 0
+      ) {
+        setRenderCount(1);
+      }
+
+      return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
+    } catch (err) {
+      console.log(err);
     }
-
-    return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
   };
 
   // -------------------- functions to change state ------------------------- //
@@ -455,7 +455,7 @@ function DocEditProfile(props) {
           // delete one chip
           onDelete={() => {
             const procFilter = allState.procedures.filter(
-              (entry) => entry != oneProc
+              (entry) => entry !== oneProc
             );
             setAllState({
               ...allState,
@@ -492,11 +492,11 @@ function DocEditProfile(props) {
       // empty space cases here and hopefully users will not enter more than 3 empty spaces. We can fix this later.
 
       !allState.procedures.includes(allState.newProc) &&
-      allState.newProc != "" &&
-      allState.newProc != " " &&
-      allState.newProc != "  " &&
-      allState.newProc != "   " &&
-      allState.newProc != "    "
+      allState.newProc !== "" &&
+      allState.newProc !== " " &&
+      allState.newProc !== "  " &&
+      allState.newProc !== "   " &&
+      allState.newProc !== "    "
     ) {
       setAllState({
         ...allState,
@@ -523,7 +523,7 @@ function DocEditProfile(props) {
           // delete one chip
           onDelete={() => {
             const condFilter = allState.conditions.filter(
-              (entry) => entry != oneCond
+              (entry) => entry !== oneCond
             );
             setAllState({
               ...allState,
@@ -556,11 +556,11 @@ function DocEditProfile(props) {
       });
     } else if (
       !allState.conditions.includes(allState.newCond) &&
-      allState.newCond != "" &&
-      allState.newCond != " " &&
-      allState.newCond != "  " &&
-      allState.newCond != "   " &&
-      allState.newCond != "    "
+      allState.newCond !== "" &&
+      allState.newCond !== " " &&
+      allState.newCond !== "  " &&
+      allState.newCond !== "   " &&
+      allState.newCond !== "    "
     ) {
       setAllState({
         ...allState,
@@ -587,7 +587,7 @@ function DocEditProfile(props) {
           // delete one chip
           onDelete={() => {
             const langFilter = allState.languages.filter(
-              (entry) => entry != oneLang
+              (entry) => entry !== oneLang
             );
             setAllState({
               ...allState,
@@ -610,7 +610,7 @@ function DocEditProfile(props) {
         ...allState,
         languages: newList,
       });
-    } else if (!allState.languages.includes(newLang) && newLang != "") {
+    } else if (!allState.languages.includes(newLang) && newLang !== "") {
       setAllState({
         ...allState,
         languages: [...allState.languages, newLang],
@@ -649,14 +649,14 @@ function DocEditProfile(props) {
       if (Object.keys(specialtyList).includes(currentSpec)) {
         specialtyList[currentSpec]++;
       } else {
-        if (currentSpec != "") {
+        if (currentSpec !== "") {
           specialtyList[currentSpec] = 1;
         }
       }
       if (specialtyList[removedSpec] > 1) {
         specialtyList[removedSpec]--;
       } else {
-        if (removedSpec != "") {
+        if (removedSpec !== "") {
           specialtyList[removedSpec] = 0;
         }
       }
@@ -705,7 +705,7 @@ function DocEditProfile(props) {
         hospital: removedHospital,
         specialty: removedSpec,
       };
-      if (deleteInfo.hospital != "" && deleteInfo.specialty != "") {
+      if (deleteInfo.hospital !== "" && deleteInfo.specialty !== "") {
         props.deleteProfileInSpec(deleteInfo);
       }
     }
@@ -795,7 +795,6 @@ function DocEditProfile(props) {
       conditionsList: conditionsList,
     };
 
-
     // to user account
     props.sendAccountProfile(accountData);
 
@@ -875,9 +874,9 @@ function DocEditProfile(props) {
 
   const specialtyError = !allState.specialty;
   const qualificationsError = !allState.qualifications;
-  const proceduresError = allState.procedures == "" || procNotLetter;
-  const conditionsError = allState.conditions == "" || condNotLetter;
-  const languageError = allState.languages == "";
+  const proceduresError = allState.procedures === "" || procNotLetter;
+  const conditionsError = allState.conditions === "" || condNotLetter;
+  const languageError = allState.languages === "";
   expertiseError =
     specialtyError ||
     qualificationsError ||
@@ -888,15 +887,13 @@ function DocEditProfile(props) {
 
   // -------------------------------------------------------------------- //
 
-  if (renderCount == 0) {
+  if (renderCount === 0) {
     return (
       <div>
-
         <CircularProgress
           color="secondary"
           style={{ marginLeft: "45%", marginTop: "10%" }}
         />
-
       </div>
     );
   } else {
@@ -940,8 +937,8 @@ function DocEditProfile(props) {
                 you can do it now!
               </Alert>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             <Typography variant="body1">
               Please fill out the profile to the best of your ability. The more
@@ -1047,8 +1044,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             <br></br>
             {/* Hospital type */}
@@ -1087,8 +1084,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             <br></br>
             {/* Work phone number */}
@@ -1179,8 +1176,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             <TextField
               required
@@ -1345,8 +1342,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             {/* Qualifications */}
             <TextField
@@ -1392,8 +1389,8 @@ function DocEditProfile(props) {
                 *Required & alphabetical letters only
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             {/* Add condition */}
 
@@ -1426,8 +1423,8 @@ function DocEditProfile(props) {
                 *Required & alphabetical letters only
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             {/* Languages */}
             <Autocomplete
@@ -1456,8 +1453,8 @@ function DocEditProfile(props) {
                 *Required
               </p>
             ) : (
-                ""
-              )}
+              ""
+            )}
             <br></br>
             <br></br>
             <br></br>
@@ -1536,6 +1533,7 @@ const states = [
 const specialties = [
   "Cardiology",
   "Ophthalmology",
+  "General Surgery",
   "Gastroenterology",
   "Neurology",
   "Obstetrics & Gynecology",

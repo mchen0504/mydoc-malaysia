@@ -6,22 +6,30 @@ import {
   SET_UNAUTHENTICATED,
   LOADING_USER,
 
-    // 新加5/14
-    GET_PROFILE,
-    GET_SPECIALTY,
-    GET_CONDITION,
+  // 新加5/14
+  GET_PROFILE,
+  GET_SPECIALTY,
+  GET_CONDITION,
 } from "../types";
 import axios from "axios";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 //loginUser is used in Login.js
 export const loginUser = (userData, history) => (dispatch) => {
   //send action with type LOADING_UI and catch the action in reducer
   dispatch({ type: LOADING_UI });
-  axios
-    .post("/login", userData)
-    .then((res) => {
-      //send request to server
-      setAuthorizationHeader(res.data.token);
+
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, userData.email, userData.password)
+    .then((userCredential) => {
+      return userCredential.user.getIdToken();
+    })
+    .then((idToken) => {
+      setAuthorizationHeader(idToken);
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
       history.push(`/`);
@@ -32,41 +40,105 @@ export const loginUser = (userData, history) => (dispatch) => {
         payload: err.response.data,
       });
     });
+
+  // axios
+  //   .post("/login", userData)
+  //   .then((res) => {
+  //     //send request to server
+  //     setAuthorizationHeader(res.data.token);
+  //     dispatch(getUserData());
+  //     dispatch({ type: CLEAR_ERRORS });
+  //     history.push(`/`);
+  //   })
+  //   .catch((err) => {
+  //     dispatch({
+  //       type: SET_ERRORS,
+  //       payload: err.response.data,
+  //     });
+  //   });
 };
 
 // used in GeneralSignup.js
-export const signupGeneralUser = (newGeneralUserData, history) => (
-  dispatch
-) => {
-  //send action with type LOADING_UI and catch the action in reducer
-  dispatch({ type: LOADING_UI });
-  axios
-    .post("/generalsignup", newGeneralUserData)
-    .then((res) => {
-      setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
-      dispatch({ type: CLEAR_ERRORS });
-      history.push(`/`);
-    })
-    .catch((err) => {
-      if (err.response) {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
-      }
-    });
-};
+export const signupGeneralUser =
+  (newGeneralUserData, history) => (dispatch) => {
+    //send action with type LOADING_UI and catch the action in reducer
+    dispatch({ type: LOADING_UI });
+    const auth = getAuth();
+    createUserWithEmailAndPassword(
+      auth,
+      newGeneralUserData.email,
+      newGeneralUserData.password
+    )
+      .then((data) => {
+        newGeneralUserData.userId = data.user.uid;
+        return data.user.getIdToken();
+      })
+      .then((idToken) => {
+        setAuthorizationHeader(idToken);
+        axios
+          .post("/createdbgeneraluser", newGeneralUserData)
+          .then((res) => {
+            dispatch({
+              type: SET_USER /* use in userReducer.js */,
+              payload: res.data,
+            });
+          })
+          .catch((err) => console.log(err));
+        dispatch({ type: CLEAR_ERRORS });
+        history.push(`/`);
+      })
+      .catch((err) => {
+        if (err.response) {
+          dispatch({
+            type: SET_ERRORS,
+            payload: err.response.data,
+          });
+        }
+      });
+
+    // axios
+    //   .post("/generalsignup", newGeneralUserData)
+    //   .then((res) => {
+    //     setAuthorizationHeader(res.data.token);
+    //     dispatch(getUserData());
+    //     dispatch({ type: CLEAR_ERRORS });
+    //     history.push(`/`);
+    //   })
+    //   .catch((err) => {
+    //     if (err.response) {
+    //       dispatch({
+    //         type: SET_ERRORS,
+    //         payload: err.response.data,
+    //       });
+    //     }
+    //   });
+  };
 
 //used in DoctorSignup.js
 export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
   //send action with type LOADING_UI and catch the action in reducer
   dispatch({ type: LOADING_UI });
-  axios
-    .post("/doctorsignup", newDoctorUserData)
-    .then((res) => {
-      setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
+  const auth = getAuth();
+  createUserWithEmailAndPassword(
+    auth,
+    newDoctorUserData.email,
+    newDoctorUserData.password
+  )
+    .then((data) => {
+      newDoctorUserData.userId = data.user.uid;
+      return data.user.getIdToken();
+    })
+    .then((idToken) => {
+      setAuthorizationHeader(idToken);
+      axios
+        .post("/createdbdoctoruser", newDoctorUserData)
+        .then((res) => {
+          dispatch({
+            type: SET_USER /* use in userReducer.js */,
+            payload: res.data,
+          });
+        })
+        .catch((err) => console.log(err));
       dispatch({ type: CLEAR_ERRORS });
       history.push(`/`);
     })
@@ -78,6 +150,23 @@ export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
         });
       }
     });
+
+  // axios
+  //   .post("/doctorsignup", newDoctorUserData)
+  //   .then((res) => {
+  //     setAuthorizationHeader(res.data.token);
+  //     dispatch(getUserData());
+  //     dispatch({ type: CLEAR_ERRORS });
+  //     history.push(`/`);
+  //   })
+  //   .catch((err) => {
+  //     if (err.response) {
+  //       dispatch({
+  //         type: SET_ERRORS,
+  //         payload: err.response.data,
+  //       });
+  //     }
+  //   });
 };
 
 const setAuthorizationHeader = (token) => {
@@ -93,14 +182,14 @@ export const logoutUser = (history) => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
   if (
-        window.location.pathname == "/account" ||
-        window.location.pathname == "/profile" ||
-        window.location.pathname == "/saved" ||
-        window.location.pathname == "/likehistory" ||
-        window.location.pathname == "/accountverification"
-      ) {
-        window.location.replace("/login");
-      }
+    window.location.pathname == "/account" ||
+    window.location.pathname == "/profile" ||
+    window.location.pathname == "/saved" ||
+    window.location.pathname == "/likehistory" ||
+    window.location.pathname == "/accountverification"
+  ) {
+    window.location.replace("/login");
+  }
 };
 
 // used in App.js to fetch user data
@@ -121,7 +210,7 @@ export const getUserData = () => (dispatch) => {
 export const updateVerification = (newVerification) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/verification", newVerification)
+    .post("/updateverification", newVerification)
     .then(() => {
       dispatch(getUserData());
     })
@@ -132,7 +221,7 @@ export const updateVerification = (newVerification) => (dispatch) => {
 export const changeProfilePic = (newProfilePic) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/profilepicture", newProfilePic)
+    .post("/updateprofilepic", newProfilePic)
     .then(() => {
       dispatch(getUserData());
     })
@@ -143,7 +232,7 @@ export const changeProfilePic = (newProfilePic) => (dispatch) => {
 export const updateUserStoredDocTags = (userSelectedTags) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/useraddeddoctortags", userSelectedTags)
+    .post("/updateuserstoreddoctags", userSelectedTags)
     .then(() => {
       dispatch(getUserData());
     })
@@ -154,7 +243,7 @@ export const updateUserStoredDocTags = (userSelectedTags) => (dispatch) => {
 export const changeDocLikeStatus = (newLikedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/userlikedoctor", newLikedList)
+    .post("/updatelikeddoctors", newLikedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -165,7 +254,7 @@ export const changeDocLikeStatus = (newLikedList) => (dispatch) => {
 export const changeDocSaveStatus = (newSavedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/usersavedoctor", newSavedList)
+    .post("/updatesaveddoctors", newSavedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -176,7 +265,7 @@ export const changeDocSaveStatus = (newSavedList) => (dispatch) => {
 export const updateUserStoredHospTags = (userSelectedTags) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/useraddedhospitaltags", userSelectedTags)
+    .post("/updateuserstoredhosptags", userSelectedTags)
     .then(() => {
       dispatch(getUserData());
     })
@@ -187,7 +276,7 @@ export const updateUserStoredHospTags = (userSelectedTags) => (dispatch) => {
 export const changeHospLikeStatus = (newLikedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/userlikehospital", newLikedList)
+    .post("/updatelikedhospitals", newLikedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -198,7 +287,7 @@ export const changeHospLikeStatus = (newLikedList) => (dispatch) => {
 export const changeHospSaveStatus = (newSavedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/usersavehospital", newSavedList)
+    .post("/updatesavedhospitals", newSavedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -208,7 +297,7 @@ export const changeHospSaveStatus = (newSavedList) => (dispatch) => {
 // 加了send report
 export const report = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/report", data).catch((err) => console.log(err));
+  axios.post("/reportdoctor", data).catch((err) => console.log(err));
 };
 
 // -------------------- ------------------------- //
@@ -221,7 +310,7 @@ export const report = (data) => (dispatch) => {
 export const sendProfileToSpec = (specData) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/profiletospec", specData)
+    .post("/updatepublicprofile", specData)
     .then(() => {
       dispatch(getSpecProfile());
     })
@@ -231,30 +320,30 @@ export const sendProfileToSpec = (specData) => (dispatch) => {
 // 加了send data to user account profile
 export const sendAccountProfile = (accountData) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/accountprofile", accountData).catch((err) => console.log(err));
+  axios.post("/updateprofile", accountData).catch((err) => console.log(err));
 };
 
 export const deleteProfileInSpec = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/deleteprofile", data).catch((err) => console.log(err));
+  axios.post("/deleteoldprofile", data).catch((err) => console.log(err));
 };
 
 // send specialty list to database
 export const sendSpecList = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/sendspeclist", data).catch((err) => console.log(err));
+  axios.post("/updatespecialtylist", data).catch((err) => console.log(err));
 };
 
 // send condition list to database
 export const sendCondList = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/sendcondlist", data).catch((err) => console.log(err));
+  axios.post("/updateconditionlist", data).catch((err) => console.log(err));
 };
 
 // publish
 export const publish = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/publish", data).catch((err) => console.log(err));
+  axios.post("/publishprofile", data).catch((err) => console.log(err));
 };
 
 // -------------------- ------------------------- //
@@ -267,8 +356,9 @@ export const publish = (data) => (dispatch) => {
 export const getSpecProfile = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/getspecprofile")
+    .get("/profile")
     .then((res) => {
+      console.log(res.data);
       dispatch({
         type: GET_PROFILE /* use in userReducer.js */,
         payload: res.data,
@@ -281,7 +371,7 @@ export const getSpecProfile = () => (dispatch) => {
 export const getSpecList = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/getspeclist")
+    .get("/specialtylist")
     .then((res) => {
       dispatch({
         type: GET_SPECIALTY /* use in userReducer.js */,
@@ -295,7 +385,7 @@ export const getSpecList = () => (dispatch) => {
 export const getCondList = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/getcondlist")
+    .get("/conditionlist")
     .then((res) => {
       dispatch({
         type: GET_CONDITION /* use in userReducer.js */,
@@ -305,7 +395,6 @@ export const getCondList = () => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
-
 // 加了send hospital report
 export const reportHospital = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
@@ -314,17 +403,12 @@ export const reportHospital = (data) => (dispatch) => {
 
 // send doctors reported to user account
 export const sendReportedDoctors = (data) => (dispatch) => {
-    dispatch({ type: LOADING_USER });
-    axios.post("/sendreporteddoctors", data).catch((err) => console.log(err));
-  };
+  dispatch({ type: LOADING_USER });
+  axios.post("/updatereporteddoctors", data).catch((err) => console.log(err));
+};
 
 // send hospitals reported to user account
 export const sendReportedHospitals = (data) => (dispatch) => {
-    dispatch({ type: LOADING_USER });
-    axios.post("/sendreportedhospitals", data).catch((err) => console.log(err));
-  };
-
-
-
-
-
+  dispatch({ type: LOADING_USER });
+  axios.post("/updatereportedhospitals", data).catch((err) => console.log(err));
+};

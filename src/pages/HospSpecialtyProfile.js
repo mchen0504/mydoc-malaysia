@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 //components
-import Navbar from "../Components/Navbar";
-import HospInfo from "../Components/profile/HospInfo";
-import HospSpecialtyDetailedInfo from "../Components/profile/HospSpecialtyDetailedInfo";
+import Navbar from "../components/Navbar";
+import HospInfo from "../components/profile/HospInfo";
+import HospSpecialtyDetailedInfo from "../components/profile/HospSpecialtyDetailedInfo";
 
 const styles = (theme) => ({
   line: {

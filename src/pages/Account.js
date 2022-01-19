@@ -1,25 +1,22 @@
 import React from "react";
-import { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 //components from docAccount folder
-import DocSideNav from "../Components/docAccount/DocSideNav";
-import Navbar from "../Components/Navbar";
-import CovidAlert from "../Components/Alert";
+import DocSideNav from "../components/docAccount/DocSideNav";
+import Navbar from "../components/Navbar";
+import CovidAlert from "../components/Alert";
 
-// import DocEditProfile from "../Components/docAccount/DocEditProfile";
-import DocAccountVerification from "../Components/docAccount/DocAccountVerification";
-import AccountSettings from "../Components/docAccount/AccountSettings";
-import DocEditProfile from "../Components/docAccount/DocEditProfile";
+// import DocEditProfile from "../components/docAccount/DocEditProfile";
+import DocAccountVerification from "../components/docAccount/DocAccountVerification";
+import AccountSettings from "../components/docAccount/AccountSettings";
+import DocEditProfile from "../components/docAccount/DocEditProfile";
 
 //eshin加的 5/4/2020
-import LikeHistorySaved from "../Components/docAccount/LikeHistorySaved";
+import LikeHistorySaved from "../components/docAccount/LikeHistorySaved";
 
 import { connect } from "react-redux";
-
 
 // material ui style
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function Account(props) {
   const classes = useStyles();
 
@@ -41,15 +37,13 @@ function Account(props) {
 
   const [verifyShowWarning, setWarningVerify] = React.useState("");
 
-
   const setProfileWarning = (value) => {
     setWarningProfile(value);
-  }
+  };
 
   const setVerifyWarning = (value) => {
     setWarningVerify(value);
-  }
-
+  };
 
   // right panel on large screen
   let rightPanel;
@@ -58,41 +52,71 @@ function Account(props) {
 
   const index = props.index;
   if (index == 0) {
-    rightPanel = props.storedCredentials.userType == "doctor" ?
-      (
+    rightPanel =
+      props.storedCredentials.userType == "doctor" ? (
         <DocEditProfile setProfileWarning={setProfileWarning} />
       ) : (
-        <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+        <LikeHistorySaved
+          {...props}
+          database={props.database}
+          saveLike="saved"
+        />
       );
 
-    mobileScreen = <DocSideNav
-      profileShowWarning={profileShowWarning}
-      setProfileWarning={setProfileWarning}
-      verifyShowWarning={verifyShowWarning}
-      setVerifyWarning={setVerifyWarning}
-    />;
+    mobileScreen = (
+      <DocSideNav
+        profileShowWarning={profileShowWarning}
+        setProfileWarning={setProfileWarning}
+        verifyShowWarning={verifyShowWarning}
+        setVerifyWarning={setVerifyWarning}
+      />
+    );
   } else if (index == 1) {
     rightPanel = <DocEditProfile setProfileWarning={setProfileWarning} />;
     mobileScreen = <DocEditProfile setProfileWarning={setProfileWarning} />;
   } else if (index == 2) {
-    rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
-    mobileScreen = <LikeHistorySaved {...props} database={props.database} saveLike="saved" />;
+    rightPanel = (
+      <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+    );
+    mobileScreen = (
+      <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+    );
   } else if (index == 3) {
-    rightPanel = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
-    mobileScreen = <LikeHistorySaved {...props} database={props.database} saveLike="likeHistory" />;
+    rightPanel = (
+      <LikeHistorySaved
+        {...props}
+        database={props.database}
+        saveLike="likeHistory"
+      />
+    );
+    mobileScreen = (
+      <LikeHistorySaved
+        {...props}
+        database={props.database}
+        saveLike="likeHistory"
+      />
+    );
   } else if (index == 4) {
-    rightPanel = <DocAccountVerification verifyShowWarning={verifyShowWarning} setVerifyWarning={setVerifyWarning} />;
-    mobileScreen = <DocAccountVerification verifyShowWarning={verifyShowWarning} setVerifyWarning={setVerifyWarning} />;
+    rightPanel = (
+      <DocAccountVerification
+        verifyShowWarning={verifyShowWarning}
+        setVerifyWarning={setVerifyWarning}
+      />
+    );
+    mobileScreen = (
+      <DocAccountVerification
+        verifyShowWarning={verifyShowWarning}
+        setVerifyWarning={setVerifyWarning}
+      />
+    );
   } else {
     rightPanel = <AccountSettings />;
     mobileScreen = <AccountSettings />;
   }
 
-
-
   return (
     <div>
-      <Navbar currentPage='account' />
+      <Navbar currentPage="account" />
       <Hidden smDown>
         <div className={classes.covidBox} style={{ position: "relative" }}>
           <CovidAlert />
@@ -104,7 +128,8 @@ function Account(props) {
               setProfileWarning={setProfileWarning}
               verifyShowWarning={verifyShowWarning}
               setVerifyWarning={setVerifyWarning}
-            />;
+            />
+            ;
           </Grid>
           <Grid item sm={12} md={8} lg={9}>
             {/* default large screen shows profile even if profile is not selected */}
@@ -117,12 +142,8 @@ function Account(props) {
   );
 }
 
-
-
 const mapStateToProps = (state) => ({
   storedCredentials: state.user.credentials,
 });
 
-
 export default connect(mapStateToProps)(Account);
-

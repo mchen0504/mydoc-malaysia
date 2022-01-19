@@ -26,8 +26,8 @@ import store from "../redux/store";
 import { SET_AUTHENTICATED } from "../redux/types";
 
 // components
-import Navbar from "../Components/Navbar";
-import CovidAlert from "../Components/Alert";
+import Navbar from "../components/Navbar";
+import CovidAlert from "../components/Alert";
 
 // material ui style
 const styles = (theme) => ({
@@ -98,11 +98,9 @@ class Login extends Component {
     });
   };
 
-
   getStoredData = async (userData) => {
     await this.props.loginUser(userData, this.props.history);
   };
-
 
   render() {
     const {
@@ -210,14 +208,14 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
 });
 
-
 const mapActionsToProps = {
   getSpecProfile,
   getSpecList,
   getCondList,
-  loginUser
+  loginUser,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(
-  withStyles(styles)(Login)
-);
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Login));

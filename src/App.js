@@ -15,10 +15,19 @@ import themeFile from "./util/theme";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { SET_AUTHENTICATED } from "./redux/types";
-import { logoutUser, getUserData, getSpecProfile, getSpecList, getCondList } from "./redux/actions/userActions";
 
-import { getAllSearchData, getAllSearchDataHospital } from "./redux/actions/dataActions";
+import {
+  logoutUser,
+  getUserData,
+  getSpecProfile,
+  getSpecList,
+  getCondList,
+} from "./redux/actions/userActions";
 
+import {
+  getAllSearchData,
+  getAllSearchDataHospital,
+} from "./redux/actions/dataActions";
 
 // pages
 import Home from "./pages/Home";
@@ -32,14 +41,14 @@ import Hospprofile from "./pages/HospProfile";
 //新加的 5/1/2020
 import Hospspecialtyprofile from "./pages/HospSpecialtyProfile";
 import Account from "./pages/Account";
+import BodyPartsDialog from "./components/bodyparts/Body";
 
 // use themeFile from theme.js
 const theme = createMuiTheme(themeFile);
 
-
 // set up api
-axios.defaults.baseURL =
-  "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
+// axios.defaults.baseURL = "http://localhost:3008/";
+// "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
 
 // backend stuff
 const token = localStorage.FBIdToken;
@@ -53,20 +62,18 @@ if (token) {
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
     axios.defaults.headers.common["Authorization"] = token; //deal with page refresh
-    store.dispatch(getUserData()); // get user data if logged in
-    store.dispatch(getSpecProfile());
+    store.dispatch(getUserData());
+    // store.dispatch(getSpecProfile());
   }
 }
 
-
 // 加了这两句 （michelle)   5/14/20  search function写完之后我profile改一下variable就可以删了
-store.dispatch(getAllSearchData());
-store.dispatch(getAllSearchDataHospital());
+// store.dispatch(getAllSearchData());
+// store.dispatch(getAllSearchDataHospital());
 
 // get info from "inputList" collection for account profile display
-store.dispatch(getSpecList());
-store.dispatch(getCondList());
-
+// store.dispatch(getSpecList());
+// store.dispatch(getCondList());
 
 // set up material ui theme
 // route to home/login/sign up
@@ -91,7 +98,8 @@ function App() {
   // he chen Newest
   const [conditionListForInput, setConditionListForInput] = React.useState();
   const [specialtyListForInput, setSpecialtyListForInput] = React.useState();
-  const [profileBackToDestination, setProfileBackToDestination] = React.useState();
+  const [profileBackToDestination, setProfileBackToDestination] =
+    React.useState();
   const [bodyPartsDic, setBodyPartsDic] = React.useState(null);
   const [drivingTime, setDrivingTime] = React.useState([1000, -1]);
   const [conditionLabel, setConditionLabel] = React.useState("");
@@ -99,52 +107,54 @@ function App() {
   const [database, setDatabase] = React.useState();
   const reportMax = 50;
 
-
-
   useEffect(() => {
-
     if (database == null) {
-      axios.get(proxyurl + 'https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/getDatabase')
-        .then((res) => {
-          setDatabase(res.data);
-        })
+      axios.get("/alldata").then((res) => {
+        setDatabase(res.data);
+      });
     }
 
     if (conditionListForInput == null) {
-      axios.get(proxyurl + 'https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/getAllInputs')
-        .then((res) => {
-          setConditionListForInput(res.data[0]);
-          setSpecialtyListForInput(res.data[1]);
-        })
+      axios.get("/inputs").then((res) => {
+        setConditionListForInput(res.data[0]);
+        setSpecialtyListForInput(res.data[1]);
+      });
     }
 
-    if (location == '') {
+    if (location == "") {
       navigator.geolocation.getCurrentPosition(function (position) {
         let latitude;
         let longitude;
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-        axios.get(proxyurl + 'https://maps.googleapis.com/maps/api/geocode/json', {
-          params: {
-            latlng: latitude + ',' + longitude,
-            key: 'AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ'
-          }
-        }).then((res) => {
-          //  Assume you live in this area (Kuala Lumpur).
-          setLocation('Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur');
-        })
-
-      })
+        axios
+          // .get(proxyurl + "https://maps.googleapis.com/maps/api/geocode/json", {
+          .get("https://maps.googleapis.com/maps/api/geocode/json", {
+            params: {
+              latlng: latitude + "," + longitude,
+              key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+            },
+          })
+          .then((res) => {
+            //  Assume you live in this area (Kuala Lumpur).
+            setLocation(
+              "Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur"
+            );
+          });
+      });
     }
 
     if (bodyPartsDic == null) {
-      axios.get(proxyurl + 'https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/getBodyDic')
+      axios
+        .get("/bodyparts")
         .then((res) => {
           setBodyPartsDic(res.data);
         })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-
-  }, []);
+  });
 
   const getLocationValue = (value) => {
     setLocation(value);
@@ -157,12 +167,12 @@ function App() {
   // he chen newest
   const changeConditionLabel = (value, method) => {
     setKeywords(value);
-    if (method == 'body') {
+    if (method == "body") {
       setConditionLabel(value);
     } else {
-      setConditionLabel('');
+      setConditionLabel("");
     }
-  }
+  };
 
   const getSearchMethod = (value) => {
     setSearchMethod(value);
@@ -170,7 +180,7 @@ function App() {
   };
 
   const startSearch = () => {
-    setConditionLabel('');
+    setConditionLabel("");
     setSearchBegin(true);
   };
 
@@ -230,12 +240,15 @@ function App() {
       let validateType =
         hos["type"].toLowerCase() == hosType.toLowerCase() ||
         hosType.toLowerCase() == "both";
-      let validateLanguage = languageList.every(
-        (element) => hos["Language"].indexOf(element) > -1
-      ) || languageList == [];
+      let validateLanguage =
+        languageList.every(
+          (element) => hos["Language"].indexOf(element) > -1
+        ) || languageList == [];
 
-      let validateDrivingTime = hos['timeOfDriving'] >= drivingTime[0] && hos['timeOfDriving'] <= drivingTime[1]
-        || drivingTime[0] == 1000;
+      let validateDrivingTime =
+        (hos["timeOfDriving"] >= drivingTime[0] &&
+          hos["timeOfDriving"] <= drivingTime[1]) ||
+        drivingTime[0] == 1000;
       if (validateType && validateLanguage && validateDrivingTime) {
         newHospitalList.push(hos);
       }
@@ -253,13 +266,12 @@ function App() {
 
   // he chen
   const doMainSearch = (pageProps) => {
-
     if (hospitalInfo.length != 0 || docInfo.lenghth != 0) {
       sethospitalInfo([]);
       setDocInfo([]);
       sethospitalInfoCopy([]);
       setDocInfoCopy([]);
-      setSearchingState('in-progress')
+      setSearchingState("in-progress");
     }
 
     if (pageProps.history != null) {
@@ -268,23 +280,24 @@ function App() {
 
     if (searchBegin) {
       let rootData = database;
-      let userKeyWords = keywords.replace(/\s/g, '').toLowerCase();
+      let userKeyWords = keywords.replace(/\s/g, "").toLowerCase();
       let newDocData = [];
       let newHosData = [];
       getNewDocAndHospital(rootData, userKeyWords)
         .then((res) => {
           newDocData = res.newDocData;
           newHosData = res.newHosData;
-        }).then(() => {
+        })
+        .then(() => {
           sethospitalInfo(newHosData);
           setDocInfo(newDocData);
           sethospitalInfoCopy(newHosData);
           setDocInfoCopy(newDocData);
-          setSearchingState('finished');
+          setSearchingState("finished");
         })
         .catch((error) => {
           console.error(error);
-        })
+        });
     }
 
     return function resetSearchStatus() {
@@ -296,49 +309,77 @@ function App() {
   let getNewDocAndHospital = async (rootData, userKeyWords) => {
     let newDocData = [];
     let newHosData = [];
-    if (searchMethod == 'Specialty') {
+    if (searchMethod == "Specialty") {
       for (let specialty in rootData) {
-        if (specialty.replace(/\s/g, '').toLowerCase() == userKeyWords) {
-          if (location == '') {
-            for (let hospital in rootData[specialty]['hospitals']) {
-              let hospitalInfo = rootData[specialty]['hospitals'][hospital];
-              if (hospitalInfo.report == null || hospitalInfo.report.reportCount < reportMax) {
+        if (specialty.replace(/\s/g, "").toLowerCase() == userKeyWords) {
+          if (location == "") {
+            for (let hospital in rootData[specialty]["hospitals"]) {
+              let hospitalInfo = rootData[specialty]["hospitals"][hospital];
+              if (
+                hospitalInfo.report == null ||
+                hospitalInfo.report.reportCount < reportMax
+              ) {
                 newHosData.push(hospitalInfo);
               }
-              for (let doctor in hospitalInfo['doctors']) {
-                if (!hospitalInfo['doctors'][doctor]['deleted'] && hospitalInfo['doctors'][doctor]['publish'] && (hospitalInfo['doctors'][doctor]['report'] == null || hospitalInfo['doctors'][doctor]['report']['reportCount'] < reportMax)) {
-                  hospitalInfo['doctors'][doctor]['userName'] = doctor;
-                  newDocData.push(hospitalInfo['doctors'][doctor]);
+              for (let doctor in hospitalInfo["doctors"]) {
+                if (
+                  !hospitalInfo["doctors"][doctor]["deleted"] &&
+                  hospitalInfo["doctors"][doctor]["publish"] &&
+                  (hospitalInfo["doctors"][doctor]["report"] == null ||
+                    hospitalInfo["doctors"][doctor]["report"]["reportCount"] <
+                      reportMax)
+                ) {
+                  hospitalInfo["doctors"][doctor]["userName"] = doctor;
+                  newDocData.push(hospitalInfo["doctors"][doctor]);
                 }
               }
             }
           } else {
-            for (let hospital in rootData[specialty]['hospitals']) {
-              let hospitalInfo = rootData[specialty]['hospitals'][hospital];
+            for (let hospital in rootData[specialty]["hospitals"]) {
+              let hospitalInfo = rootData[specialty]["hospitals"][hospital];
               let potentialLocation = hospitalInfo.address;
-              let distanceInfo = await axios.get(proxyurl + 'https://maps.googleapis.com/maps/api/distancematrix/json', {
-                params: {
-                  origins: location,
-                  destinations: potentialLocation,
-                  key: 'AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ'
+              let distanceInfo = await axios.get(
+                proxyurl +
+                  "https://maps.googleapis.com/maps/api/distancematrix/json",
+                {
+                  params: {
+                    origins: location,
+                    destinations: potentialLocation,
+                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                  },
                 }
-              })
+              );
               let duration;
-              if (distanceInfo.data.rows.length > 0 && distanceInfo.data.rows[0].elements.length > 0 && distanceInfo.data.rows[0].elements[0].status == 'OK') {
-                duration = await distanceInfo.data.rows[0].elements[0].duration.value / 3600;
+              if (
+                distanceInfo.data.rows.length > 0 &&
+                distanceInfo.data.rows[0].elements.length > 0 &&
+                distanceInfo.data.rows[0].elements[0].status == "OK"
+              ) {
+                duration =
+                  (await distanceInfo.data.rows[0].elements[0].duration.value) /
+                  3600;
               } else {
                 duration = -1;
               }
               if (duration < 1.5 && duration >= 0) {
                 hospitalInfo.timeOfDriving = duration;
-                if (hospitalInfo.report == null || hospitalInfo.report.reportCount < reportMax) {
+                if (
+                  hospitalInfo.report == null ||
+                  hospitalInfo.report.reportCount < reportMax
+                ) {
                   newHosData.push(hospitalInfo);
                 }
-                for (let doctor in hospitalInfo['doctors']) {
-                  if (!hospitalInfo['doctors'][doctor]['deleted'] && (hospitalInfo['doctors'][doctor]['report'] == null || hospitalInfo['doctors'][doctor]['report']['reportCount'] < reportMax) && hospitalInfo['doctors'][doctor]['publish']) {
-                    hospitalInfo['doctors'][doctor]['userName'] = doctor;
-                    hospitalInfo['doctors'][doctor]['timeOfDriving'] = duration;
-                    newDocData.push(hospitalInfo['doctors'][doctor]);
+                for (let doctor in hospitalInfo["doctors"]) {
+                  if (
+                    !hospitalInfo["doctors"][doctor]["deleted"] &&
+                    (hospitalInfo["doctors"][doctor]["report"] == null ||
+                      hospitalInfo["doctors"][doctor]["report"]["reportCount"] <
+                        reportMax) &&
+                    hospitalInfo["doctors"][doctor]["publish"]
+                  ) {
+                    hospitalInfo["doctors"][doctor]["userName"] = doctor;
+                    hospitalInfo["doctors"][doctor]["timeOfDriving"] = duration;
+                    newDocData.push(hospitalInfo["doctors"][doctor]);
                   }
                 }
               }
@@ -348,53 +389,89 @@ function App() {
       }
     } else if (searchMethod == "Doctor") {
       for (let specialty in rootData) {
-        for (let hos in rootData[specialty]['hospitals']) {
-          let potentialHos = rootData[specialty]['hospitals'][hos];
-          if (location == '') {
+        for (let hos in rootData[specialty]["hospitals"]) {
+          let potentialHos = rootData[specialty]["hospitals"][hos];
+          if (location == "") {
             let docFound = 0;
-            for (let doctor in potentialHos['doctors']) {
-              let targetDoctor = potentialHos['doctors'][doctor];
-              if (targetDoctor['name'].replace(/\s/g, '').toLowerCase().includes(userKeyWords.replace(/\s/g, '').toLowerCase())) {
-                if (!targetDoctor['deleted'] && (targetDoctor['report'] == null || targetDoctor['report']['reportCount'] < reportMax) && targetDoctor['publish']) {
-                  targetDoctor['userName'] = doctor;
+            for (let doctor in potentialHos["doctors"]) {
+              let targetDoctor = potentialHos["doctors"][doctor];
+              if (
+                targetDoctor["name"]
+                  .replace(/\s/g, "")
+                  .toLowerCase()
+                  .includes(userKeyWords.replace(/\s/g, "").toLowerCase())
+              ) {
+                if (
+                  !targetDoctor["deleted"] &&
+                  (targetDoctor["report"] == null ||
+                    targetDoctor["report"]["reportCount"] < reportMax) &&
+                  targetDoctor["publish"]
+                ) {
+                  targetDoctor["userName"] = doctor;
                   newDocData.push(targetDoctor);
                   docFound++;
                 }
               }
               if (docFound == 1) {
-                if (potentialHos.report == null || potentialHos.report.reportCount < reportMax) {
+                if (
+                  potentialHos.report == null ||
+                  potentialHos.report.reportCount < reportMax
+                ) {
                   newHosData.push(potentialHos);
                 }
               }
             }
           } else {
             let potentialLocation = potentialHos.address;
-            let distanceInfo = await axios.get(proxyurl + 'https://maps.googleapis.com/maps/api/distancematrix/json', {
-              params: {
-                origins: location,
-                destinations: potentialLocation,
-                key: 'AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ'
+            let distanceInfo = await axios.get(
+              proxyurl +
+                "https://maps.googleapis.com/maps/api/distancematrix/json",
+              {
+                params: {
+                  origins: location,
+                  destinations: potentialLocation,
+                  key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                },
               }
-            });
+            );
             let duration;
-            if (distanceInfo.data.rows.length > 0 && distanceInfo.data.rows[0].elements.length > 0 && distanceInfo.data.rows[0].elements[0].status == 'OK') {
-              duration = await distanceInfo.data.rows[0].elements[0].duration.value / 3600;
+            if (
+              distanceInfo.data.rows.length > 0 &&
+              distanceInfo.data.rows[0].elements.length > 0 &&
+              distanceInfo.data.rows[0].elements[0].status == "OK"
+            ) {
+              duration =
+                (await distanceInfo.data.rows[0].elements[0].duration.value) /
+                3600;
             } else {
               duration = -1;
             }
             if (duration < 1.5 && duration >= 0) {
               let docFound = 0;
-              for (let doctor in potentialHos['doctors']) {
-                let targetDoctor = potentialHos['doctors'][doctor];
-                if (targetDoctor['name'].replace(/\s/g, '').toLowerCase().includes(userKeyWords.replace(/\s/g, '').toLowerCase())) {
-                  if (!targetDoctor['deleted'] && (targetDoctor['report'] == null || targetDoctor['report']['reportCount'] < reportMax) && targetDoctor['publish']) {
-                    targetDoctor['userName'] = doctor;
+              for (let doctor in potentialHos["doctors"]) {
+                let targetDoctor = potentialHos["doctors"][doctor];
+                if (
+                  targetDoctor["name"]
+                    .replace(/\s/g, "")
+                    .toLowerCase()
+                    .includes(userKeyWords.replace(/\s/g, "").toLowerCase())
+                ) {
+                  if (
+                    !targetDoctor["deleted"] &&
+                    (targetDoctor["report"] == null ||
+                      targetDoctor["report"]["reportCount"] < reportMax) &&
+                    targetDoctor["publish"]
+                  ) {
+                    targetDoctor["userName"] = doctor;
                     newDocData.push(targetDoctor);
                     docFound++;
                   }
                 }
                 if (docFound == 1) {
-                  if (potentialHos.report == null || potentialHos.report.reportCount < reportMax) {
+                  if (
+                    potentialHos.report == null ||
+                    potentialHos.report.reportCount < reportMax
+                  ) {
                     newHosData.push(potentialHos);
                   }
                 }
@@ -405,23 +482,36 @@ function App() {
       }
     } else if (searchMethod == "Hospital") {
       for (let specialty in rootData) {
-        for (let hos in rootData[specialty]['hospitals']) {
-          let potentialHos = rootData[specialty]['hospitals'][hos];
+        for (let hos in rootData[specialty]["hospitals"]) {
+          let potentialHos = rootData[specialty]["hospitals"][hos];
           let locationMatch = true;
-          let hosNameMacth = potentialHos['name'].replace(/\s/g, '').toLowerCase().includes(userKeyWords);
+          let hosNameMacth = potentialHos["name"]
+            .replace(/\s/g, "")
+            .toLowerCase()
+            .includes(userKeyWords);
           if (hosNameMacth) {
-            if (location != '') {
+            if (location != "") {
               let potentialLocation = potentialHos.address;
-              let distanceInfo = await axios.get(proxyurl + 'https://maps.googleapis.com/maps/api/distancematrix/json', {
-                params: {
-                  origins: location,
-                  destinations: potentialLocation,
-                  key: 'AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ'
+              let distanceInfo = await axios.get(
+                proxyurl +
+                  "https://maps.googleapis.com/maps/api/distancematrix/json",
+                {
+                  params: {
+                    origins: location,
+                    destinations: potentialLocation,
+                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                  },
                 }
-              });
-              let duration
-              if (distanceInfo.data.rows.length > 0 && distanceInfo.data.rows[0].elements.length > 0 && distanceInfo.data.rows[0].elements[0].status == 'OK') {
-                duration = await distanceInfo.data.rows[0].elements[0].duration.value / 3600;
+              );
+              let duration;
+              if (
+                distanceInfo.data.rows.length > 0 &&
+                distanceInfo.data.rows[0].elements.length > 0 &&
+                distanceInfo.data.rows[0].elements[0].status == "OK"
+              ) {
+                duration =
+                  (await distanceInfo.data.rows[0].elements[0].duration.value) /
+                  3600;
               } else {
                 duration = -1;
               }
@@ -430,44 +520,61 @@ function App() {
               }
             }
             if (locationMatch) {
-              if (potentialHos.report == null || potentialHos.report.reportCount < reportMax) {
+              if (
+                potentialHos.report == null ||
+                potentialHos.report.reportCount < reportMax
+              ) {
                 newHosData.push(potentialHos);
               }
-              for (let doctor in potentialHos['doctors']) {
-                let targetDoctor = potentialHos['doctors'][doctor];
-                if (!targetDoctor['deleted'] && (targetDoctor['report'] == null || targetDoctor['report']['reportCount'] < reportMax) && targetDoctor['publish']) {
-                  potentialHos['doctors'][doctor]['userName'] = doctor;
-                  newDocData.push(potentialHos['doctors'][doctor]);
+              for (let doctor in potentialHos["doctors"]) {
+                let targetDoctor = potentialHos["doctors"][doctor];
+                if (
+                  !targetDoctor["deleted"] &&
+                  (targetDoctor["report"] == null ||
+                    targetDoctor["report"]["reportCount"] < reportMax) &&
+                  targetDoctor["publish"]
+                ) {
+                  potentialHos["doctors"][doctor]["userName"] = doctor;
+                  newDocData.push(potentialHos["doctors"][doctor]);
                 }
               }
             }
           }
         }
-
       }
     } else {
       for (let specialty in rootData) {
-        let conditionList = rootData[specialty]['conditions'];
+        let conditionList = rootData[specialty]["conditions"];
         conditionList = conditionList.map(function (item) {
-          return item.toLowerCase().replace(/\s/g, '');
+          return item.toLowerCase().replace(/\s/g, "");
         });
         let locationMatch = true;
         let conditionMatch = conditionList.includes(userKeyWords);
         if (conditionMatch) {
-          for (let hos in rootData[specialty]['hospitals']) {
-            let potentialHos = rootData[specialty]['hospitals'][hos];
+          for (let hos in rootData[specialty]["hospitals"]) {
+            let potentialHos = rootData[specialty]["hospitals"][hos];
             let potentialLocation = potentialHos.address;
-            if (location != '') {
-              let distanceInfo = await axios.get(proxyurl + 'https://maps.googleapis.com/maps/api/distancematrix/json', {
-                params: {
-                  origins: location,
-                  destinations: potentialLocation,
-                  key: 'AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ'
+            if (location != "") {
+              let distanceInfo = await axios.get(
+                proxyurl +
+                  "https://maps.googleapis.com/maps/api/distancematrix/json",
+                {
+                  params: {
+                    origins: location,
+                    destinations: potentialLocation,
+                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                  },
                 }
-              });
-              let duration
-              if (distanceInfo.data.rows.length > 0 && distanceInfo.data.rows[0].elements.length > 0 && distanceInfo.data.rows[0].elements[0].status == 'OK') {
-                duration = await distanceInfo.data.rows[0].elements[0].duration.value / 3600;
+              );
+              let duration;
+              if (
+                distanceInfo.data.rows.length > 0 &&
+                distanceInfo.data.rows[0].elements.length > 0 &&
+                distanceInfo.data.rows[0].elements[0].status == "OK"
+              ) {
+                duration =
+                  (await distanceInfo.data.rows[0].elements[0].duration.value) /
+                  3600;
               } else {
                 duration = -1;
               }
@@ -476,18 +583,28 @@ function App() {
               }
             }
             if (locationMatch) {
-              if (potentialHos.report == null || potentialHos.report.reportCount < reportMax) {
+              if (
+                potentialHos.report == null ||
+                potentialHos.report.reportCount < reportMax
+              ) {
                 newHosData.push(potentialHos);
               }
-              for (let doctor in potentialHos['doctors']) {
-                let doctorCondition = potentialHos['doctors'][doctor]['conditions'];
+              for (let doctor in potentialHos["doctors"]) {
+                let doctorCondition =
+                  potentialHos["doctors"][doctor]["conditions"];
                 doctorCondition = doctorCondition.map(function (item) {
-                  return item.toLowerCase().replace(/\s/g, '');
+                  return item.toLowerCase().replace(/\s/g, "");
                 });
-                let targetDoctor = potentialHos['doctors'][doctor];
-                if (doctorCondition.includes(userKeyWords) && !targetDoctor['deleted'] && (targetDoctor['report'] == null || targetDoctor['report']['reportCount'] < reportMax) && targetDoctor['publish']) {
-                  potentialHos['doctors'][doctor]['userName'] = doctor;
-                  newDocData.push(potentialHos['doctors'][doctor]);
+                let targetDoctor = potentialHos["doctors"][doctor];
+                if (
+                  doctorCondition.includes(userKeyWords) &&
+                  !targetDoctor["deleted"] &&
+                  (targetDoctor["report"] == null ||
+                    targetDoctor["report"]["reportCount"] < reportMax) &&
+                  targetDoctor["publish"]
+                ) {
+                  potentialHos["doctors"][doctor]["userName"] = doctor;
+                  newDocData.push(potentialHos["doctors"][doctor]);
                 }
               }
             }
@@ -499,53 +616,56 @@ function App() {
     newHosData.forEach((hos) => {
       hos["Address"] = hos.address;
       hos["HospitalType"] = hos.type;
-      hos['Insurance'] = hos.insurance;
-      hos['Language'] = hos.languages;
-      hos['Phone'] = hos.phone;
-      hos['HospitalName'] = hos.name;
-      hos['RelateSpecialty'] = hos.relatedSpecialty;
-      hos['Tags'] = hos.tags;
-      hos['Web'] = hos.website;
+      hos["Insurance"] = hos.insurance;
+      hos["Language"] = hos.languages;
+      hos["Phone"] = hos.phone;
+      hos["HospitalName"] = hos.name;
+      hos["RelateSpecialty"] = hos.relatedSpecialty;
+      hos["Tags"] = hos.tags;
+      hos["Web"] = hos.website;
       let conditionList = [];
-      for (let doctor in hos['doctors']) {
-        let targetDoc = hos['doctors'][doctor];
+      for (let doctor in hos["doctors"]) {
+        let targetDoc = hos["doctors"][doctor];
         targetDoc.conditions = targetDoc.conditions.map((item) => {
           let newItem = item.toLowerCase();
-          newItem = newItem.replace(newItem[0], newItem[0].toUpperCase())
-          return newItem
+          newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
+          return newItem;
         });
         targetDoc.conditions.forEach((condition) => {
           if (conditionList.indexOf(condition) == -1) {
-            conditionList.push(condition)
+            conditionList.push(condition);
           }
         });
       }
-      hos['Conditions'] = conditionList;
+      hos["Conditions"] = conditionList;
     });
 
     newDocData.forEach((doc) => {
       doc["Address"] = doc.address;
       doc["Language"] = doc.languages;
-      doc['Phone'] = doc.phone;
-      doc['Hospital'] = doc.hospital;
-      doc['Conditions'] = doc.conditions;
-      doc['DocName'] = doc.name;
-      doc['Specialty'] = doc.specialty;
-      doc['YearsofPractice'] = doc.yearsOfPractice;
-      doc['Procedures'] = doc.procedures;
-      doc['NumberOfLikes'] = doc.likes;
-      doc['Qualifications'] = doc.qualifications;
-      doc['Type'] = doc.type
+      doc["Phone"] = doc.phone;
+      doc["Hospital"] = doc.hospital;
+      doc["Conditions"] = doc.conditions;
+      doc["DocName"] = doc.name;
+      doc["Specialty"] = doc.specialty;
+      doc["YearsofPractice"] = doc.yearsOfPractice;
+      doc["Procedures"] = doc.procedures;
+      doc["NumberOfLikes"] = doc.likes;
+      doc["Qualifications"] = doc.qualifications;
+      doc["Type"] = doc.type;
     });
 
-    newDocData.sort((a, b) => { return b.likes - a.likes });
-    newHosData.sort((a, b) => { return b.likes - a.likes });
+    newDocData.sort((a, b) => {
+      return b.likes - a.likes;
+    });
+    newHosData.sort((a, b) => {
+      return b.likes - a.likes;
+    });
     return {
       newDocData: newDocData,
-      newHosData: newHosData
-    }
+      newHosData: newHosData,
+    };
   };
-
 
   const renderHome = (renderProps) => {
     return (
@@ -632,7 +752,6 @@ function App() {
         specialtyListForInput={specialtyListForInput}
         profileBackToDestination={profileBackToDestination}
         setProfileBackToDestination={setProfileBackToDestination}
-
       />
     );
   };
@@ -663,80 +782,86 @@ function App() {
     );
   };
 
-
-
-
   // michelle改的/加的
   const renderAccount = (renderProps) => {
-    return <Account
-      {...renderProps}
-      setDocInfo={setDocInfo}
-      sethospitalInfo={sethospitalInfo}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={0}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setDocInfo={setDocInfo}
+        sethospitalInfo={sethospitalInfo}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={0}
+      />
+    );
   };
 
   const renderAccountEditProfile = (renderProps) => {
-    return <Account
-      {...renderProps}
-      updateTargetDoc={updateTargetDoc}
-      updateTargetHos={updateTargetHos}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={1}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={1}
+      />
+    );
   };
 
   const renderSaved = (renderProps) => {
-    return <Account
-      {...renderProps}
-      updateTargetDoc={updateTargetDoc}
-      updateTargetHos={updateTargetHos}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={2}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={2}
+      />
+    );
   };
 
   const renderLikeHistory = (renderProps) => {
-    return <Account
-      {...renderProps}
-      updateTargetDoc={updateTargetDoc}
-      updateTargetHos={updateTargetHos}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={3}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={3}
+      />
+    );
   };
 
   const renderAccountVerification = (renderProps) => {
-    return <Account
-      {...renderProps}
-      updateTargetDoc={updateTargetDoc}
-      updateTargetHos={updateTargetHos}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={4}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={4}
+      />
+    );
   };
 
   const renderAccountSettings = (renderProps) => {
-    return <Account
-      {...renderProps}
-      updateTargetDoc={updateTargetDoc}
-      updateTargetHos={updateTargetHos}
-      setProfileBackToDestination={setProfileBackToDestination}
-      database={database}
-      index={5}
-    />;
+    return (
+      <Account
+        {...renderProps}
+        updateTargetDoc={updateTargetDoc}
+        updateTargetHos={updateTargetHos}
+        setProfileBackToDestination={setProfileBackToDestination}
+        database={database}
+        index={5}
+      />
+    );
   };
-
-
-
-
-
 
   return (
     <MuiThemeProvider theme={theme}>

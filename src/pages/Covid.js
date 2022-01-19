@@ -3,15 +3,15 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 
 //components from Covid folder
-import SideNav from "../Components/covid/SideNav";
-import AboutCovid from "../Components/covid/AboutCovid";
-import Symptoms from "../Components/covid/Symptoms";
-import Prevention from "../Components/covid/Prevention";
-import Testing from "../Components/covid/Testing";
-import Treatment from "../Components/covid/Treatment";
-import Inquiries from "../Components/covid/Inquiries";
-import Navbar from "../Components/Navbar";
-import CovidAlert from "../Components/Alert";
+import SideNav from "../components/covid/SideNav";
+import AboutCovid from "../components/covid/AboutCovid";
+import Symptoms from "../components/covid/Symptoms";
+import Prevention from "../components/covid/Prevention";
+import Testing from "../components/covid/Testing";
+import Treatment from "../components/covid/Treatment";
+import Inquiries from "../components/covid/Inquiries";
+import Navbar from "../components/Navbar";
+import CovidAlert from "../components/Alert";
 
 // material ui style
 const styles = (theme) => ({

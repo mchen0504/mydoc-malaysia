@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 import Hidden from "@material-ui/core/Hidden";
 import Tabs from "@material-ui/core/Tabs";
@@ -133,104 +133,90 @@ const StyledTab = withStyles((theme) => ({
 export default function GlobalSearchTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [keyword, setkeyword] = React.useState('');
+  const [keyword, setkeyword] = React.useState("");
   let specialties = props.specialtyListForInput;
   let conditions = props.conditionListForInput;
 
-    // He Chen 2020 5/22
-    let docNames = [];
-    let hospNames = [];
-  
-    const getDocHosNameList = () => {
-      // console.log(props.database === undefined);
-      let allInfo = props.database;
-      for (let spec in allInfo){
-        let targetSpec = allInfo[spec];
-        for (let hos in targetSpec.hospitals){
-          let hospital = targetSpec.hospitals[hos];
-          hospNames.push({hospName : hospital.name});
-          let doctorsList = hospital.doctors;
-          for (let docId in doctorsList){
-            if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
-              docNames.push({ name: doctorsList[docId].name });
-            }
+  // He Chen 2020 5/22
+  let docNames = [];
+  let hospNames = [];
+
+  const getDocHosNameList = () => {
+    let allInfo = props.database;
+    for (let spec in allInfo) {
+      let targetSpec = allInfo[spec];
+      for (let hos in targetSpec.hospitals) {
+        let hospital = targetSpec.hospitals[hos];
+        hospNames.push({ hospName: hospital.name });
+        let doctorsList = hospital.doctors;
+        for (let docId in doctorsList) {
+          if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
+            docNames.push({ name: doctorsList[docId].name });
           }
         }
       }
-      docNames = new Set(docNames.map(e => JSON.stringify(e)));
-      docNames = Array.from(docNames).map(e => JSON.parse(e));
-      hospNames = new Set(hospNames.map(e => JSON.stringify(e)));
-      hospNames = Array.from(hospNames).map(e => JSON.parse(e));
     }
-  
-    getDocHosNameList();
+    docNames = new Set(docNames.map((e) => JSON.stringify(e)));
+    docNames = Array.from(docNames).map((e) => JSON.parse(e));
+    hospNames = new Set(hospNames.map((e) => JSON.stringify(e)));
+    hospNames = Array.from(hospNames).map((e) => JSON.parse(e));
+  };
+
+  getDocHosNameList();
 
   const handleSearchMethodChange = (event, newValue) => {
-    let method = '';
-    if(newValue == 0){
-      method = 'Specialty';
-    } else if (newValue == 1){
-      method = 'Doctor';
-    } else if (newValue == 2){
-      method = 'Hospital';
+    let method = "";
+    if (newValue == 0) {
+      method = "Specialty";
+    } else if (newValue == 1) {
+      method = "Doctor";
+    } else if (newValue == 2) {
+      method = "Hospital";
     } else {
-      method = 'Condition';
+      method = "Condition";
     }
     setValue(newValue);
     props.getSearchMethod(method);
   };
 
-
-
   const handleSpecialtySearchKeyChange = (event, newValue) => {
-    
-    if(newValue){
+    if (newValue) {
       props.getKeyWords(newValue.specialty);
     }
-    
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
-    console.log(newValue);
-    if(newValue){
-      console.log(newValue);
+    if (newValue) {
       props.getKeyWords(newValue.name);
     }
-    
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
-    
-    if(newValue){
-      console.log(newValue);
+    if (newValue) {
       props.getKeyWords(newValue.hospName);
     }
-    
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
-    
-    if(newValue){
-      console.log(newValue);
+    if (newValue) {
       props.getKeyWords(newValue.condition);
     }
-    
   };
 
-  const getTextFieldValue = (event)=>{
-    console.log(event.target.value);
+  const getTextFieldValue = (event) => {
     setkeyword(event.target.value);
     props.getKeyWords(event.target.value);
-  }
+  };
 
-  const hadleSearch = ()=>{
+  const hadleSearch = () => {
     props.handleClose();
     props.startSearch();
-  }
+  };
 
   useEffect(() => {
-    if(props.searchBegin){return props.doMainSearch(props);}
-    
+    if (props.searchBegin) {
+      return props.doMainSearch(props);
+    }
   });
 
   return (
@@ -273,7 +259,7 @@ export default function GlobalSearchTabs(props) {
       <TabPanel value={value} index={0} style={{ width: "100%" }}>
         <Autocomplete
           options={specialties}
-          onChange = {handleSpecialtySearchKeyChange}
+          onChange={handleSpecialtySearchKeyChange}
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterSpecialtyOptions}
           renderInput={(params) => (
@@ -288,7 +274,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick = {hadleSearch}
+          onClick={hadleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -303,7 +289,7 @@ export default function GlobalSearchTabs(props) {
       {/* autocomplete: search by doctor's name */}
       <TabPanel value={value} index={1} style={{ width: "100%" }}>
         <Autocomplete
-          onChange = {handleDoctorSearchKeyChange}
+          onChange={handleDoctorSearchKeyChange}
           freeSolo
           options={docNames}
           getOptionLabel={(option) => option.name}
@@ -313,7 +299,7 @@ export default function GlobalSearchTabs(props) {
               {...params}
               label="Search by doctor's name"
               variant="outlined"
-              onChange = {getTextFieldValue}
+              onChange={getTextFieldValue}
             />
           )}
         />
@@ -321,7 +307,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick = {hadleSearch}
+          onClick={hadleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -336,7 +322,7 @@ export default function GlobalSearchTabs(props) {
       {/* autocomplete: search by hospital's name */}
       <TabPanel value={value} index={2} style={{ width: "100%" }}>
         <Autocomplete
-          onChange = {handleHospitalSearchKeyChange}
+          onChange={handleHospitalSearchKeyChange}
           options={hospNames}
           freeSolo
           getOptionLabel={(option) => option.hospName}
@@ -344,7 +330,7 @@ export default function GlobalSearchTabs(props) {
           renderInput={(params) => (
             <TextField
               {...params}
-              onChange = {getTextFieldValue}
+              onChange={getTextFieldValue}
               label="Search by hospital's name"
               variant="outlined"
             />
@@ -354,7 +340,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick = {hadleSearch}
+          onClick={hadleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -369,7 +355,7 @@ export default function GlobalSearchTabs(props) {
       {/* autocomplete: search by condition */}
       <TabPanel value={value} index={3} style={{ width: "100%" }}>
         <Autocomplete
-          onChange = {handleConditionSearchKeyChange}
+          onChange={handleConditionSearchKeyChange}
           options={conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterConditionOptions}
@@ -385,7 +371,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-        onClick = {hadleSearch}
+          onClick={hadleSearch}
           variant="contained"
           color="secondary"
           size="md"

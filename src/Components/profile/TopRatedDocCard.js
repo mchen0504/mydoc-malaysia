@@ -7,7 +7,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Box from "@material-ui/core/Box";
-import docImg from "../../img/results/docAlex.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,13 +42,13 @@ export default function TopRatedDocCard(props) {
 
   const likes = props.targetDoc.likes ? props.targetDoc.likes : 0;
 
-  const handleOnclick = ()=>{
+  const handleOnclick = () => {
     props.setProfileBackToDestination("hospprofile");
     props.updateTargetDoc(props.targetDoc);
     if (props.history != null) {
       props.history.push("/docprofile");
     }
-  }
+  };
 
   return (
     <Card className={classes.root} onClick={handleOnclick}>
@@ -79,7 +78,8 @@ export default function TopRatedDocCard(props) {
               color="textSecondary"
               align="center"
             >
-              <strong>Specialty: </strong> <span>{props.targetDoc.specialty}</span>
+              <strong>Specialty: </strong>{" "}
+              <span>{props.targetDoc.specialty}</span>
             </Typography>
             <br></br>
             {/* Like icon + number of likes */}

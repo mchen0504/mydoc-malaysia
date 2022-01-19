@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 //components
-import Navbar from "../Components/Navbar";
-import DocInfo from "../Components/profile/DocInfo";
-import Appointment from "../Components/profile/Appointment";
-import DocDetailedInfo from "../Components/profile/DocDetailedInfo";
+import Navbar from "../components/Navbar";
+import DocInfo from "../components/profile/DocInfo";
+import Appointment from "../components/profile/Appointment";
+import DocDetailedInfo from "../components/profile/DocDetailedInfo";
 
 const styles = (theme) => ({
   line: {
@@ -20,19 +20,19 @@ class DocProfile extends Component {
   render() {
     const { classes } = this.props;
     window.scrollTo(0, 0);
-    // he chen 
-    const backToPage = this.props.profileBackToDestination
+    // he chen
+    const backToPage = this.props.profileBackToDestination;
     return (
       <div>
         {
-          // // he chen 
+          // // he chen
         }
-        <Navbar  currentPage='DocProfile' {...this.props}/>
-        <DocInfo {...this.props} backTo={backToPage}/>
+        <Navbar currentPage="DocProfile" {...this.props} />
+        <DocInfo {...this.props} backTo={backToPage} />
         <hr className={classes.line}></hr>
-        <Appointment {...this.props}/>
+        <Appointment {...this.props} />
         <hr className={classes.line}></hr>
-        <DocDetailedInfo {...this.props}/>
+        <DocDetailedInfo {...this.props} />
       </div>
     );
   }

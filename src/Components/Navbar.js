@@ -52,17 +52,22 @@ const styles = (theme) => ({
 class Navbar extends Component {
   toHome = (event) => {
     window.location.replace("/");
-  }
+  };
 
   render() {
-    const { classes } = this.props;
+    const { classes, ...other } = this.props;
     const { authenticated } = this.props;
 
     let globalSearch = null;
-    if (this.props.currentPage !== "Home" && this.props.currentPage !== "signUp" && this.props.currentPage !== "login" && this.props.currentPage != "account") {
+    if (
+      this.props.currentPage !== "Home" &&
+      this.props.currentPage !== "signUp" &&
+      this.props.currentPage !== "login" &&
+      this.props.currentPage != "account"
+    ) {
       globalSearch = (
         <Box style={{ cursor: "pointer" }}>
-          <GlobalSearch {...this.props}/>
+          <GlobalSearch {...this.props} />
         </Box>
       );
     }
@@ -90,35 +95,35 @@ class Navbar extends Component {
               <Box>
                 {authenticated ? (
                   <Fragment>
-                    <UserMenu {...this.props} />
+                    <UserMenu {...other} />
                   </Fragment>
                 ) : (
-                    <Fragment>
-                      <Hidden only={["md", "lg", "xl"]}>
-                        <IconButton
-                          className={classes.iconButton}
-                          component={Link}
-                          to="/login"
-                        >
-                          <Avatar style={{ backgroundColor: "#003367" }}>
-                            <PersonIcon />
-                          </Avatar>
-                        </IconButton>
-                      </Hidden>
-                      <Hidden only={["xs", "sm"]}>
-                        <Button
-                          style={{ marginLeft: 20 }}
-                          size="small"
-                          variant="outlined"
-                          color="inherit"
-                          component={Link}
-                          to="/login"
-                        >
-                          Login / Sign up
+                  <Fragment>
+                    <Hidden only={["md", "lg", "xl"]}>
+                      <IconButton
+                        className={classes.iconButton}
+                        component={Link}
+                        to="/login"
+                      >
+                        <Avatar style={{ backgroundColor: "#003367" }}>
+                          <PersonIcon />
+                        </Avatar>
+                      </IconButton>
+                    </Hidden>
+                    <Hidden only={["xs", "sm"]}>
+                      <Button
+                        style={{ marginLeft: 20 }}
+                        size="small"
+                        variant="outlined"
+                        color="inherit"
+                        component={Link}
+                        to="/login"
+                      >
+                        Login / Sign up
                       </Button>
-                      </Hidden>
-                    </Fragment>
-                  )}
+                    </Hidden>
+                  </Fragment>
+                )}
               </Box>
             </Toolbar>
           </AppBar>

@@ -7,14 +7,12 @@ import Hidden from "@material-ui/core/Hidden";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
 
 import savedLikeNoResultsFound from "../../img/savedLikeNoResultsFound.png";
-
-
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -22,10 +20,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // for small cards display, might delete later if naming conventions unify
-
 
 const useStyles = makeStyles((theme) => ({
   ...theme.account,
@@ -74,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   noResultImg: {
     objectFit: "cover",
     width: "90%",
-    height: "90%"
+    height: "90%",
   },
 }));
 
@@ -97,12 +93,11 @@ function LikeHistorySaved(props) {
 
   const [renderCount, setRenderCount] = React.useState(0);
 
-  const [databaseInfo, setDatabase] = React.useState({})
+  const [databaseInfo, setDatabase] = React.useState({});
 
   useEffect(() => {
     displayStoredCredentials();
   }, []);
-
 
   const displayStoredCredentials = () => {
     getStoredCredentials()
@@ -122,9 +117,13 @@ function LikeHistorySaved(props) {
           likedHospitals = stored.hospitals ? stored.hospitals : [];
         }
 
-        let docCardsList = (likedDoctors.length === 0) ?
-          (
-            <Box display="flex" justifyContent="center" style={{ marginTop: "none", marginLeft: "15%" }}>
+        let docCardsList =
+          likedDoctors.length === 0 ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              style={{ marginTop: "none", marginLeft: "15%" }}
+            >
               <div style={{ maxWidth: 600 }}>
                 <img
                   className={classes.noResultImg}
@@ -133,25 +132,35 @@ function LikeHistorySaved(props) {
                 />
               </div>
             </Box>
-
           ) : (
-            likedDoctors.map(doctor => {
+            likedDoctors.map((doctor) => {
               let specialty = doctor.specialty;
               let hospital = doctor.hospital.replace(/\s+/g, "");
               let username = doctor.username.replace(/\s+/g, "");
-              let targetDoc = res[1].data[specialty]['hospitals'][hospital]['doctors'][username];
+              let targetDoc =
+                res[1].data[specialty]["hospitals"][hospital]["doctors"][
+                  username
+                ];
               return (
-                <DocCard {...props} key={doctor.username} targetDoc={targetDoc} targetDocUserName={username} displayType={displayType} />
-              )
+                <DocCard
+                  {...props}
+                  key={doctor.username}
+                  targetDoc={targetDoc}
+                  targetDocUserName={username}
+                  displayType={displayType}
+                />
+              );
             })
-          )
-
-
+          );
 
         // list of liked hospitals cards on hospital tab
-        let hosCardsList = (likedHospitals.length === 0) ?
-          (
-            <Box display="flex" justifyContent="center" style={{ marginTop: "none", marginLeft: "15%" }}>
+        let hosCardsList =
+          likedHospitals.length === 0 ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              style={{ marginTop: "none", marginLeft: "15%" }}
+            >
               <div style={{ maxWidth: 600 }}>
                 <img
                   className={classes.noResultImg}
@@ -160,18 +169,25 @@ function LikeHistorySaved(props) {
                 />
               </div>
             </Box>
-
           ) : (
-            likedHospitals.map(hospital => {
+            likedHospitals.map((hospital) => {
               let specialty = hospital.relatedSpecialty;
               let hospitalUserName = hospital.name.replace(/\s+/g, "");
-              let targetHos = res[1].data[specialty]['hospitals'][hospitalUserName];
+              let targetHos =
+                res[1].data[specialty]["hospitals"][hospitalUserName];
               return (
-                <HospitalCard {...props} key={hospital.name} targetHos={targetHos} targetHosUserName={hospitalUserName} hospitalInfo={hospital} displayType={displayType} database={databaseInfo} />
-              )
+                <HospitalCard
+                  {...props}
+                  key={hospital.name}
+                  targetHos={targetHos}
+                  targetHosUserName={hospitalUserName}
+                  hospitalInfo={hospital}
+                  displayType={displayType}
+                  database={databaseInfo}
+                />
+              );
             })
-          )
-
+          );
 
         setDoctorCards(docCardsList);
         setHospitalCards(hosCardsList);
@@ -179,32 +195,42 @@ function LikeHistorySaved(props) {
       })
       .catch((error) => {
         console.error(error);
-      })
-  }
+      });
+  };
 
   let getStoredCredentials = async () => {
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    let userStoredCredentials = await axios.get(axios.defaults.baseURL + "user");
-    let databaseInfo = await axios.get(proxyurl + 'https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/getDatabase')
-    return [userStoredCredentials, databaseInfo];
-  }
-
+    try {
+      // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      let userStoredCredentials = await axios.get("/user");
+      let databaseInfo = await axios.get("/alldata");
+      return [userStoredCredentials, databaseInfo];
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (renderCount === 0) {
     return (
       <div>
-        <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />
+        <CircularProgress
+          color="secondary"
+          style={{ marginLeft: "45%", marginTop: "5%" }}
+        />
       </div>
     );
   } else {
-
-
     return (
       <a id="likehistory" className={classes.anchor}>
         <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
           <Grid item xs={10} md={8}>
-            <Box display="flex" mt={4} mb={3} flexWrap="wrap" alignItems="center">
+            <Box
+              display="flex"
+              mt={4}
+              mb={3}
+              flexWrap="wrap"
+              alignItems="center"
+            >
               <Box flexGrow={1} flexDirection="row" mb={1}>
                 <Typography variant="h5" color="primary">
                   {/* Back button, 手机屏幕才会出现 */}
@@ -231,14 +257,20 @@ function LikeHistorySaved(props) {
                   onChange={handleDisplay}
                 >
                   <ToggleButton value="doctor" color="primary">
-                    <Typography color="primary" style={{ textTransform: "none" }}>
+                    <Typography
+                      color="primary"
+                      style={{ textTransform: "none" }}
+                    >
                       Doctor
-                  </Typography>
+                    </Typography>
                   </ToggleButton>
                   <ToggleButton value="hospital">
-                    <Typography color="primary" style={{ textTransform: "none" }}>
+                    <Typography
+                      color="primary"
+                      style={{ textTransform: "none" }}
+                    >
                       Hospital
-                  </Typography>
+                    </Typography>
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Box>{" "}
@@ -251,8 +283,8 @@ function LikeHistorySaved(props) {
             {display === "doctor" ? (
               <Fragment>{doctorCards}</Fragment>
             ) : (
-                <Fragment>{hospitalCards}</Fragment>
-              )}
+              <Fragment>{hospitalCards}</Fragment>
+            )}
           </Grid>
           <Grid item xs={1} md={3}></Grid>
         </Grid>
@@ -264,12 +296,9 @@ function LikeHistorySaved(props) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // might be deleted later if naming conventions unify
 
-
-
 // Each indiivdual doctor card
 function DocCard(props) {
   const classes = useStyles();
-
 
   let language = "";
   props.targetDoc["languages"].forEach((lang) => {
@@ -277,34 +306,34 @@ function DocCard(props) {
   });
   language = language.substring(1);
 
-
-
   const clickDoctorCard = () => {
     let newestTargetDoc = props.targetDoc;
     newestTargetDoc["Address"] = newestTargetDoc.address;
     newestTargetDoc["Language"] = newestTargetDoc.languages;
-    newestTargetDoc['Phone'] = newestTargetDoc.phone;
-    newestTargetDoc['Hospital'] = newestTargetDoc.hospital;
-    newestTargetDoc['Conditions'] = newestTargetDoc.conditions;
-    newestTargetDoc['DocName'] = newestTargetDoc.name;
-    newestTargetDoc['Specialty'] = newestTargetDoc.specialty;
-    newestTargetDoc['YearsofPractice'] = newestTargetDoc.yearsOfPractice;
-    newestTargetDoc['Procedures'] = newestTargetDoc.procedures;
-    newestTargetDoc['NumberOfLikes'] = newestTargetDoc.likes;
-    newestTargetDoc['Qualifications'] = newestTargetDoc.qualifications;
-    newestTargetDoc['Type'] = newestTargetDoc.type;
-    newestTargetDoc['userName'] = props.targetDocUserName;
+    newestTargetDoc["Phone"] = newestTargetDoc.phone;
+    newestTargetDoc["Hospital"] = newestTargetDoc.hospital;
+    newestTargetDoc["Conditions"] = newestTargetDoc.conditions;
+    newestTargetDoc["DocName"] = newestTargetDoc.name;
+    newestTargetDoc["Specialty"] = newestTargetDoc.specialty;
+    newestTargetDoc["YearsofPractice"] = newestTargetDoc.yearsOfPractice;
+    newestTargetDoc["Procedures"] = newestTargetDoc.procedures;
+    newestTargetDoc["NumberOfLikes"] = newestTargetDoc.likes;
+    newestTargetDoc["Qualifications"] = newestTargetDoc.qualifications;
+    newestTargetDoc["Type"] = newestTargetDoc.type;
+    newestTargetDoc["userName"] = props.targetDocUserName;
     props.updateTargetDoc(newestTargetDoc);
     props.setProfileBackToDestination(props.displayType);
     if (props.history != null) {
       props.history.push("/docprofile");
     }
-  }
-
-
+  };
 
   return (
-    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={clickDoctorCard}>
+    <Card
+      style={{ cursor: "pointer" }}
+      className={classes.root}
+      onClick={clickDoctorCard}
+    >
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* doctor image */}
@@ -336,7 +365,11 @@ function DocCard(props) {
             </Typography>
             <br></br>
             {/* private tag */}
-            <Chip color="secondary" size="small" label={props.targetDoc.type}></Chip>
+            <Chip
+              color="secondary"
+              size="small"
+              label={props.targetDoc.type}
+            ></Chip>
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -344,60 +377,63 @@ function DocCard(props) {
           <Box className={classes.likeBox}>
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              {props.targetDoc["likes"].toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+              {props.targetDoc["likes"]
+                ? props.targetDoc["likes"].toLocaleString(navigator.language, {
+                    minimumFractionDigits: 0,
+                  })
+                : 0}
             </Typography>
           </Box>
         </Grid>
       </Grid>
     </Card>
   );
-
 }
-
 
 function HospitalCard(props) {
   const classes = useStyles();
 
-
   const clickHospitalCard = () => {
     let newestTargetHos = props.targetHos;
 
-
     newestTargetHos["Address"] = newestTargetHos.address;
     newestTargetHos["HospitalType"] = newestTargetHos.type;
-    newestTargetHos['Insurance'] = newestTargetHos.insurance;
-    newestTargetHos['Language'] = newestTargetHos.languages;
-    newestTargetHos['Phone'] = newestTargetHos.phone;
-    newestTargetHos['HospitalName'] = newestTargetHos.name;
-    newestTargetHos['RelateSpecialty'] = newestTargetHos.relatedSpecialty;
-    newestTargetHos['Tags'] = newestTargetHos.tags;
-    newestTargetHos['Web'] = newestTargetHos.website;
+    newestTargetHos["Insurance"] = newestTargetHos.insurance;
+    newestTargetHos["Language"] = newestTargetHos.languages;
+    newestTargetHos["Phone"] = newestTargetHos.phone;
+    newestTargetHos["HospitalName"] = newestTargetHos.name;
+    newestTargetHos["RelateSpecialty"] = newestTargetHos.relatedSpecialty;
+    newestTargetHos["Tags"] = newestTargetHos.tags;
+    newestTargetHos["Web"] = newestTargetHos.website;
 
     let conditionList = [];
-    for (let doctor in newestTargetHos['doctors']) {
-      let targetDoc = newestTargetHos['doctors'][doctor];
+    for (let doctor in newestTargetHos["doctors"]) {
+      let targetDoc = newestTargetHos["doctors"][doctor];
       targetDoc.conditions = targetDoc.conditions.map((item) => {
         let newItem = item.toLowerCase();
-        newItem = newItem.replace(newItem[0], newItem[0].toUpperCase())
-        return newItem
+        newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
+        return newItem;
       });
       targetDoc.conditions.forEach((condition) => {
         if (conditionList.indexOf(condition) == -1) {
-          conditionList.push(condition)
+          conditionList.push(condition);
         }
       });
     }
-    newestTargetHos['Conditions'] = conditionList;
+    newestTargetHos["Conditions"] = conditionList;
     props.updateTargetHos(newestTargetHos);
     props.setProfileBackToDestination(props.displayType);
     if (props.history != null) {
       props.history.push("/hospprofile");
     }
-  }
-
+  };
 
   return (
-    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={clickHospitalCard}>
+    <Card
+      style={{ cursor: "pointer" }}
+      className={classes.root}
+      onClick={clickHospitalCard}
+    >
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {/* hospital logo image */}
@@ -429,7 +465,11 @@ function HospitalCard(props) {
             </Typography>
 
             <br></br>
-            <Chip color="secondary" size="small" label={props.targetHos.type}></Chip>
+            <Chip
+              color="secondary"
+              size="small"
+              label={props.targetHos.type}
+            ></Chip>
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -437,7 +477,9 @@ function HospitalCard(props) {
           <Box className={classes.likeBox}>
             <FavoriteIcon style={{ color: "red" }} />
             <Typography variant="body2" color="primary">
-              {props.targetHos["likes"].toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+              {props.targetHos["likes"].toLocaleString(navigator.language, {
+                minimumFractionDigits: 0,
+              })}
             </Typography>
           </Box>
         </Grid>
@@ -445,7 +487,5 @@ function HospitalCard(props) {
     </Card>
   );
 }
-
-
 
 export default LikeHistorySaved;

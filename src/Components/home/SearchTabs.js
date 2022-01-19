@@ -99,30 +99,28 @@ export default function SearchTabs(props) {
   const specialties = props.specialtyListForInput;
 
   const [value, setValue] = React.useState(0);
-  const [keyword, setkeyword] = React.useState('');
+  const [keyword, setkeyword] = React.useState("");
 
   const handleSearchMethodChange = (event, newValue) => {
-    let method = '';
+    let method = "";
     if (newValue == 0) {
-      method = 'Specialty';
+      method = "Specialty";
     } else if (newValue == 1) {
-      method = 'Doctor';
+      method = "Doctor";
     } else if (newValue == 2) {
-      method = 'Hospital';
+      method = "Hospital";
     } else {
-      method = 'Condition';
+      method = "Condition";
     }
     setValue(newValue);
     props.getSearchMethod(method);
   };
-
 
   // He Chen 2020 5/22
   let docNames = [];
   let hospNames = [];
 
   const getDocHosNameList = () => {
-    // console.log(props.database === undefined);
     let allInfo = props.database;
     for (let spec in allInfo) {
       let targetSpec = allInfo[spec];
@@ -137,49 +135,44 @@ export default function SearchTabs(props) {
         }
       }
     }
-    docNames = new Set(docNames.map(e => JSON.stringify(e)));
-    docNames = Array.from(docNames).map(e => JSON.parse(e));
-    hospNames = new Set(hospNames.map(e => JSON.stringify(e)));
-    hospNames = Array.from(hospNames).map(e => JSON.parse(e));
-  }
+    docNames = new Set(docNames.map((e) => JSON.stringify(e)));
+    docNames = Array.from(docNames).map((e) => JSON.parse(e));
+    hospNames = new Set(hospNames.map((e) => JSON.stringify(e)));
+    hospNames = Array.from(hospNames).map((e) => JSON.parse(e));
+  };
 
   getDocHosNameList();
   // He Chen 2020 5/22 ends
 
-
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchMethod('Specialty');
+      props.setSearchMethod("Specialty");
       props.getKeyWords(newValue.specialty);
     }
-
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
     if (newValue) {
       props.getKeyWords(newValue.name);
     }
-
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
     if (newValue) {
       props.getKeyWords(newValue.hospName);
     }
-
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.changeConditionLabel(newValue.condition, 'normal');
+      props.changeConditionLabel(newValue.condition, "normal");
     }
-
   };
 
   const getTextFieldValue = (event) => {
     setkeyword(event.target.value);
     props.getKeyWords(event.target.value);
-  }
+  };
   return (
     <div>
       <div className={classes.tabContainer}>
@@ -202,7 +195,10 @@ export default function SearchTabs(props) {
           options={specialties}
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterSpecialtyOptions}
-          disabled={props.database === undefined || props.specialtyListForInput == undefined}
+          disabled={
+            props.database === undefined ||
+            props.specialtyListForInput === undefined
+          }
           renderInput={(params) => (
             <TextField
               // disabled={true}
@@ -225,7 +221,10 @@ export default function SearchTabs(props) {
           options={docNames}
           getOptionLabel={(option) => option.name}
           filterOptions={filterDocOptions}
-          disabled={props.database === undefined || props.specialtyListForInput == undefined}
+          disabled={
+            props.database === undefined ||
+            props.specialtyListForInput === undefined
+          }
           renderInput={(params) => (
             <TextField
               {...params}
@@ -233,7 +232,7 @@ export default function SearchTabs(props) {
               variant="filled"
               onChange={getTextFieldValue}
               onKeyPress={(ev) => {
-                if (ev.key === 'Enter') {
+                if (ev.key === "Enter") {
                   props.getKeyWords(keyword);
                   props.startSearch();
                 }
@@ -254,14 +253,17 @@ export default function SearchTabs(props) {
           options={hospNames}
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterHospOptions}
-          disabled={props.database === undefined || props.specialtyListForInput == undefined}
+          disabled={
+            props.database === undefined ||
+            props.specialtyListForInput === undefined
+          }
           renderInput={(params) => (
             <TextField
               {...params}
               label="Search by hospital's name"
               onChange={getTextFieldValue}
               onKeyPress={(ev) => {
-                if (ev.key === 'Enter') {
+                if (ev.key === "Enter") {
                   props.getKeyWords(keyword);
                   props.startSearch();
                 }
@@ -282,20 +284,25 @@ export default function SearchTabs(props) {
           options={conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterConditionOptions}
-          disabled={props.database === undefined || props.conditionListForInput == undefined || props.specialtyListForInput == undefined}
+          disabled={
+            props.database === undefined ||
+            props.conditionListForInput === undefined ||
+            props.specialtyListForInput === undefined
+          }
           renderInput={(params) => {
-            if (props.conditionLabel != "") {
+            if (props.conditionLabel !== "") {
               params.inputProps.value = props.conditionLabel;
             }
-            return <TextField
-              {...params}
-              label={"Search by medical condition"}
-              variant="filled"
-              className={classes.inputRoot}
-              InputProps={{ ...params.InputProps, disableUnderline: true }}
-            />
-          }
-          }
+            return (
+              <TextField
+                {...params}
+                label={"Search by medical condition"}
+                variant="filled"
+                className={classes.inputRoot}
+                InputProps={{ ...params.InputProps, disableUnderline: true }}
+              />
+            );
+          }}
         />
         <br></br>
       </TabPanel>

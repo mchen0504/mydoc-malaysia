@@ -4,10 +4,10 @@ import Bg from "../img/login/doctors-heart.png";
 // material ui
 import withStyles from "@material-ui/core/styles/withStyles";
 
-// Components
-import SignupTab from "../Components/login/SignupTab";
-import Navbar from "../Components/Navbar";
-import CovidAlert from "../Components/Alert";
+// components
+import SignupTab from "../components/login/SignupTab";
+import Navbar from "../components/Navbar";
+import CovidAlert from "../components/Alert";
 
 // material ui style
 const styles = (theme) => ({
@@ -40,7 +40,7 @@ class Signup extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <Navbar currentPage='signUp'/>
+        <Navbar currentPage="signUp" />
         <div className={classes.covidBox}>
           <CovidAlert />
 

@@ -14,7 +14,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
-import BookmarkIcon from '@material-ui/icons/Bookmark';
+import BookmarkIcon from "@material-ui/icons/Bookmark";
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
@@ -28,22 +28,26 @@ import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";
 
-
 //components
 import CovidAlert from "../Alert";
 import HospTags from "./HospTags";
 
 import PropTypes from "prop-types";
 
-import { changeHospLikeStatus, changeHospSaveStatus, sendReportedHospitals } from "../../redux/actions/userActions";
-import { updateHospitalLikes, reportHospital } from "../../redux/actions/dataActions";
-
+import {
+  changeHospLikeStatus,
+  changeHospSaveStatus,
+  sendReportedHospitals,
+} from "../../redux/actions/userActions";
+import {
+  updateHospitalLikes,
+  reportHospital,
+} from "../../redux/actions/dataActions";
 
 // ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 // ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 // "hospital tags" used in this js is actually referred to the tags attached to a specialty in this hospital
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 const useStyles = makeStyles((theme) => ({
   covidBox: {
@@ -84,8 +88,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   signUpInButton: {
-    paddingLeft: "7.5rem"
-  }
+    paddingLeft: "7.5rem",
+  },
 }));
 
 //for hospital image + basic info + likes
@@ -97,12 +101,12 @@ function HospInfo(props) {
   const authenticated = props.authenticated;
 
   const backToRes = () => {
-    if (props.history != null) {
-      if (props.backTo == "resultsPage") {
+    if (props.history !== null) {
+      if (props.backTo === "resultsPage") {
         props.history.push("/results");
-      } else if (props.backTo == "hospprofile") {
+      } else if (props.backTo === "hospprofile") {
         props.history.push("/results");
-      } else if (props.backTo == "likeHistory"){
+      } else if (props.backTo === "likeHistory") {
         props.history.push("/likehistory");
       } else {
         props.history.push("/saved");
@@ -111,17 +115,15 @@ function HospInfo(props) {
   };
 
   let returnPageDesc;
-  if (props.backTo == "resultsPage"){
+  if (props.backTo === "resultsPage") {
     returnPageDesc = "Result Page";
-  } else if (props.backTo == "hospprofile") {
+  } else if (props.backTo === "hospprofile") {
     returnPageDesc = "Result Page";
-  } else if (props.backTo == "likeHistory"){
+  } else if (props.backTo === "likeHistory") {
     returnPageDesc = "Liked History Page";
   } else {
     returnPageDesc = "Saved History Page";
   }
-
-  const [renderCount, setRenderCount] = React.useState(0);
 
   const [likeSaveInfo, setState] = React.useState({
     hasLiked: false,
@@ -136,16 +138,13 @@ function HospInfo(props) {
     reportedList: [],
     numReports: 0,
     reportReasonsList: [],
-    oneReason: ""
+    oneReason: "",
   });
-
 
   // only get called once in the first render
   useEffect(() => {
-    // if (renderCount == 0) {
-      return displayStoredData();
-    // }
-  },[]);
+    return displayStoredData();
+  }, []);
 
   const displayStoredData = () => {
     // call function to get data from returned props from firebase
@@ -162,8 +161,12 @@ function HospInfo(props) {
           if (res.likeHistory.hospitals) {
             listOfLikes = res.likeHistory.hospitals;
             // if the user has liked this particular hospital before
-            const index = res.likeHistory.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase());
-            if (index != -1) {
+            const index = res.likeHistory.hospitals.findIndex(
+              (hospital) =>
+                hospital.name.replace(/\s/g, "").toLowerCase() ===
+                props.targetHos.name.replace(/\s/g, "").toLowerCase()
+            );
+            if (index !== -1) {
               liked = true;
             }
           } else {
@@ -182,15 +185,18 @@ function HospInfo(props) {
           if (res.saved.hospitals) {
             listOfSaves = res.saved.hospitals;
             // if the user has saved this particular hospital before
-            const index = res.saved.hospitals.findIndex(hospital => hospital.name.replace(/\s/g,'').toLowerCase() == props.targetHos.name.replace(/\s/g,'').toLowerCase())
-            if (index != -1) {
+            const index = res.saved.hospitals.findIndex(
+              (hospital) =>
+                hospital.name.replace(/\s/g, "").toLowerCase() ===
+                props.targetHos.name.replace(/\s/g, "").toLowerCase()
+            );
+            if (index !== -1) {
               saved = true;
             }
           } else {
             listOfSaves = [];
           }
         }
-
 
         setState({
           hasLiked: liked,
@@ -201,23 +207,27 @@ function HospInfo(props) {
           savedList: listOfSaves,
 
           reportedList: res.reportedHospitals ? res.reportedHospitals : [],
-          numReports: props.targetHos.report ? props.targetHos.report.reportCount : 0,
-          reportReasonsList: props.targetHos.report ? props.targetHos.report.reportReasons : [],
-          oneReason: ""
+          numReports: props.targetHos.report
+            ? props.targetHos.report.reportCount
+            : 0,
+          reportReasonsList: props.targetHos.report
+            ? props.targetHos.report.reportReasons
+            : [],
+          oneReason: "",
         });
 
         // setRenderCount(1);
-      }).catch((error) => {
-        console.error(error);
       })
-  }
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   // wait for returned props from firebase to be ready
   let getStoredData = async () => {
     let storedCredentials = await props.storedCredentials;
     return storedCredentials;
-  }
-
+  };
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -226,17 +236,19 @@ function HospInfo(props) {
     // the user has liked this hospital before
     if (likeSaveInfo.hasLiked) {
       let likedListCopy = likeSaveInfo.likedList;
-      let index = likedListCopy.findIndex(hospital => hospital.name == props.targetHos.name);
+      let index = likedListCopy.findIndex(
+        (hospital) => hospital.name === props.targetHos.name
+      );
       // remove this hospital from the user like list
       likedListCopy.splice(index, 1);
-      setState(prevState => {
+      setState((prevState) => {
         prevState.numLikes = prevState.numLikes - 1;
         prevState.hasLiked = false;
         prevState.likedList = likedListCopy;
-        return ({
-          ...prevState
-        })
-      })
+        return {
+          ...prevState,
+        };
+      });
     } else {
       const newHospInfo = {
         name: props.targetHos.name,
@@ -244,7 +256,7 @@ function HospInfo(props) {
         likes: likeSaveInfo.numLikes,
         phone: props.targetHos.phone,
         relatedSpecialty: props.targetHos.relatedSpecialty,
-        type: props.targetHos.type
+        type: props.targetHos.type,
       };
 
       likeSaveInfo.likedList.push(newHospInfo);
@@ -253,14 +265,14 @@ function HospInfo(props) {
         (prevState) => {
           prevState.numLikes = prevState.numLikes + 1;
           prevState.hasLiked = true;
-          return ({
-            ...prevState
-          })
+          return {
+            ...prevState,
+          };
         }
-      )
+      );
     }
     toggleLike();
-  }
+  };
 
   const toggleLike = () => {
     waitLikeUpdate()
@@ -268,28 +280,31 @@ function HospInfo(props) {
         props.changeHospLikeStatus(likeSaveInfo.likedList);
         const updateInfo = {
           specialty: props.targetHos.relatedSpecialty,
-          hospital: props.targetHos.HospitalName.replace(/\s/g,''),
-          likes: res[1]
-        }
+          hospital: props.targetHos.HospitalName.replace(/\s/g, ""),
+          likes: res[1],
+        };
         props.updateHospitalLikes(updateInfo);
         updateLocalDocList(updateInfo);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   let waitLikeUpdate = async () => {
-    let [likedList, likes] =
-      await Promise.all([likeSaveInfo.likedList, likeSaveInfo.numLikes]);
+    let [likedList, likes] = await Promise.all([
+      likeSaveInfo.likedList,
+      likeSaveInfo.numLikes,
+    ]);
     return [likedList, likes];
-  }
+  };
 
-  const updateLocalDocList = (updateInfo)=>{
+  const updateLocalDocList = (updateInfo) => {
     // set location target list location
     let newHosList = [];
-    for (let hos in props.hospitalInfo){
+    for (let hos in props.hospitalInfo) {
       let hosItem = props.hospitalInfo[hos];
-      if (hosItem.name == props.targetHos.name){
+      if (hosItem.name === props.targetHos.name) {
         hosItem.NumberOfLikes = likeSaveInfo.numLikes;
         hosItem.likes = likeSaveInfo.numLikes;
       }
@@ -300,16 +315,19 @@ function HospInfo(props) {
     // set database
     let newDatabase;
     newDatabase = props.database;
-    let hospitalId = updateInfo['hospital'].replace(/\s/g,'')
-    newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['likes'] = likeSaveInfo.numLikes;
-    newDatabase[updateInfo['specialty']]['hospitals'][hospitalId]['NumberOfLikes'] = likeSaveInfo.numLikes;
+    let hospitalId = updateInfo["hospital"].replace(/\s/g, "");
+    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["likes"] =
+      likeSaveInfo.numLikes;
+    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId][
+      "NumberOfLikes"
+    ] = likeSaveInfo.numLikes;
     props.setDatabase(newDatabase);
-  }
+  };
 
   // if the user has liked this hospital before: filled heart, otherwise outlined heart
-  const LikeIcon = (likeSaveInfo.hasLiked) ? FavoriteIcon : FavoriteBorderOutlinedIcon;
-
-
+  const LikeIcon = likeSaveInfo.hasLiked
+    ? FavoriteIcon
+    : FavoriteBorderOutlinedIcon;
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SAVE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -318,7 +336,9 @@ function HospInfo(props) {
     // the user has saved this hospital before
     if (likeSaveInfo.hasSaved) {
       let savedListCopy = likeSaveInfo.savedList;
-      let index = savedListCopy.findIndex(hospital => hospital.name == props.targetHos.name);
+      let index = savedListCopy.findIndex(
+        (hospital) => hospital.name === props.targetHos.name
+      );
       // remove this hospital from the user saved list
       savedListCopy.splice(index, 1);
 
@@ -326,54 +346,47 @@ function HospInfo(props) {
         ...likeSaveInfo,
         savedList: savedListCopy,
         hasSaved: false,
-      })
+      });
     } else {
       // the newly saved hospital's information to be added to the user's saved hospital list
       const newHospInfo = {
-        name: props.targetHos.name.replace(/\s/g,''),
+        name: props.targetHos.name.replace(/\s/g, ""),
         address: props.targetHos.address,
         likes: likeSaveInfo.numLikes,
         phone: props.targetHos.phone,
         relatedSpecialty: props.targetHos.relatedSpecialty,
-        type: props.targetHos.type
+        type: props.targetHos.type,
       };
       likeSaveInfo.savedList.push(newHospInfo);
       setState(
         // add to the list if the list contains other doctors, otherwise use this doctor to start a list
         (prevState) => {
           prevState.hasSaved = true;
-          return ({
-            ...prevState
-          })
+          return {
+            ...prevState,
+          };
         }
-      )
+      );
     }
-    toggleSave();
-  }
+    updateUserSave();
+  };
 
-
-  const toggleSave = () => {
-    waitSaveUpdate()
-      .then((res) => {
-        props.changeHospSaveStatus(res);
-      }).catch((error) => {
-        console.error(error);
-      });
-  }
-
-  let waitSaveUpdate = async () => {
-    let savedList = await likeSaveInfo.savedList;
-    return savedList;
-  }
-
+  const updateUserSave = async () => {
+    try {
+      let savedList = await likeSaveInfo.savedList;
+      props.changeHospSaveStatus(savedList);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
-  const SaveIcon = (likeSaveInfo.hasSaved) ? BookmarkIcon : BookmarkBorderOutlinedIcon;
-
-
+  const SaveIcon = likeSaveInfo.hasSaved
+    ? BookmarkIcon
+    : BookmarkBorderOutlinedIcon;
 
   // -------------------------------------------------------------------- //
-    // ----------------------------Report---------------------------------------- //
+  // ----------------------------Report---------------------------------------- //
   // 新加 5/14
   //report弹窗：填的表
   const [reportOpen, setReportOpen] = React.useState(false);
@@ -394,10 +407,10 @@ function HospInfo(props) {
   };
 
   if (!props.targetHos) {
-        props.history.push("/");
-        window.location.reload();
-      }
-  
+    props.history.push("/");
+    window.location.reload();
+  }
+
   const reported = likeSaveInfo.reportedList.includes(props.targetHos.name);
 
   // send hospital report to database
@@ -415,7 +428,7 @@ function HospInfo(props) {
       reportCount: likeSaveInfo.numReports + 1,
       reportReasons: reasons,
 
-      // *******hard code 
+      // *******hard code
       specialty: props.targetHos.relatedSpecialty,
       hospital: props.targetHos.name,
     };
@@ -433,17 +446,12 @@ function HospInfo(props) {
       numReports: prevState.numReports + 1,
       reportReasonsList: [prevState.reportReasonsList, oneReason],
       oneReason: "",
-      reportedList: [prevState.reportedList,props.targetHos.name],
+      reportedList: [prevState.reportedList, props.targetHos.name],
     }));
   };
 
-
-
-
-
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // ~~~~~~~~~~~sign up or login in if want to save or report~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
   // 弹窗去signin/signup如果要report没有login
   const [loginOpen, setLoginOpen] = React.useState({
@@ -469,16 +477,15 @@ function HospInfo(props) {
   // for login in diagolue: render correponding icon for user option: recommend, like, save
   let Icon = FavoriteIcon;
 
-  if (loginOpen.userOption == "Recommend") {
+  if (loginOpen.userOption === "Recommend") {
     Icon = FavoriteIcon;
-  } else if (loginOpen.userOption == "Save") {
+  } else if (loginOpen.userOption === "Save") {
     Icon = BookmarkBorderOutlinedIcon;
-  } else if (loginOpen.userOption == "Report") {
+  } else if (loginOpen.userOption === "Report") {
     Icon = ErrorOutlineOutlinedIcon;
   } else {
     Icon = EditOutlinedIcon;
   }
-
 
   return (
     <div>
@@ -505,7 +512,11 @@ function HospInfo(props) {
           <Grid item xs={6} align="center">
             {/* hospital image */}
             <div style={{ width: 150, height: 180 }}>
-              <img className={classes.img} src={props.targetHos["imgSrc"]} alt="hospimg" />
+              <img
+                className={classes.img}
+                src={props.targetHos["imgSrc"]}
+                alt="hospimg"
+              />
             </div>
           </Grid>
           {/* Like icon + number of likes */}
@@ -524,17 +535,19 @@ function HospInfo(props) {
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                  // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
-                  <Fragment>
-                    <IconButton onClick={() => handleLoginOpen("Recommend")}>
-                      <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
-                    </IconButton>
-                  </Fragment>
-
-                )}                )}
+                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
+                <Fragment>
+                  <IconButton onClick={() => handleLoginOpen("Recommend")}>
+                    <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
+                  </IconButton>
+                </Fragment>
+              )}{" "}
+              )}
               {/* like count */}
               <Typography variant="body2" color="primary">
-                {likeSaveInfo.numLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+                {likeSaveInfo.numLikes.toLocaleString(navigator.language, {
+                  minimumFractionDigits: 0,
+                })}
               </Typography>
             </Box>
           </Grid>
@@ -553,7 +566,11 @@ function HospInfo(props) {
             <Hidden xsDown>
               {/* hospital image */}
               <div style={{ width: 200, height: 250 }}>
-                <img className={classes.img} src={props.targetHos["imgSrc"]} alt="hospimg" />
+                <img
+                  className={classes.img}
+                  src={props.targetHos["imgSrc"]}
+                  alt="hospimg"
+                />
               </div>
             </Hidden>
 
@@ -576,89 +593,91 @@ function HospInfo(props) {
                   onClick={handleReportOpen}
                 >
                   Report
-              </Button>
-              ) : (
-// michelle 5/16: 这里的fragment和里面的东西都替换掉原来的 （这里新的东西比原来长很多 麻烦小心对一下位置）
-                <Fragment>
-                <Button
-                  startIcon={<ErrorOutlineOutlinedIcon />}
-                  style={{ textTransform: "none" }}
-                  color="primary"
-                  onClick={() => handleLoginOpen("Report")}
-                >
-                  Report
                 </Button>
+              ) : (
+                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的 （这里新的东西比原来长很多 麻烦小心对一下位置）
+                <Fragment>
+                  <Button
+                    startIcon={<ErrorOutlineOutlinedIcon />}
+                    style={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={() => handleLoginOpen("Report")}
+                  >
+                    Report
+                  </Button>
 
-                {/* login dialog asking user to sign in if they want to report, save, or like */}
-                <Dialog
-                  fullWidth="true"
-                  maxWidth="sm"
-                  open={loginOpen.open}
-                  onClose={handleLoginClose}
-                >
-                  <Box display="flex" alignItems="center">
-                    <Box flexGrow={1}>
-                      <DialogTitle>{loginOpen.userOption} a Hospital</DialogTitle>
+                  {/* login dialog asking user to sign in if they want to report, save, or like */}
+                  <Dialog
+                    fullWidth="true"
+                    maxWidth="sm"
+                    open={loginOpen.open}
+                    onClose={handleLoginClose}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Box flexGrow={1}>
+                        <DialogTitle>
+                          {loginOpen.userOption} a Hospital
+                        </DialogTitle>
+                      </Box>
+                      <Box>
+                        <DialogActions>
+                          <IconButton
+                            size="small"
+                            onClick={handleLoginClose}
+                            color="primary"
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        </DialogActions>
+                      </Box>
                     </Box>
-                    <Box>
-                      <DialogActions>
-                        <IconButton
-                          size="small"
-                          onClick={handleLoginClose}
+                    <DialogContent>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Icon style={{ color: "red" }} />
+                        <br></br>
+                        <Typography variant="body1" align="center">
+                          You need to sign in to{" "}
+                          {loginOpen.userOption.toLowerCase()} this hospital
+                        </Typography>
+                      </Box>
+                      <Box display="flex" mt={2} mb={2}>
+                        <Button
+                          className={classes.signUpInButton}
+                          variant="contained"
                           color="primary"
+                          style={{ textTransform: "none" }}
+                          fullWidth
+                          component={Link}
+                          to="/login"
                         >
-                          <CloseIcon />
-                        </IconButton>
-                      </DialogActions>
-                    </Box>
-                  </Box>
-                  <DialogContent>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Icon style={{ color: "red" }} />
-                      <br></br>
-                      <Typography variant="body1" align="center">
-                        You need to sign in to {loginOpen.userOption.toLowerCase()} this hospital
-                                        </Typography>
-                    </Box>
-                    <Box display="flex" mt={2} mb={2}>
-                      <Button
-                        className={classes.signUpInButton}
-                        variant="contained"
-                        color="primary"
-                        style={{ textTransform: "none" }}
-                        fullWidth
-                        component={Link}
-                        to="/login"
-                      >
-                        Log in
-                                        </Button>
-                    </Box>
+                          Log in                         
+                        </Button>
+                      </Box>
 
-                    <Box display="flex" mb={2}>
-                      <Button
-                        className={classes.signUpInButton}
-                        variant="outlined"
-                        color="primary"
-                        style={{ textTransform: "none" }}
-                        fullWidth
-                        component={Link}
-                        to="/signup"
-                      >
-                        Sign up
-                                        </Button>
-                    </Box>
-                  </DialogContent>
-                </Dialog>
-
+                      <Box display="flex" mb={2}>
+                        <Button
+                          className={classes.signUpInButton}
+                          variant="outlined"
+                          color="primary"
+                          style={{ textTransform: "none" }}
+                          fullWidth
+                          component={Link}
+                          to="/signup"
+                        >
+                          Sign up                         
+                        </Button>
+                      </Box>
+                    </DialogContent>
+                  </Dialog>
                 </Fragment>
-                )}
+              )}
 
-                {/* report dialogue 新加的 5/10/2020 */}
+              {/* report dialogue 新加的 5/10/2020 */}
               <Dialog
                 fullWidth="true"
                 maxWidth="sm"
@@ -711,7 +730,6 @@ function HospInfo(props) {
                 </DialogActions>
               </Dialog>
 
-
               {/* save button */}
 
               {authenticated ? (
@@ -722,21 +740,20 @@ function HospInfo(props) {
                   onClick={toggleSaveUnsave}
                 >
                   Save
-              </Button>
+                </Button>
               ) : (
-                  // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
-                  <Fragment>
-                    <Button
-                      startIcon={<SaveIcon />}
-                      style={{ textTransform: "none" }}
-                      color="primary"
-                      onClick={() => handleLoginOpen("Save")}
-                    >
-                      Save
-                     </Button>
-                  </Fragment>
-                )}
-
+                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
+                <Fragment>
+                  <Button
+                    startIcon={<SaveIcon />}
+                    style={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={() => handleLoginOpen("Save")}
+                  >
+                    Save
+                  </Button>
+                </Fragment>
+              )}
             </Box>
           </Box>
         </Grid>
@@ -765,7 +782,9 @@ function HospInfo(props) {
           <Box className={classes.profileGrid} mt={3} mb={3}>
             <Typography variant="body1" color="textPrimary">
               <strong>Official website: </strong>{" "}
-              <a href={props.targetHos["Web"]} style={{ color: "#003367" }}>Link</a>
+              <a href={props.targetHos["Web"]} style={{ color: "#003367" }}>
+                Link
+              </a>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
@@ -801,7 +820,11 @@ function HospInfo(props) {
             </Box>
           </Box>
           {/* edit Tag component (imported from HospTag.js) */}
-          <HospTags tagInfo={props.targetHos["tags"]} targetHos={props.targetHos} handleLoginOpen={handleLoginOpen}/>
+          <HospTags
+            tagInfo={props.targetHos["tags"]}
+            targetHos={props.targetHos}
+            handleLoginOpen={handleLoginOpen}
+          />
         </Grid>
 
         <Grid item xs={12} sm={1} md={2}>
@@ -821,15 +844,17 @@ function HospInfo(props) {
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                  // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
-                  <Fragment>
-                    <IconButton onClick={() => handleLoginOpen("Recommend")}>
-                      <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
-                    </IconButton>
-                  </Fragment>
-                )}
+                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
+                <Fragment>
+                  <IconButton onClick={() => handleLoginOpen("Recommend")}>
+                    <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
+                  </IconButton>
+                </Fragment>
+              )}
               <Typography variant="body2" color="primary">
-                {likeSaveInfo.numLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+                {likeSaveInfo.numLikes.toLocaleString(navigator.language, {
+                  minimumFractionDigits: 0,
+                })}
               </Typography>
             </Box>
           </Hidden>
@@ -849,13 +874,13 @@ HospInfo.propTypes = {
 
   // report
   sendReportedHospitals: PropTypes.func.isRequired,
-  reportHospital: PropTypes.func.isRequired
+  reportHospital: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
   storedCredentials: state.user.credentials,
-  searchInfo: state.data.searchInfoHospital
+  searchInfo: state.data.searchInfoHospital,
 });
 
 const mapActionsToProps = {
@@ -865,7 +890,7 @@ const mapActionsToProps = {
   changeHospSaveStatus,
 
   sendReportedHospitals,
-  reportHospital
+  reportHospital,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(HospInfo);

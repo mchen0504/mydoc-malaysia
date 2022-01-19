@@ -23,23 +23,22 @@ export default function DocInfo(props) {
   const classes = useStyles();
 
   // create language List
-  let languageList = props.targetDoc['Language'].map((lang)=>{
-    let langCard = <p>{lang}</p>;
+  let languageList = props.targetDoc["Language"].map((lang) => {
+    let langCard = <p key={lang}>{lang}</p>;
     return langCard;
-  })
+  });
 
   // create procedure List
-  let procList = props.targetDoc['Procedures'].map((proc)=>{
-    let procCard = <p>{proc}</p>;
+  let procList = props.targetDoc["Procedures"].map((proc) => {
+    let procCard = <p key={proc}>{proc}</p>;
     return procCard;
-  })
+  });
 
   // create condition List
-  let conditionCardList = props.targetDoc['Conditions'].map((condition)=>{
-    let conditionCard = <p>{condition}</p>;
+  let conditionCardList = props.targetDoc["Conditions"].map((condition) => {
+    let conditionCard = <p key={condition}>{condition}</p>;
     return conditionCard;
-  })
-
+  });
 
   return (
     <div>
@@ -53,7 +52,7 @@ export default function DocInfo(props) {
             <Divider className={classes.divider} style={{ width: 120 }} />
             <br></br>
             <Typography variant="body1">
-              {props.targetDoc['Qualifications']}
+              {props.targetDoc["Qualifications"]}
             </Typography>
           </Box>
           <Hidden smUp>
@@ -75,9 +74,7 @@ export default function DocInfo(props) {
               Languages
             </Typography>
             <Divider className={classes.divider} style={{ width: 100 }} />
-            <Typography variant="body1">
-              {languageList}
-            </Typography>
+            <Typography variant="body1">{languageList}</Typography>
           </Box>
           <Hidden smUp>
             <hr className={classes.line}></hr>
@@ -93,9 +90,7 @@ export default function DocInfo(props) {
               Procedures
             </Typography>
             <Divider className={classes.divider} style={{ width: 120 }} />
-            <Typography variant="body1">
-              {procList}
-            </Typography>
+            <Typography variant="body1">{procList}</Typography>
           </Box>
           <Hidden smUp>
             <hr className={classes.line}></hr>
@@ -116,9 +111,7 @@ export default function DocInfo(props) {
               Conditions
             </Typography>
             <Divider className={classes.divider} style={{ width: 100 }} />
-            <Typography variant="body1">
-              {conditionCardList}
-            </Typography>
+            <Typography variant="body1">{conditionCardList}</Typography>
           </Box>
         </Grid>
         <Grid item sm={1}></Grid>

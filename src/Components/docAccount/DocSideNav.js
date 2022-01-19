@@ -13,24 +13,20 @@ import FavoriteOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import PersonIcon from "@material-ui/icons/PersonOutlined";
 import BookmarkIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUserOutlined";
-import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 import Badge from "@material-ui/core/Badge";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-
 import { changeProfilePic } from "../../redux/actions/userActions";
 import { updateDoctorProfilePic } from "../../redux/actions/dataActions";
 
-
-const proxyurl = "https://cors-anywhere.herokuapp.com/";
-
+// const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,10 +80,8 @@ const useStyles = makeStyles((theme) => ({
 function DocSideNav(props) {
   const classes = useStyles();
 
-
   // determine if useEffect will be called: don't call if renderCount = 1
   const [renderCount, setRenderCount] = React.useState(0);
-
 
   const [userInfo, setState] = React.useState({
     userType: "",
@@ -103,16 +97,12 @@ function DocSideNav(props) {
 
     // profileShowWarning: "",
     // verifyShowWarning: ""
-  })
+  });
 
   const indicator = "";
 
-
-
-
   // initial render: only gets called once
   useEffect(() => {
-    // if (renderCount == 0) {
     if (!indicator) {
       return displayStoredData();
     }
@@ -129,8 +119,6 @@ function DocSideNav(props) {
           returnedInfo.push(res);
         }
 
-        
-
         // let credentials = returnedInfo[0].data.credentials;
         let username = returnedInfo[0].username;
 
@@ -144,29 +132,25 @@ function DocSideNav(props) {
         let profileWarning = false;
         let verifyWarning = false;
 
-
         // check if all fields of verification have been filled.
         if (returnedInfo[0].verification) {
+          const verifyHasEmpty = !Object.values(
+            returnedInfo[0].verification
+          ).some((x) => x !== null && x !== "" && x !== " ");
 
-          const verifyHasEmpty =
-            !Object.values(returnedInfo[0].verification).some(x => (x !== null && x !== "" && x !== " "));
+          const notAllFilled =
+            Object.keys(returnedInfo[0].verification).length !== 5;
 
-          const notAllFilled = Object.keys(returnedInfo[0].verification).length !== 5;
-
-          verifyWarning = (verifyHasEmpty || notAllFilled) ? true : false;
+          verifyWarning = verifyHasEmpty || notAllFilled ? true : false;
         }
 
-
-
         // if we did not go into search data --> no specialty exists
-        if (returnedInfo.length == 1) {
+        if (returnedInfo.length === 1) {
           storedTags = "";
           likes = 0;
           // no data in search = never submitted profile
           profileWarning = true;
-
         } else {
-
           // michelle 5/16: 这两句原来前面有let  名字也不太一样 你可以直接替换掉
           doctorSpecialty = returnedInfo[0].profile.specialty;
           doctorHospital = returnedInfo[0].profile.hospital;
@@ -180,7 +164,6 @@ function DocSideNav(props) {
           // has data in search data = has submitted profile
           profileWarning = false;
         }
-
 
         setState({
           userType: returnedInfo[0].userType,
@@ -201,55 +184,55 @@ function DocSideNav(props) {
         props.setProfileWarning(profileWarning);
         props.setVerifyWarning(verifyWarning);
 
-
         // if (username) {
         setRenderCount(1);
         // }
-      }).catch((error) => {
-        console.error(error);
       })
-  }
-
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   // overall fetching function
   let fetchData = async () => {
     // wait for the first async function to finish before peoceeding
-    return await getStoredCredentials()
-      .then((res) => {
-
-        // add result from the first async function to returnedInfo
-        const credentials = res.data.credentials;
-        returnedInfo.push(credentials);
-        // check to see if a field returned from the first async function exists
-        if (credentials.userType == "doctor" && credentials.profile.specialty) {
-          // if yes, use it to proceed the second async function
-          return getSpecialtyData(credentials.profile.specialty, credentials.profile.hospital);
-        }
-        // }
-      });
-  }
-
+    return await getStoredCredentials().then((res) => {
+      // add result from the first async function to returnedInfo
+      const credentials = res.data.credentials;
+      returnedInfo.push(credentials);
+      // check to see if a field returned from the first async function exists
+      if (credentials.userType === "doctor" && credentials.profile.specialty) {
+        // if yes, use it to proceed the second async function
+        return getSpecialtyData(
+          credentials.username,
+          credentials.profile.specialty,
+          credentials.profile.hospital
+        );
+      }
+      // }
+    });
+  };
 
   let getStoredCredentials = async () => {
     // let userStoredCredentials = await props.storedCredentials;
-    let userStoredCredentials = await axios.get(proxyurl + axios.defaults.baseURL + "user");
-    return userStoredCredentials;
-  }
+    try {
+      let userStoredCredentials = await axios.get("/user");
+      return userStoredCredentials;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-
-  let getSpecialtyData = async (searchSpecialty, searchHospital) => {
-    let specialtyData =
-      await axios.get(proxyurl + axios.defaults.baseURL + "getdoctorusersearchinfo",
-        {
-          params: {
-            specialty: searchSpecialty,
-            hospital: searchHospital.replace(/\s+/g, "")
-          }
-        });
+  let getSpecialtyData = async (username, searchSpecialty, searchHospital) => {
+    let specialtyData = await axios.get("/doctorprofile", {
+      params: {
+        username,
+        specialty: searchSpecialty,
+        hospital: searchHospital.replace(/\s+/g, ""),
+      },
+    });
     return specialtyData;
-  }
-
-
+  };
 
   // reads new image and sets state
   const uploadProfilePicture = (event) => {
@@ -261,16 +244,14 @@ function DocSideNav(props) {
     reader.onload = () => {
       setState({
         ...userInfo,
-        profilePic: reader.result
-      })
+        profilePic: reader.result,
+      });
     };
   };
 
-
-
   // wait for the newly uploaded image to be updated to state and post to firebase
   useEffect(() => {
-    if (renderCount == 1) {
+    if (renderCount === 1) {
       return postProfilePic();
     }
   }, [userInfo.profilePic]);
@@ -279,8 +260,8 @@ function DocSideNav(props) {
     waitProfileUpdate()
       .then((imgSrc) => {
         const imgSrcVar = {
-          imgSrc: imgSrc
-        }
+          imgSrc: imgSrc,
+        };
         props.changeProfilePic(imgSrcVar);
 
         // michelle 5/16: 下面这个if是新加上去的
@@ -291,42 +272,40 @@ function DocSideNav(props) {
             specialty: userInfo.specialty,
             hospital: userInfo.hospital,
             username: userInfo.username,
-            imgSrc: imgSrc
-          }
+            imgSrc: imgSrc,
+          };
           props.updateDoctorProfilePic(updateInfo);
         }
-
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   let waitProfileUpdate = async () => {
     let newProfilePic = await userInfo.profilePic;
     return newProfilePic;
-  }
+  };
 
   // create a tag list that contains all tags for this doctor
-  let tagList = (userInfo.tags) ? userInfo.tags.map(tag => {
-    return (
-      <Fragment key={tag.tagName}>
-        <li key={tag.tagName}>
-          <Chip
-            label={tag.tagName + ' (' + tag.count + ')'}
-            className={classes.tag}
-            color="secondary"
-            size="small"
-          />
-        </li>
-      </Fragment>
-    )
-  }) : <p>No review tags yet</p>;
-
-
-
-
-
-
+  let tagList = userInfo.tags ? (
+    userInfo.tags.map((tag) => {
+      return (
+        <Fragment key={tag.tagName}>
+          <li key={tag.tagName}>
+            <Chip
+              label={tag.tagName + " (" + tag.count + ")"}
+              className={classes.tag}
+              color="secondary"
+              size="small"
+            />
+          </li>
+        </Fragment>
+      );
+    })
+  ) : (
+    <p>No review tags yet</p>
+  );
 
   //选list item (profile, saved, like history, acc verification, acc settings)
   const [selectedIndex, setSelectedIndex] = React.useState();
@@ -335,27 +314,17 @@ function DocSideNav(props) {
     setSelectedIndex(index);
   };
 
-  //tooltip first time user instruction
-  const [open, setOpen] = React.useState(false);
-  const handleTooltipClose = () => {
-    setOpen(false);
-  };
-  const handleTooltipOpen = () => {
-    setOpen(true);
-  };
-
-
   if (!userInfo.username) {
     // loading spinner if prop data is not yet available
     return (
       <div>
-        <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '5%' }} />
+        <CircularProgress
+          color="secondary"
+          style={{ marginLeft: "45%", marginTop: "5%" }}
+        />
       </div>
     );
-
   } else {
-
-
     return (
       <Fragment>
         <div className={classes.root}>
@@ -398,9 +367,9 @@ function DocSideNav(props) {
 
               <Typography variant="h6" color="primary">
                 Hi, {userInfo.username}!
-            </Typography>
+              </Typography>
 
-              {userInfo.userType == "doctor" ? (
+              {userInfo.userType === "doctor" ? (
                 <Box className={classes.likeBox} mt={2} mb={2}>
                   {/* Likes */}
                   <FavoriteIcon style={{ color: "red" }} />
@@ -408,19 +377,20 @@ function DocSideNav(props) {
                     &nbsp;{userInfo.likes}
                   </Typography>
                 </Box>
-              ) : <br></br>}
+              ) : (
+                <br></br>
+              )}
 
-              {userInfo.userType == "doctor" ? (
-                <div className={classes.tagBox}>
-                  {tagList}
-                </div>
-              ) : <br />}
-
+              {userInfo.userType === "doctor" ? (
+                <div className={classes.tagBox}>{tagList}</div>
+              ) : (
+                <br />
+              )}
             </Box>
 
             {/* Profile */}
 
-            {userInfo.userType == "doctor" ? (
+            {userInfo.userType === "doctor" ? (
               <ListItem
                 button
                 selected={selectedIndex === 0}
@@ -443,17 +413,18 @@ function DocSideNav(props) {
                         2. Set up your profile <br></br>
                         <br></br>
                         Add your personal, work, and expertise information.
-                  </h2>
+                      </h2>
                     }
                   >
                     <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
                   </Tooltip>
                 ) : (
-                    ""
-                  )}
-
+                  ""
+                )}
               </ListItem>
-            ) : ""}
+            ) : (
+              ""
+            )}
 
             {/* Saved  */}
             <ListItem
@@ -484,7 +455,7 @@ function DocSideNav(props) {
             </ListItem>
 
             {/* Account verification */}
-            {userInfo.userType == "doctor" ? (
+            {userInfo.userType === "doctor" ? (
               <ListItem
                 button
                 selected={selectedIndex === 3}
@@ -509,33 +480,20 @@ function DocSideNav(props) {
                         <br></br>
                         1. Verify your account <br></br>
                         <br></br>
-                        Once you verified your account, you will be able to publish
-                        your profile.
-                  </h2>
+                        Once you verified your account, you will be able to
+                        publish your profile.
+                      </h2>
                     }
                   >
                     <ErrorOutlineOutlinedIcon style={{ color: "red" }} />
                   </Tooltip>
                 ) : (
-                    ""
-                  )}
-
+                  ""
+                )}
               </ListItem>
-            ) : ""}
-
-            {/* Account settings */}
-            {/* <ListItem
-              button
-              selected={selectedIndex === 4}
-              onClick={(event) => handleListItemClick(event, 4)}
-              component="a"
-              href="/accountsettings"
-            >
-              <ListItemIcon style={{ marginLeft: 20 }}>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Account Settings" />
-            </ListItem> */}
+            ) : (
+              ""
+            )}
           </List>
         </div>
       </Fragment>
@@ -546,19 +504,18 @@ function DocSideNav(props) {
 DocSideNav.propTypes = {
   changeProfilePic: PropTypes.func.isRequired,
   updateDoctorProfilePic: PropTypes.func.isRequired,
-
   getDoctorUserSearchInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
   storedCredentials: state.user.credentials,
-  searchUserInfo: state.data.doctorUserInfo
+  searchUserInfo: state.data.doctorUserInfo,
 });
 
 const mapActionsToProps = {
   changeProfilePic,
-  updateDoctorProfilePic
+  updateDoctorProfilePic,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(DocSideNav);
