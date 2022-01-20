@@ -44,6 +44,7 @@ export default function TopRatedDocCard(props) {
 
   const handleOnclick = () => {
     props.setProfileBackToDestination("hospprofile");
+    console.log(props.targetDoc);
     props.updateTargetDoc(props.targetDoc);
     if (props.history != null) {
       props.history.push("/docprofile");

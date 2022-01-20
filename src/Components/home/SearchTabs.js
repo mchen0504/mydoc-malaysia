@@ -103,11 +103,11 @@ export default function SearchTabs(props) {
 
   const handleSearchMethodChange = (event, newValue) => {
     let method = "";
-    if (newValue == 0) {
+    if (newValue === 0) {
       method = "Specialty";
-    } else if (newValue == 1) {
+    } else if (newValue === 1) {
       method = "Doctor";
-    } else if (newValue == 2) {
+    } else if (newValue === 2) {
       method = "Hospital";
     } else {
       method = "Condition";

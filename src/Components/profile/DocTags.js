@@ -107,7 +107,6 @@ function Tags(props) {
             userStored = res[1].addedDoctorTags[props.targetDoc.userName];
           }
         }
-
         setState({
           currentTags: res[0].data.tags ? res[0].data.tags : "",
           storedUserTags: userStored,
@@ -123,13 +122,9 @@ function Tags(props) {
   let getStoredData = async () => {
     // making two asynchronous calls: one from searchInfo and one from user credentials info
     let [storedSearchInfo, userStoredCredentials] = await Promise.all([
-      await axios.get("/doctorprofile", {
-        params: {
-          username: props.targetDoc.userName,
-          specialty: props.targetDoc.specialty,
-          hospital: props.targetDoc.Hospital,
-        },
-      }),
+      await axios.get(
+        `/doctorprofile?username=${props.targetDoc.userName}&specialty=${props.targetDoc.specialty}&hospital=${props.targetDoc.Hospital}`
+      ),
       props.storedCredentials,
     ]);
     return [storedSearchInfo, userStoredCredentials];
@@ -268,7 +263,7 @@ function Tags(props) {
     );
   });
 
-  const updateSelectedTags = () => {
+  const updateSelectedTags = async () => {
     const doctorNewTags = {
       username: props.targetDoc.userName,
       tags: allTags["storedUserTags"],
@@ -277,7 +272,9 @@ function Tags(props) {
 
     const updateInfo = {
       specialty: props.targetDoc.specialty,
-      hospital: props.targetDoc.Hospital,
+      hospital: props.targetDoc.Hospital
+        ? props.targetDoc.Hospital
+        : props.targetDoc.hospital,
       username: props.targetDoc.userName,
       tags: allTags["currentTags"],
     };

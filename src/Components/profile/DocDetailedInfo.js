@@ -23,19 +23,19 @@ export default function DocInfo(props) {
   const classes = useStyles();
 
   // create language List
-  let languageList = props.targetDoc["Language"].map((lang) => {
+  let languageList = props.targetDoc.languages.map((lang) => {
     let langCard = <p key={lang}>{lang}</p>;
     return langCard;
   });
 
   // create procedure List
-  let procList = props.targetDoc["Procedures"].map((proc) => {
+  let procList = props.targetDoc.procedures.map((proc) => {
     let procCard = <p key={proc}>{proc}</p>;
     return procCard;
   });
 
   // create condition List
-  let conditionCardList = props.targetDoc["Conditions"].map((condition) => {
+  let conditionCardList = props.targetDoc.conditions.map((condition) => {
     let conditionCard = <p key={condition}>{condition}</p>;
     return conditionCard;
   });

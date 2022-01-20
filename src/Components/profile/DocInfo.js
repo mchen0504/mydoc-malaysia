@@ -188,13 +188,15 @@ function DocInfo(props) {
             listOfSaves = [];
           }
         }
+        console.log(props.targetDoc);
         setState({
           username: res.username,
           hasLiked: liked,
           likedList: listOfLikes,
-          numLikes: props.targetDoc.NumberOfLikes
-            ? props.targetDoc.NumberOfLikes
-            : 0,
+          numLikes:
+            props.targetDoc.NumberOfLikes || props.targetDoc.likes
+              ? props.targetDoc.NumberOfLikes || props.targetDoc.likes
+              : 0,
 
           hasSaved: saved,
           savedList: listOfSaves,
@@ -340,7 +342,6 @@ function DocInfo(props) {
         hasSaved: false,
       });
     } else {
-      console.log(props.targetDoc);
       // the newly saved doctor's information to be added to the user's saved doctor list
       let newDocInfo = {
         hospital: props.targetDoc.Hospital,
@@ -369,7 +370,6 @@ function DocInfo(props) {
   const updateUserSave = async () => {
     try {
       let savedList = await likeSaveInfo.savedList;
-      console.log(savedList);
       props.changeDocSaveStatus(savedList);
     } catch (err) {
       console.error(err);
@@ -493,6 +493,7 @@ function DocInfo(props) {
 
   return (
     <div>
+      {console.log(likeSaveInfo)}
       <div className={classes.covidBox}>
         <CovidAlert />
       </div>
@@ -571,7 +572,7 @@ function DocInfo(props) {
               <div style={{ width: 200, height: 250 }}>
                 <img
                   className={classes.img}
-                  src={props.targetDoc["imgSrc"]}
+                  src={props.targetDoc.imgSrc}
                   alt="docimg"
                 />
               </div>
@@ -580,7 +581,7 @@ function DocInfo(props) {
             {/* 手机屏幕出现的格式：doctor's name 在照片下面 */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
-                {"Dr. " + props.targetDoc["DocName"]}
+                {"Dr. " + props.targetDoc.name}
               </Typography>
             </Hidden>
 
@@ -764,7 +765,7 @@ function DocInfo(props) {
           {/* 大屏幕会出现的格式：doctor name 在右边 */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
-              {"Dr. " + props.targetDoc["DocName"]}
+              {"Dr. " + props.targetDoc.name}
             </Typography>
           </Hidden>
           <br></br>
@@ -778,23 +779,23 @@ function DocInfo(props) {
           <Box className={classes.profileGrid} mt={3} mb={3}>
             <Typography variant="body1" color="textPrimary">
               <strong>Specialty: </strong>{" "}
-              <span>{props.targetDoc["Specialty"]} </span>
+              <span>{props.targetDoc.specialty} </span>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
               <strong>Years of Practice: </strong>{" "}
-              <span>{props.targetDoc["YearsofPractice"] + " years"} </span>
+              <span>{props.targetDoc.yearsOfPractice + " years"} </span>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
               <strong>Hospital: </strong>
-              <span>{props.targetDoc["Hospital"]}</span>
+              <span>{props.targetDoc.hospital}</span>
               {/* private tag */}
               <Chip
                 style={{ marginLeft: 10 }}
                 color="primary"
                 size="small"
-                label={props.targetDoc["Type"]}
+                label={props.targetDoc.type}
               ></Chip>
             </Typography>
             <br></br>
@@ -802,19 +803,19 @@ function DocInfo(props) {
             <Box display="flex" flexDirection="row" mt={1}>
               <LocationOnOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetDoc["Address"]}</span>
+                <span>{props.targetDoc.address}</span>
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" mt={1}>
               <PhoneOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetDoc["Phone"]}</span>
+                <span>{props.targetDoc.phone}</span>
               </Typography>
             </Box>
           </Box>
 
           <DocTags
-            tagInfo={props.targetDoc["tags"]}
+            tagInfo={props.targetDoc.tags}
             targetDoc={props.targetDoc}
             handleLoginOpen={handleLoginOpen}
           />

@@ -44,37 +44,44 @@ const useStyles = makeStyles((theme) => ({
 export default function Appointment(props) {
   const classes = useStyles();
 
-
   // create grid based on appointment list
-  let appointment = props.targetDoc['appointment'];
+  let appointment = props.targetDoc["appointment"];
   let appointmentList = [];
   for (let appointmentType in appointment) {
-    if (appointmentType == 'email' && appointment[appointmentType]['status'] == true) {
-      appointmentList.push(<Grid item xs={6} sm={2}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          mb={2}
-        >
-          <img src={emailIcon} className={classes.icon} alt="emailicon"></img>
-          <br></br>
-          <Link style={{ textDecoration: "underline" }}>
-            <a
-              href={"mailto:" + appointment[appointmentType]['content']}
-              target="_blank"
-              style={{ color: "#003367" }}
-            >
-              Email
-           </a>
-          </Link>
-        </Box>
-      </Grid>)
-    }
-    if (appointmentType == 'online' && appointment[appointmentType]['status'] == true) {
+    if (
+      appointmentType == "email" &&
+      appointment[appointmentType]["status"] == true
+    ) {
       appointmentList.push(
-        <Grid item xs={6} sm={2}>
+        <Grid item xs={6} sm={2} key="email">
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            mb={2}
+          >
+            <img src={emailIcon} className={classes.icon} alt="emailicon"></img>
+            <br></br>
+            <Link style={{ textDecoration: "underline" }}>
+              <a
+                href={"mailto:" + appointment[appointmentType]["content"]}
+                target="_blank"
+                style={{ color: "#003367" }}
+              >
+                Email
+              </a>
+            </Link>
+          </Box>
+        </Grid>
+      );
+    }
+    if (
+      appointmentType == "online" &&
+      appointment[appointmentType]["status"] == true
+    ) {
+      appointmentList.push(
+        <Grid item xs={6} sm={2} key="online">
           <Box
             display="flex"
             flexDirection="column"
@@ -90,7 +97,7 @@ export default function Appointment(props) {
             <br></br>
             <Link style={{ textDecoration: "underline" }}>
               <a
-                href={appointment[appointmentType]['content']}
+                href={appointment[appointmentType]["content"]}
                 target="_blank"
                 style={{ color: "#003367" }}
               >
@@ -98,12 +105,16 @@ export default function Appointment(props) {
               </a>
             </Link>
           </Box>
-        </Grid>)
+        </Grid>
+      );
     }
 
-    if (appointmentType == 'onsite' && appointment[appointmentType]['status'] == true) {
+    if (
+      appointmentType == "onsite" &&
+      appointment[appointmentType]["status"] == true
+    ) {
       appointmentList.push(
-        <Grid item xs={6} sm={2}>
+        <Grid item xs={6} sm={2} key="onsite">
           <Box
             display="flex"
             flexDirection="column"
@@ -120,15 +131,18 @@ export default function Appointment(props) {
 
             <Typography variant="body1" color="primary">
               On site
-          </Typography>
+            </Typography>
           </Box>
         </Grid>
-      )
+      );
     }
 
-    if (appointmentType == 'call' && appointment[appointmentType]['status'] == true) {
+    if (
+      appointmentType == "call" &&
+      appointment[appointmentType]["status"] == true
+    ) {
       appointmentList.push(
-        <Grid item xs={6} sm={2}>
+        <Grid item xs={6} sm={2} key="call">
           <Box
             display="flex"
             flexDirection="column"
@@ -138,9 +152,9 @@ export default function Appointment(props) {
           >
             <img src={phoneIcon} className={classes.icon} alt="phoneicon"></img>
             <br></br>
-            <Link style={{ textDecoration: "underline" }} >
+            <Link style={{ textDecoration: "underline" }}>
               <a
-                href={"tel:" + appointment[appointmentType]['content']}
+                href={"tel:" + appointment[appointmentType]["content"]}
                 target="_blank"
                 style={{ color: "#003367" }}
               >
@@ -148,10 +162,10 @@ export default function Appointment(props) {
               </a>
             </Link>
           </Box>
-        </Grid>)
+        </Grid>
+      );
     }
   }
-
 
   return (
     <div>

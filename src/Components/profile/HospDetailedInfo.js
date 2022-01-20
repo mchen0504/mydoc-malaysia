@@ -67,6 +67,7 @@ export default function DocInfo(props) {
   let doctorSortList = [];
   for (let doctor in doctors) {
     let targetDoc = doctors[doctor];
+    targetDoc["userName"] = doctor;
     // if the doctor has published their profile and they are still in this specialty
     if (targetDoc.publish && !targetDoc.deleted) {
       targetDoc.Conditions = targetDoc.conditions.map((item) => {
@@ -87,6 +88,7 @@ export default function DocInfo(props) {
   });
   let doctorCards = [];
   doctorSortList.forEach((doc, index) => {
+    console.log(doc);
     let card = <TopRatedDocCard {...props} targetDoc={doc} key={index} />;
     doctorCards.push(card);
   });

@@ -29,6 +29,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       return userCredential.user.getIdToken();
     })
     .then((idToken) => {
+      console.log(idToken);
       setAuthorizationHeader(idToken);
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
@@ -37,7 +38,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data,
+        payload: err.code,
       });
     });
 
@@ -88,12 +89,13 @@ export const signupGeneralUser =
         history.push(`/`);
       })
       .catch((err) => {
-        if (err.response) {
-          dispatch({
-            type: SET_ERRORS,
-            payload: err.response.data,
-          });
-        }
+        // console.log(err);
+        // if (err.response) {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.code,
+        });
+        // }
       });
 
     // axios
