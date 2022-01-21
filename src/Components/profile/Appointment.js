@@ -49,8 +49,8 @@ export default function Appointment(props) {
   let appointmentList = [];
   for (let appointmentType in appointment) {
     if (
-      appointmentType == "email" &&
-      appointment[appointmentType]["status"] == true
+      appointmentType === "email" &&
+      appointment[appointmentType]["status"] === true
     ) {
       appointmentList.push(
         <Grid item xs={6} sm={2} key="email">
@@ -77,8 +77,8 @@ export default function Appointment(props) {
       );
     }
     if (
-      appointmentType == "online" &&
-      appointment[appointmentType]["status"] == true
+      appointmentType === "online" &&
+      appointment[appointmentType]["status"] === true
     ) {
       appointmentList.push(
         <Grid item xs={6} sm={2} key="online">
@@ -110,8 +110,8 @@ export default function Appointment(props) {
     }
 
     if (
-      appointmentType == "onsite" &&
-      appointment[appointmentType]["status"] == true
+      appointmentType === "onsite" &&
+      appointment[appointmentType]["status"] === true
     ) {
       appointmentList.push(
         <Grid item xs={6} sm={2} key="onsite">
@@ -138,8 +138,8 @@ export default function Appointment(props) {
     }
 
     if (
-      appointmentType == "call" &&
-      appointment[appointmentType]["status"] == true
+      appointmentType === "call" &&
+      appointment[appointmentType]["status"] === true
     ) {
       appointmentList.push(
         <Grid item xs={6} sm={2} key="call">

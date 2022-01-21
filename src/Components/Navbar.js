@@ -63,7 +63,7 @@ class Navbar extends Component {
       this.props.currentPage !== "Home" &&
       this.props.currentPage !== "signUp" &&
       this.props.currentPage !== "login" &&
-      this.props.currentPage != "account"
+      this.props.currentPage !== "account"
     ) {
       globalSearch = (
         <Box style={{ cursor: "pointer" }}>

@@ -8,11 +8,11 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     margin: 30,
+    paddingLeft: 20,
   },
 
   img: {
@@ -55,7 +55,7 @@ export default function HospitalCard(props) {
   const classes = useStyles();
 
   const handleClick = () => {
-    props.setProfileBackToDestination('resultsPage')
+    props.setProfileBackToDestination("resultsPage");
     props.updateTargetHos(props.resultData);
     if (props.history != null) {
       props.history.push("/hospprofile");
@@ -71,7 +71,11 @@ export default function HospitalCard(props) {
   let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
 
   return (
-    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={handleClick}>
+    <Card
+      style={{ cursor: "pointer" }}
+      className={classes.root}
+      onClick={handleClick}
+    >
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {cardImage}
@@ -107,7 +111,9 @@ export default function HospitalCard(props) {
             <div align="center">
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                {hospLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+                {hospLikes.toLocaleString(navigator.language, {
+                  minimumFractionDigits: 0,
+                })}
               </Typography>
             </div>
           </Box>

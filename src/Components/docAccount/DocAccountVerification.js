@@ -46,7 +46,7 @@ function DocAccountVerification(props) {
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
   // in firebase is successfully set to state)
   useEffect(() => {
-    if (renderCount == 0) {
+    if (renderCount === 0) {
       return displayStoredData();
     }
   });

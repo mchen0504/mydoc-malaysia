@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
 
 // material ui
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -18,10 +18,6 @@ import Bg from "../img/login/doctors-heart.png";
 //redux
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
-import { getSpecProfile } from "../redux/actions/userActions";
-import { getSpecList } from "../redux/actions/userActions";
-import { getCondList } from "../redux/actions/userActions";
-
 import store from "../redux/store";
 import { SET_AUTHENTICATED } from "../redux/types";
 
@@ -30,7 +26,7 @@ import Navbar from "../components/Navbar";
 import CovidAlert from "../components/Alert";
 
 // material ui style
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   ...theme.auth,
   bg: {
     [theme.breakpoints.down("md")]: {
@@ -53,154 +49,167 @@ const styles = (theme) => ({
       marginRight: 20,
     },
   },
-});
+}));
 
-// Login page
-class Login extends Component {
-  constructor() {
-    super();
-    this.state = {
-      email: "",
-      password: "",
-      errors: {},
-    };
-  }
+function Login(props) {
+  const classes = useStyles();
 
-  static getDerivedStateFromProps(props, state) {
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    errors: {},
+  });
+
+  useEffect(() => {
     if (props.UI.errors) {
-      return {
-        errors: props.UI.errors,
-      };
+      if (props.UI.errors === "auth/user-not-found") {
+        errors.email = "There is no account associated with this email";
+      } else if (props.UI.errors === "auth/wrong-password") {
+        errors.general = "Wrong password";
+      } else {
+        errors.general = "Something went wrong. Please try again";
+      }
+      setCredentials((credentials) => ({
+        ...credentials,
+        errors,
+      }));
     }
-    return null;
-  }
+  }, [props.UI.errors]);
 
-  componentDidUpdate() {
+  useEffect(() => {
     const token = localStorage.FBIdToken;
     if (token) {
       store.dispatch({ type: SET_AUTHENTICATED });
       axios.defaults.headers.common["Authorization"] = token;
     }
-  }
+  });
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+    setCredentials((credentials) => ({
+      ...credentials,
+      errors: {},
+    }));
     const userData = {
-      email: this.state.email,
-      password: this.state.password,
+      email: credentials.email,
+      password: credentials.password,
     };
-    this.getStoredData(userData);
+
+    let errors = {};
+    const isEmpty = (string) => {
+      if (string.trim() === "") return true;
+      else return false;
+    };
+    if (isEmpty(userData.email))
+      errors.email = "Email address must not be empty";
+    if (isEmpty(userData.password))
+      errors.password = "Password must not be empty";
+
+    if (Object.keys(errors).length > 0) {
+      setCredentials((credentials) => ({ ...credentials, errors }));
+    } else {
+      props.loginUser(userData, props.history);
+    }
   };
 
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setCredentials((credentials) => ({
+      ...credentials,
+      [name]: value,
+    }));
   };
 
-  getStoredData = async (userData) => {
-    await this.props.loginUser(userData, this.props.history);
-  };
+  const {
+    UI: { loading },
+  } = props;
+  const { errors } = credentials;
 
-  render() {
-    const {
-      classes,
-      UI: { loading },
-    } = this.props;
-    const { errors } = this.state;
-    return (
-      <div>
-        <Navbar currentPage="login" />
-        <div className={classes.covidBox}>
-          <CovidAlert />
+  return (
+    <div>
+      <Navbar currentPage="login" />
+      <div className={classes.covidBox}>
+        <CovidAlert />
 
-          <Grid container className={classes.form}>
-            <Grid item xs={1} sm={2} md={4} />
-            <Grid item xs={10} sm={8} md={4}>
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-              >
-                <Typography className={classes.pageTitle}>Log in</Typography>
-                <form noValidate onSubmit={this.handleSubmit}>
-                  <TextField
-                    id="email"
-                    name="email"
-                    type="email"
-                    label="Email address"
-                    className={classes.textField}
-                    helperText={errors.email}
-                    error={errors.email ? true : false}
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                    fullWidth
-                    variant="outlined"
-                  />
-                  <TextField
-                    id="password"
-                    name="password"
-                    type="password"
-                    label="Password"
-                    className={classes.textField}
-                    helperText={errors.password}
-                    error={errors.password ? true : false}
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    fullWidth
-                    variant="outlined"
-                  />
-                  {errors.general && (
-                    <Typography variant="body2" className={classes.customError}>
-                      {errors.general}
-                    </Typography>
-                  )}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                    fullWidth
-                    size="large"
-                    disabled={loading}
-                  >
-                    Log in
-                    {loading && (
-                      <CircularProgress
-                        size={30}
-                        className={classes.progress}
-                        color="secondary"
-                      />
-                    )}
-                  </Button>
-
-                  <Typography variant="body2">
-                    Don't have an account?{" "}
-                    <Link
-                      to="/signup"
-                      style={{ color: "#003367" }}
-                      className={classes.link}
-                    >
-                      Sign up
-                    </Link>
+        <Grid container className={classes.form}>
+          <Grid item xs={1} sm={2} md={4} />
+          <Grid item xs={10} sm={8} md={4}>
+            <Box display="flex" flexDirection="column" justifyContent="center">
+              <Typography className={classes.pageTitle}>Log in</Typography>
+              <form noValidate onSubmit={handleSubmit}>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email address"
+                  className={classes.textField}
+                  helperText={errors.email}
+                  error={errors.email ? true : false}
+                  value={credentials.email}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  className={classes.textField}
+                  helperText={errors.password}
+                  error={errors.password ? true : false}
+                  value={credentials.password}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+                {errors.general && (
+                  <Typography variant="body2" className={classes.customError}>
+                    {errors.general}
                   </Typography>
-                </form>
-              </Box>
-            </Grid>
-            <Grid item xs={1} sm={2} md={4} />
-            <img src={Bg} alt="doctor-hearts" className={classes.bg} />
+                )}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  fullWidth
+                  size="large"
+                  disabled={loading}
+                >
+                  Log in
+                  {loading && (
+                    <CircularProgress
+                      size={30}
+                      className={classes.progress}
+                      color="secondary"
+                    />
+                  )}
+                </Button>
+
+                <Typography variant="body2">
+                  Don't have an account?{" "}
+                  <Link
+                    to="/signup"
+                    style={{ color: "#003367" }}
+                    className={classes.link}
+                  >
+                    Sign up
+                  </Link>
+                </Typography>
+              </form>
+            </Box>
           </Grid>
-        </div>
+          <Grid item xs={1} sm={2} md={4} />
+          <img src={Bg} alt="doctor-hearts" className={classes.bg} />
+        </Grid>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 Login.propTypes = {
-  classes: PropTypes.object.isRequired,
   loginUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -209,13 +218,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-  getSpecProfile,
-  getSpecList,
-  getCondList,
   loginUser,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(withStyles(styles)(Login));
+export default connect(mapStateToProps, mapActionsToProps)(Login);

@@ -29,7 +29,6 @@ export const loginUser = (userData, history) => (dispatch) => {
       return userCredential.user.getIdToken();
     })
     .then((idToken) => {
-      console.log(idToken);
       setAuthorizationHeader(idToken);
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
@@ -41,22 +40,6 @@ export const loginUser = (userData, history) => (dispatch) => {
         payload: err.code,
       });
     });
-
-  // axios
-  //   .post("/login", userData)
-  //   .then((res) => {
-  //     //send request to server
-  //     setAuthorizationHeader(res.data.token);
-  //     dispatch(getUserData());
-  //     dispatch({ type: CLEAR_ERRORS });
-  //     history.push(`/`);
-  //   })
-  //   .catch((err) => {
-  //     dispatch({
-  //       type: SET_ERRORS,
-  //       payload: err.response.data,
-  //     });
-  //   });
 };
 
 // used in GeneralSignup.js
@@ -97,23 +80,6 @@ export const signupGeneralUser =
         });
         // }
       });
-
-    // axios
-    //   .post("/generalsignup", newGeneralUserData)
-    //   .then((res) => {
-    //     setAuthorizationHeader(res.data.token);
-    //     dispatch(getUserData());
-    //     dispatch({ type: CLEAR_ERRORS });
-    //     history.push(`/`);
-    //   })
-    //   .catch((err) => {
-    //     if (err.response) {
-    //       dispatch({
-    //         type: SET_ERRORS,
-    //         payload: err.response.data,
-    //       });
-    //     }
-    //   });
   };
 
 //used in DoctorSignup.js
@@ -145,30 +111,13 @@ export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
       history.push(`/`);
     })
     .catch((err) => {
-      if (err.response) {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
-      }
+      // if (err.response) {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.code,
+      });
+      // }
     });
-
-  // axios
-  //   .post("/doctorsignup", newDoctorUserData)
-  //   .then((res) => {
-  //     setAuthorizationHeader(res.data.token);
-  //     dispatch(getUserData());
-  //     dispatch({ type: CLEAR_ERRORS });
-  //     history.push(`/`);
-  //   })
-  //   .catch((err) => {
-  //     if (err.response) {
-  //       dispatch({
-  //         type: SET_ERRORS,
-  //         payload: err.response.data,
-  //       });
-  //     }
-  //   });
 };
 
 const setAuthorizationHeader = (token) => {

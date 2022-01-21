@@ -70,7 +70,7 @@ export function FilterButtonPhone(props) {
         <br></br>
         {/* NOT DONE YET - If display by doctor, filter sidebar will show years of practice; 
             if display by hospital, filter sidebar will show location */}
-        <YearsOfPractice />
+        {props.display === "doctor" && <YearsOfPractice />}
       </Box>
     </div>
   );

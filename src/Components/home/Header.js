@@ -83,7 +83,7 @@ export default function Header(props) {
   });
 
   let renderBodyParts = null;
-  if (props.searchMethod == "Condition") {
+  if (props.searchMethod === "Condition") {
     renderBodyParts = (
       <BodyPartsDialog
         changeConditionLabel={props.changeConditionLabel}

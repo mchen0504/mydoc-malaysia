@@ -68,14 +68,14 @@ export default function BodyPartsDialog(props) {
   };
 
   let symList = [];
-  if (selectedBodyPart != "") {
+  if (selectedBodyPart !== "") {
     symList = Object.keys(
       props.bodyPartsDic[selectedBodyPart].SymptomsConditionDic
     );
   }
 
   let condition = [];
-  if (selectedSym != "") {
+  if (selectedSym !== "") {
     condition =
       props.bodyPartsDic[selectedBodyPart].SymptomsConditionDic[selectedSym];
   }
@@ -212,7 +212,7 @@ export default function BodyPartsDialog(props) {
                     <ListItem
                       id={text}
                       button
-                      selected={selectedSym == text}
+                      selected={selectedSym === text}
                       key={text}
                       onClick={getSymName.bind(this, text)}
                     >
@@ -241,7 +241,7 @@ export default function BodyPartsDialog(props) {
                     <ListItem
                       button
                       key={text}
-                      selected={selectedCondition == text}
+                      selected={selectedCondition === text}
                       onClick={getConditionName.bind(this, text)}
                     >
                       <ListItemText primary={text} />

@@ -51,9 +51,9 @@ function Account(props) {
   let mobileScreen;
 
   const index = props.index;
-  if (index == 0) {
+  if (index === 0) {
     rightPanel =
-      props.storedCredentials.userType == "doctor" ? (
+      props.storedCredentials.userType === "doctor" ? (
         <DocEditProfile setProfileWarning={setProfileWarning} />
       ) : (
         <LikeHistorySaved
@@ -71,17 +71,17 @@ function Account(props) {
         setVerifyWarning={setVerifyWarning}
       />
     );
-  } else if (index == 1) {
+  } else if (index === 1) {
     rightPanel = <DocEditProfile setProfileWarning={setProfileWarning} />;
     mobileScreen = <DocEditProfile setProfileWarning={setProfileWarning} />;
-  } else if (index == 2) {
+  } else if (index === 2) {
     rightPanel = (
       <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
     );
     mobileScreen = (
       <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
     );
-  } else if (index == 3) {
+  } else if (index === 3) {
     rightPanel = (
       <LikeHistorySaved
         {...props}
@@ -96,7 +96,7 @@ function Account(props) {
         saveLike="likeHistory"
       />
     );
-  } else if (index == 4) {
+  } else if (index === 4) {
     rightPanel = (
       <DocAccountVerification
         verifyShowWarning={verifyShowWarning}

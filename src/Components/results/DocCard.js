@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     margin: 30,
+    paddingLeft: 20,
   },
 
   img: {
@@ -58,7 +59,7 @@ export default function DocCard(props) {
     language = language + ", " + lang;
   });
   language = language.substring(1);
-  // he chen 
+  // he chen
   const handleClick = () => {
     props.updateTargetDoc(props.resultData);
     props.setProfileBackToDestination("resultsPage");
@@ -82,7 +83,11 @@ export default function DocCard(props) {
   }
 
   return (
-    <Card style={{ cursor: "pointer" }} className={classes.root} onClick={handleClick}>
+    <Card
+      style={{ cursor: "pointer" }}
+      className={classes.root}
+      onClick={handleClick}
+    >
       <Grid container spacing={0}>
         <Grid item xs={12} sm={3} className={classes.imageGrid}>
           {cardImage}
@@ -108,7 +113,11 @@ export default function DocCard(props) {
             </Typography>
             <br></br>
             {/* private tag */}
-            <Chip color="secondary" size="small" label={props.resultData["Type"]}></Chip>
+            <Chip
+              color="secondary"
+              size="small"
+              label={props.resultData["Type"]}
+            ></Chip>
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -117,7 +126,9 @@ export default function DocCard(props) {
             <div align="center">
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                {docLikes.toLocaleString(navigator.language, { minimumFractionDigits: 0 })}
+                {docLikes.toLocaleString(navigator.language, {
+                  minimumFractionDigits: 0,
+                })}
               </Typography>
             </div>
           </Box>

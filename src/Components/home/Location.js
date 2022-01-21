@@ -63,12 +63,12 @@ export default function Location(props) {
   };
 
   const handleUserSelection = (targetLocation) => {
-    let targetValue = '';
-    if (targetLocation){
+    let targetValue = "";
+    if (targetLocation) {
       targetValue = targetLocation.description;
     }
     props.getLocationValue(targetValue);
-  }
+  };
 
   const fetch = React.useMemo(
     () =>
@@ -82,7 +82,8 @@ export default function Location(props) {
     let active = true;
 
     if (!autocompleteService.current && window.google) {
-      autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      autocompleteService.current =
+        new window.google.maps.places.AutocompleteService();
     }
     if (!autocompleteService.current) {
       return undefined;
@@ -104,19 +105,22 @@ export default function Location(props) {
     };
   }, [inputValue, fetch]);
 
-  let currentAddress = 'Your current location is loading'
-  if(props.currentLocation){
+  let currentAddress = "Loading your current location...";
+  if (props.currentLocation) {
     currentAddress = props.currentLocation;
   }
 
   return (
     <div>
       <Autocomplete
-        onChange={(event, value) =>{handleUserSelection(value)}}
+        disabled
+        onChange={(event, value) => {
+          handleUserSelection(value);
+        }}
         className={classes.autocomplete}
-        getOptionLabel={(option) =>{
-          return typeof option === "string" ? option : option.description}
-        }
+        getOptionLabel={(option) => {
+          return typeof option === "string" ? option : option.description;
+        }}
         filterOptions={(x) => x}
         options={options}
         autoComplete
@@ -124,7 +128,7 @@ export default function Location(props) {
         renderInput={(params) => (
           <TextField
             {...params}
-            label='Enter a location'
+            label="Location search is not currently available"
             placeholder={currentAddress}
             onChange={handleChange}
             variant="filled"
@@ -138,17 +142,18 @@ export default function Location(props) {
           const parts = parse(
             option.structured_formatting.main_text,
             matches.map((match) => {
-                return [match.offset, match.offset + match.length]
-              }
-            )
+              return [match.offset, match.offset + match.length];
+            })
           );
-          let allOptions = parts.map((part, index) => { 
-            return <span
-              key={index}
-              style={{ fontWeight: part.highlight ? 700 : 400 }}
-            >
-              {part.text}
-            </span>
+          let allOptions = parts.map((part, index) => {
+            return (
+              <span
+                key={index}
+                style={{ fontWeight: part.highlight ? 700 : 400 }}
+              >
+                {part.text}
+              </span>
+            );
           });
 
           return (

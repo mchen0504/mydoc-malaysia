@@ -188,7 +188,6 @@ function DocInfo(props) {
             listOfSaves = [];
           }
         }
-        console.log(props.targetDoc);
         setState({
           username: res.username,
           hasLiked: liked,
@@ -493,7 +492,6 @@ function DocInfo(props) {
 
   return (
     <div>
-      {console.log(likeSaveInfo)}
       <div className={classes.covidBox}>
         <CovidAlert />
       </div>

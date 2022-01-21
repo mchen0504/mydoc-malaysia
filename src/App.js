@@ -122,17 +122,15 @@ function App() {
     }
 
     if (location == "") {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        let latitude;
-        let longitude;
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+      navigator.geolocation.getCurrentPosition((position) => {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
         axios
-          // .get(proxyurl + "https://maps.googleapis.com/maps/api/geocode/json", {
-          .get("https://maps.googleapis.com/maps/api/geocode/json", {
+          .get(proxyurl + "https://maps.googleapis.com/maps/api/geocode/json", {
+            // .get("https://maps.googleapis.com/maps/api/geocode/json", {
             params: {
               latlng: latitude + "," + longitude,
-              key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+              key: "",
             },
           })
           .then((res) => {
@@ -345,7 +343,7 @@ function App() {
                   params: {
                     origins: location,
                     destinations: potentialLocation,
-                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                    key: "",
                   },
                 }
               );
@@ -430,7 +428,7 @@ function App() {
                 params: {
                   origins: location,
                   destinations: potentialLocation,
-                  key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                  key: "",
                 },
               }
             );
@@ -499,7 +497,7 @@ function App() {
                   params: {
                     origins: location,
                     destinations: potentialLocation,
-                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                    key: "",
                   },
                 }
               );
@@ -562,7 +560,7 @@ function App() {
                   params: {
                     origins: location,
                     destinations: potentialLocation,
-                    key: "AIzaSyDHEaLdiFVUAJGJUW9fqq_VhOhBL4FzebQ",
+                    key: "",
                   },
                 }
               );
