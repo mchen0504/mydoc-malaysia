@@ -13,7 +13,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 //redux
 import { connect } from "react-redux";
+import store from "../../redux/store";
 //bring in action
+import { CLEAR_ERRORS } from "../../redux/types";
 import { signupGeneralUser } from "../../redux/actions/userActions";
 import { validateSignUpData } from "./validateSignUpData";
 
@@ -40,16 +42,18 @@ function GeneralSignup(props) {
   });
 
   useEffect(() => {
-    if (props.UI.errors) {
-      if (props.UI.errors === "auth/email-already-in-use") {
-        errors.email = "This email is in use";
-      } else {
-        errors.general = "Something went wrong. Please try again";
+    if (credentials.username) {
+      if (props.UI.errors) {
+        if (props.UI.errors === "auth/email-already-in-use") {
+          errors.email = "This email is in use";
+        } else {
+          errors.general = "Something went wrong. Please try again";
+        }
+        setCredentials((credentials) => ({
+          ...credentials,
+          errors,
+        }));
       }
-      setCredentials((credentials) => ({
-        ...credentials,
-        errors,
-      }));
     }
   }, [props.UI.errors]);
 

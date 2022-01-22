@@ -102,8 +102,6 @@ function LikeHistorySaved(props) {
   const displayStoredCredentials = () => {
     getStoredCredentials()
       .then((res) => {
-        // michelle 5/16: 从storedCredentials改成用axios了 所以现在uncomment这句 把原来的let stored = res[displayType]删掉
-
         let stored = res[0].data.credentials[displayType];
         let likedDoctors;
         let likedHospitals;
@@ -200,8 +198,8 @@ function LikeHistorySaved(props) {
 
   let getStoredCredentials = async () => {
     try {
-      // const proxyurl = "https://cors-anywhere.herokuapp.com/";
       let userStoredCredentials = await axios.get("/user");
+      console.log(userStoredCredentials);
       let databaseInfo = await axios.get("/alldata");
       return [userStoredCredentials, databaseInfo];
     } catch (err) {

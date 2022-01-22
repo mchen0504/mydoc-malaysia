@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -8,6 +9,7 @@ import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import DocInfo from "../profile/DocDetailedInfo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,13 +55,36 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual doctor card
 export default function DocCard(props) {
   const classes = useStyles();
+
+  // const locationParts = useLocation().pathname.split("/");
+  // const specialty = locationParts[1];
+  // const hospital = locationParts[2];
+  // const name = locationParts[3];
+
+  // coost[(DocInfo, setDocInfo)] = useState();
+
+  // useEffect(() => {
+  //   try {
+  //     const data = axios.get("/two", {
+  //       params: {
+  //         specialty,
+  //         hospital,
+  //         name,
+  //       },
+  //     });
+  //     setDocInfo(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
+
   // create language strings
   let language = "";
   props.resultData["Language"].forEach((lang) => {
     language = language + ", " + lang;
   });
   language = language.substring(1);
-  // he chen
+
   const handleClick = () => {
     props.updateTargetDoc(props.resultData);
     props.setProfileBackToDestination("resultsPage");

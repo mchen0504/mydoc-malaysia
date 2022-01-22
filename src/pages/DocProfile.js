@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import DocInfo from "../components/profile/DocInfo";
 import Appointment from "../components/profile/Appointment";
 import DocDetailedInfo from "../components/profile/DocDetailedInfo";
+import Test from "../components/profile/Test";
 
 const styles = (theme) => ({
   line: {
@@ -28,11 +29,12 @@ class DocProfile extends Component {
           // // he chen
         }
         <Navbar currentPage="DocProfile" {...this.props} />
-        <DocInfo {...this.props} backTo={backToPage} />
+        {/* <DocInfo {...this.props} backTo={backToPage} /> */}
+        <Test {...this.props} backTo={backToPage} />
         <hr className={classes.line}></hr>
-        <Appointment {...this.props} />
+        {/* <Appointment {...this.props} /> */}
         <hr className={classes.line}></hr>
-        <DocDetailedInfo {...this.props} />
+        {/* <DocDetailedInfo {...this.props} /> */}
       </div>
     );
   }

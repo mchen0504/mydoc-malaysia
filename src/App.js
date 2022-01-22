@@ -42,6 +42,7 @@ import Hospprofile from "./pages/HospProfile";
 import Hospspecialtyprofile from "./pages/HospSpecialtyProfile";
 import Account from "./pages/Account";
 import BodyPartsDialog from "./components/bodyparts/Body";
+import Test from "./components/profile/Test";
 
 // use themeFile from theme.js
 const theme = createMuiTheme(themeFile);
@@ -872,7 +873,12 @@ function App() {
               <AuthRoute exact path="/signup" component={signup} />
               <Route exact path="/covid19" component={covid}></Route>
               <Route exact path="/results" render={renderResults}></Route>
-              <Route exact path="/docprofile" render={renderDocProfile}></Route>
+              {/* <Route exact path="/docprofile" render={renderDocProfile}></Route> */}
+              <Route
+                exact
+                path="/profile/:specialty/:hospital/:name"
+                render={renderDocProfile}
+              ></Route>
               <Route
                 exact
                 path="/hospprofile"
