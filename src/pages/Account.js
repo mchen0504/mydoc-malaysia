@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
@@ -33,9 +33,18 @@ const useStyles = makeStyles((theme) => ({
 function Account(props) {
   const classes = useStyles();
 
+  const [userInfo, setUserInfo] = React.useState();
   const [profileShowWarning, setWarningProfile] = React.useState("");
-
   const [verifyShowWarning, setWarningVerify] = React.useState("");
+
+  useEffect(() => {
+    const getUserInfo = () => {
+      props.storedCredentials.then((res) => {
+        setUserInfo(res);
+      });
+    };
+    getUserInfo();
+  }, []);
 
   const setProfileWarning = (value) => {
     setWarningProfile(value);
@@ -45,21 +54,20 @@ function Account(props) {
     setWarningVerify(value);
   };
 
-  // right panel on large screen
   let rightPanel;
-  // what will be render on mobile screen
   let mobileScreen;
 
   const index = props.index;
   if (index === 0) {
     rightPanel =
-      props.storedCredentials.userType === "doctor" ? (
+      userInfo.userType === "doctor" ? (
         <DocEditProfile setProfileWarning={setProfileWarning} />
       ) : (
         <LikeHistorySaved
           {...props}
           database={props.database}
           saveLike="saved"
+          userInfo={userInfo}
         />
       );
 

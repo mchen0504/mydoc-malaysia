@@ -12,6 +12,7 @@ import Carousel from "react-elastic-carousel";
 
 //components
 import TopRatedDocCard from "./TopRatedDocCard";
+import TopRatedDocCardTest from "./TopRatedDocCardTest";
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -55,29 +56,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // for Top Rated Doctors, Top Rated Specialty, Insurance Accepted section (used in HospProfile.js under pages folder)
-export default function DocInfo(props) {
+export default function DocInfoTest(props) {
   const classes = useStyles();
+  const { hospInfo } = props;
 
   // carousel 显示的卡片数量 （eshin added 5/4/20)
   const breakPoints = [{ itemsToShow: 3 }];
 
   // created 5/11
-  let doctors = props.targetHos.doctors;
+  let doctors = hospInfo?.doctors;
   let conditionList = [];
   let doctorSortList = [];
-  for (let doctor in doctors) {
-    console.log(doctor);
-    console.log(doctors[doctor]);
-    let targetDoc = doctors[doctor];
-    targetDoc.userName = doctor;
+  for (let username in doctors) {
+    let targetDoc = doctors[username];
+    targetDoc.username = username;
     // if the doctor has published their profile and they are still in this specialty
     if (targetDoc.publish && !targetDoc.deleted) {
-      targetDoc.Conditions = targetDoc.conditions.map((item) => {
+      targetDoc.conditions = targetDoc.conditions.map((item) => {
         let newItem = item.toLowerCase();
         newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
         return newItem;
       });
-      targetDoc.Conditions.forEach((condition) => {
+      targetDoc.conditions.forEach((condition) => {
         if (conditionList.indexOf(condition) === -1) {
           conditionList.push(condition);
         }
@@ -86,24 +86,24 @@ export default function DocInfo(props) {
     }
   }
   doctorSortList.sort((a, b) => {
-    return b.NumberOfLikes - a.NumberOfLikes;
+    return b.likes - a.likes;
   });
   let doctorCards = [];
   doctorSortList.forEach((doc, index) => {
-    console.log(doc);
-    let card = <TopRatedDocCard {...props} targetDoc={doc} key={index} />;
+    // let card = <TopRatedDocCard {...props} docInfo={doc} key={index} />;
+    let card = <TopRatedDocCardTest {...props} docInfo={doc} key={index} />;
     doctorCards.push(card);
   });
 
   // create procedure List
   let conditionsDesc = conditionList.map((singleCondition) => {
-    let conditionInfo = <p>{singleCondition}</p>;
+    let conditionInfo = <p key={singleCondition}>{singleCondition}</p>;
     return conditionInfo;
   });
 
   // create condition List
-  let insuranceList = props.targetHos["Insurance"].map((insurance) => {
-    let insuranceCards = <p>{insurance}</p>;
+  let insuranceList = hospInfo?.insurance.map((insurance) => {
+    let insuranceCards = <p key={insurance}>{insurance}</p>;
     return insuranceCards;
   });
 
@@ -123,9 +123,6 @@ export default function DocInfo(props) {
           <Divider className={classes.divider} style={{ width: 170 }} />
           <br></br>
           <br></br>
-          {/* 这里出现top rated doctors 的卡片*/}
-          {/* eshin added 5/4/20 */}
-
           {doctorCards.length !== 0 ? (
             <Carousel breakPoints={breakPoints}>{doctorCards}</Carousel>
           ) : (
@@ -135,7 +132,7 @@ export default function DocInfo(props) {
         <br></br>
         <hr className={classes.thinLine}></hr>
       </Grid>
-      {/* 以下是top rated specialities + accepted insurance section */}
+
       <Grid container spacing={0}>
         <Grid item sm={1}></Grid>
         <Grid item xs={12} sm={4}>

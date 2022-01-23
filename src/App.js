@@ -876,12 +876,17 @@ function App() {
               {/* <Route exact path="/docprofile" render={renderDocProfile}></Route> */}
               <Route
                 exact
-                path="/profile/:specialty/:hospital/:name"
+                path="/profile/:hospital/:specialty/:name"
                 render={renderDocProfile}
               ></Route>
-              <Route
+              {/* <Route
                 exact
                 path="/hospprofile"
+                render={renderHosProfile}
+              ></Route> */}
+              <Route
+                exact
+                path="/profile/:hospital/:specialty"
                 render={renderHosProfile}
               ></Route>
 

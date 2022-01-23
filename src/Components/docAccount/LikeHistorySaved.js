@@ -20,9 +20,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// for small cards display, might delete later if naming conventions unify
-
 const useStyles = makeStyles((theme) => ({
   ...theme.account,
 
@@ -78,13 +75,19 @@ const useStyles = makeStyles((theme) => ({
 
 function LikeHistorySaved(props) {
   const classes = useStyles();
+  const { userInfo } = props;
 
   // decide if the page should render Like History or Saved
   const displayType = props.saveLike;
 
   const [display, setDisplay] = React.useState("doctor"); //display by doctor as default
   const [doctorCards, setDoctorCards] = React.useState([]); //display by doctor as default
-  const [hospitalCards, setHospitalCards] = React.useState([]); //display by doctor as default
+
+  const [stored, setStored] = React.useState({
+    doctors: [],
+    hospitals: [],
+  });
+
   const handleDisplay = (event, newDisplay) => {
     if (newDisplay != null) {
       setDisplay(newDisplay);
@@ -96,8 +99,91 @@ function LikeHistorySaved(props) {
   const [databaseInfo, setDatabase] = React.useState({});
 
   useEffect(() => {
-    displayStoredCredentials();
-  }, []);
+    if (userInfo) {
+      let stored = userInfo[displayType];
+      let doctors = [];
+      let hospitals = [];
+
+      if (stored) {
+        doctors = stored.doctors && stored.doctors;
+        hospitals = stored.hospitals && stored.hospitals;
+      }
+
+      setStored({
+        doctors,
+        hospitals,
+      });
+    }
+  }, [userInfo]);
+
+  const docCardsList =
+    stored.doctors.length === 0 ? (
+      <Box
+        display="flex"
+        justifyContent="center"
+        style={{ marginTop: "none", marginLeft: "15%" }}
+      >
+        <div style={{ maxWidth: 600 }}>
+          <img
+            className={classes.noResultImg}
+            src={savedLikeNoResultsFound}
+            alt="searchNotFoundImg"
+          />
+        </div>
+      </Box>
+    ) : (
+      stored.doctors.map((doctor) => {
+        let specialty = doctor.specialty;
+        let hospital = doctor.hospital.replace(/\s+/g, "");
+        let username = doctor.username.replace(/\s+/g, "");
+        // let targetDoc =
+        //   res[1].data[specialty]["hospitals"][hospital]["doctors"][username];
+        return (
+          <DocCard
+            {...props}
+            key={doctor.username}
+            // targetDoc={targetDoc}
+            targetDocUserName={username}
+            displayType={displayType}
+          />
+        );
+      })
+    );
+
+  // list of liked hospitals cards on hospital tab
+  let hosCardsList =
+    likedHospitals.length === 0 ? (
+      <Box
+        display="flex"
+        justifyContent="center"
+        style={{ marginTop: "none", marginLeft: "15%" }}
+      >
+        <div style={{ maxWidth: 600 }}>
+          <img
+            className={classes.noResultImg}
+            src={savedLikeNoResultsFound}
+            alt="searchNotFoundImg"
+          />
+        </div>
+      </Box>
+    ) : (
+      likedHospitals.map((hospital) => {
+        let specialty = hospital.relatedSpecialty;
+        let hospitalUserName = hospital.name.replace(/\s+/g, "");
+        let targetHos = res[1].data[specialty]["hospitals"][hospitalUserName];
+        return (
+          <HospitalCard
+            {...props}
+            key={hospital.name}
+            targetHos={targetHos}
+            targetHosUserName={hospitalUserName}
+            hospitalInfo={hospital}
+            displayType={displayType}
+            database={databaseInfo}
+          />
+        );
+      })
+    );
 
   const displayStoredCredentials = () => {
     getStoredCredentials()
