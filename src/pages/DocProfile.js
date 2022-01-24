@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { connect } from "react-redux";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DocProfile(props) {
+function DocProfile(props) {
   const classes = useStyles();
   window.scrollTo(0, 0);
   const backToPage = props.profileBackToDestination;
@@ -93,3 +94,9 @@ export default function DocProfile(props) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  storedCredentials: state.user.credentials,
+});
+
+export default connect(mapStateToProps)(DocProfile);

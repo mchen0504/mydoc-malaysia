@@ -207,6 +207,9 @@ function HospInfoTest(props) {
         phone: hospInfo.phone,
         relatedSpecialty: hospInfo.relatedSpecialty,
         type: hospInfo.type,
+        address: hospInfo.address,
+        phone: hospInfo.phone,
+        imgSrc: hospInfo.imgSrc,
       };
 
       likeSaveInfo.likedList.push(newHospInfo);

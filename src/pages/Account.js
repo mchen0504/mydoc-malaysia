@@ -38,13 +38,8 @@ function Account(props) {
   const [verifyShowWarning, setWarningVerify] = React.useState("");
 
   useEffect(() => {
-    const getUserInfo = () => {
-      props.storedCredentials.then((res) => {
-        setUserInfo(res);
-      });
-    };
-    getUserInfo();
-  }, []);
+    setUserInfo(props.storedCredentials);
+  }, [props.storedCredentials]);
 
   const setProfileWarning = (value) => {
     setWarningProfile(value);
@@ -60,7 +55,7 @@ function Account(props) {
   const index = props.index;
   if (index === 0) {
     rightPanel =
-      userInfo.userType === "doctor" ? (
+      userInfo?.userType === "doctor" ? (
         <DocEditProfile setProfileWarning={setProfileWarning} />
       ) : (
         <LikeHistorySaved
@@ -73,6 +68,7 @@ function Account(props) {
 
     mobileScreen = (
       <DocSideNav
+        userInfo={userInfo}
         profileShowWarning={profileShowWarning}
         setProfileWarning={setProfileWarning}
         verifyShowWarning={verifyShowWarning}
@@ -132,6 +128,7 @@ function Account(props) {
         <Grid container spacing={0}>
           <Grid item md={4} lg={3}>
             <DocSideNav
+              userInfo={userInfo}
               profileShowWarning={profileShowWarning}
               setProfileWarning={setProfileWarning}
               verifyShowWarning={verifyShowWarning}

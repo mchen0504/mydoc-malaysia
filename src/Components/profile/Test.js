@@ -188,69 +188,68 @@ function Test(props) {
 
   // when the like button is pressed
   const toggleLikeUnlike = () => {
+    let newLikedList = [...likeSaveInfo.likedList];
+    let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
-      let likedListCopy = likeSaveInfo.likedList;
-      let index = likedListCopy.findIndex(
+      let index = newLikedList.findIndex(
         (doctor) => doctor.username === docInfo.username
       );
-      // remove this doctor from the user like list
-      likedListCopy.splice(index, 1);
-      setState((prevState) => {
-        prevState.numLikes = prevState.numLikes - 1;
-        prevState.hasLiked = false;
-        prevState.likedList = likedListCopy;
-        return {
-          ...prevState,
-        };
-      });
+      newLikedList.splice(index, 1);
+      newLikes = newLikes - 1;
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: false,
+        likedList: newLikedList,
+      }));
     } else {
-      // the newly liked doctor's information to be added to the user's liked doctor list
+      newLikes = newLikes + 1;
       let newDocInfo = {
         hospital: docInfo.hospital,
         specialty: docInfo.specialty,
         username: docInfo.username,
+        name: docInfo.name,
+        imgSrc: docInfo.imgSrc,
+        languages: docInfo.languages,
+        type: docInfo.type,
+        likes: newLikes,
       };
-
-      likeSaveInfo.likedList.push(newDocInfo);
-
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.numLikes = prevState.numLikes + 1;
-          prevState.hasLiked = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newLikedList.push(newDocInfo);
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: true,
+        likedList: newLikedList,
+      }));
     }
 
     let updateInfo = {
       specialty: docInfo.specialty,
       hospital: docInfo.hospital,
       username: docInfo.username,
-      likes: likeSaveInfo.numLikes,
+      likes: newLikes,
     };
-    toggleLike(updateInfo);
-    updateLocalDocList(updateInfo);
+    toggleLike(updateInfo, newLikedList);
+    updateLocalDocList(newLikes);
   };
 
-  const toggleLike = (numberOfLikeInfoParam) => {
+  const toggleLike = (updateInfo, likedList) => {
     axios
-      .post("/updatelikeddoctors", likeSaveInfo.likedList)
+      .post("/updatelikeddoctors", likedList)
       .then(() => {
-        props.updateDoctorLikes(numberOfLikeInfoParam);
+        console.log(updateInfo.likes);
+        props.updateDoctorLikes(updateInfo);
       })
       .catch((error) => console.error(error));
   };
 
-  const updateLocalDocList = (updateInfo) => {
+  const updateLocalDocList = (newLikes) => {
     let newDocList = [];
     for (let doc in docInfo) {
       let docItem = docInfo[doc];
       if (docItem.DocName === docInfo.name) {
-        docItem.NumberOfLikes = likeSaveInfo.numLikes;
-        docItem.likes = likeSaveInfo.numLikes;
+        docItem.NumberOfLikes = newLikes;
+        docItem.likes = newLikes;
       }
       newDocList.push(docItem);
     }
@@ -259,14 +258,14 @@ function Test(props) {
     // set database
     let newDatabase;
     newDatabase = props.database;
-    let hospitalId = updateInfo["hospital"].replace(/\s/g, "");
-    let docID = updateInfo["username"].replace(/\s/g, "");
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["doctors"][
+    let hospitalId = docInfo.hospital.replace(/\s/g, "");
+    let docID = docInfo.username.replace(/\s/g, "");
+
+    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[docID].likes =
+      newLikes;
+    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[
       docID
-    ]["likes"] = likeSaveInfo.numLikes;
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["doctors"][
-      docID
-    ]["NumberOfLikes"] = likeSaveInfo.numLikes;
+    ].NumberOfLikes = newLikes;
     props.setDatabase(newDatabase);
   };
 
@@ -279,53 +278,36 @@ function Test(props) {
 
   // when the save button is pressed
   const toggleSaveUnsave = () => {
-    // the user has saved this doctor before
+    let newSavedList = [...likeSaveInfo.savedList];
     if (likeSaveInfo.hasSaved) {
-      let savedListCopy = likeSaveInfo.savedList;
-      let index = savedListCopy.findIndex(
+      let index = newSavedList.findIndex(
         (doctor) => doctor.username === docInfo.username
       );
-      // remove this doctor from the user saved list
-      savedListCopy.splice(index, 1);
-
-      setState({
-        ...likeSaveInfo,
-        savedList: savedListCopy,
+      newSavedList.splice(index, 1);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
         hasSaved: false,
-      });
+      }));
     } else {
-      // the newly saved doctor's information to be added to the user's saved doctor list
       let newDocInfo = {
         hospital: docInfo.hospital,
-        languages: docInfo.languages,
-        likes: likeSaveInfo.likes,
-        name: docInfo.name,
         specialty: docInfo.specialty,
-        type: docInfo.type,
         username: docInfo.username,
+        name: docInfo.name,
+        imgSrc: docInfo.imgSrc,
+        languages: docInfo.languages,
+        type: docInfo.type,
+        likes: likeSaveInfo.numLikes,
       };
-      likeSaveInfo.savedList.push(newDocInfo);
-
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.hasSaved = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newSavedList.push(newDocInfo);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
+        hasSaved: true,
+      }));
     }
-    updateUserSave();
-  };
-
-  const updateUserSave = async () => {
-    try {
-      let savedList = await likeSaveInfo.savedList;
-      props.changeDocSaveStatus(savedList);
-    } catch (err) {
-      console.error(err);
-    }
+    props.changeDocSaveStatus(newSavedList);
   };
 
   // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark

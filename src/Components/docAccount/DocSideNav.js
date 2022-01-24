@@ -79,21 +79,22 @@ const useStyles = makeStyles((theme) => ({
 //Doctor Account 左边的navigation
 function DocSideNav(props) {
   const classes = useStyles();
+  const { userInfo } = props;
 
   // determine if useEffect will be called: don't call if renderCount = 1
   const [renderCount, setRenderCount] = React.useState(0);
 
-  const [userInfo, setState] = React.useState({
-    userType: "",
+  const [doctorInfo, setDoctorInfo] = React.useState({
+    // userType: "",
     profilePic: "",
     tags: [],
-    username: "",
+    // username: "",
     likes: 0,
 
     // michelle 5/16: 这边新加了两个state： specialty 和 hospital
     // remain undefined for general users/doctors that haven't filled out their profiles
-    specialty: "",
-    hospital: "",
+    // specialty: "",
+    // hospital: "",
 
     // profileShowWarning: "",
     // verifyShowWarning: ""
@@ -103,136 +104,184 @@ function DocSideNav(props) {
 
   // initial render: only gets called once
   useEffect(() => {
-    if (!indicator) {
-      return displayStoredData();
+    // if (!indicator) {
+    //   return displayStoredData();
+    // }
+
+    // let username = returnedInfo[0].username;
+    if (userInfo) {
+      let tags;
+      let likes;
+      let profileWarning = true;
+      let verifyWarning = false;
+
+      // check if all fields of verification have been filled.
+      if (userInfo.verification) {
+        const verifyHasEmpty = !Object.values(userInfo.verification).some(
+          (x) => x !== null && x !== "" && x !== " "
+        );
+        const notAllFilled = Object.keys(userInfo.verification).length !== 5;
+        verifyWarning = verifyHasEmpty || notAllFilled ? true : false;
+      }
+
+      // if doctor submitted profile
+      if (userInfo.userType === "doctor" || userInfo.profile?.specialty) {
+        axios
+          .get("/doctorprofile", {
+            params: {
+              username: userInfo.username,
+              specialty: userInfo.profile.specialty,
+              hospital: userInfo.profile.hospital,
+            },
+          })
+          .then((data) => {
+            tags = data.tags ? data.tags : "";
+            likes = data.likes ? data.likes : 0;
+          })
+          .catch((err) => console.error(err));
+        profileWarning = false;
+      }
+
+      setDoctorInfo({
+        profilePic: userInfo.imgSrc,
+        tags,
+        likes,
+      });
+
+      // set profileShowWarning in account.js
+      props.setProfileWarning(profileWarning);
+      props.setVerifyWarning(verifyWarning);
+
+      // if (username) {
+      setRenderCount(1);
     }
-  }, []);
+  }, [userInfo]);
 
   // to store fetched data
-  let returnedInfo = [];
+  // let returnedInfo = [];
 
-  const displayStoredData = () => {
-    fetchData()
-      .then((res) => {
-        // if res exists (if the second async function did run), add res to returnedInfo
-        if (res) {
-          returnedInfo.push(res);
-        }
+  // const displayStoredData = () => {
+  //   fetchData()
+  //     .then((res) => {
+  //       // if res exists (if the second async function did run), add res to returnedInfo
+  //       if (res) {
+  //         returnedInfo.push(res);
+  //       }
 
-        // let credentials = returnedInfo[0].data.credentials;
-        let username = returnedInfo[0].username;
+  //       // let credentials = returnedInfo[0].data.credentials;
+  //       let username = returnedInfo[0].username;
 
-        let storedTags;
-        let likes;
+  //       let storedTags;
+  //       let likes;
 
-        // michelle 5/16: 这两个是新加的
-        let doctorSpecialty;
-        let doctorHospital;
+  //       // michelle 5/16: 这两个是新加的
+  //       let doctorSpecialty;
+  //       let doctorHospital;
 
-        let profileWarning = false;
-        let verifyWarning = false;
+  //       let profileWarning = false;
+  //       let verifyWarning = false;
 
-        // check if all fields of verification have been filled.
-        if (returnedInfo[0].verification) {
-          const verifyHasEmpty = !Object.values(
-            returnedInfo[0].verification
-          ).some((x) => x !== null && x !== "" && x !== " ");
+  //       // check if all fields of verification have been filled.
+  //       if (returnedInfo[0].verification) {
+  //         const verifyHasEmpty = !Object.values(
+  //           returnedInfo[0].verification
+  //         ).some((x) => x !== null && x !== "" && x !== " ");
 
-          const notAllFilled =
-            Object.keys(returnedInfo[0].verification).length !== 5;
+  //         const notAllFilled =
+  //           Object.keys(returnedInfo[0].verification).length !== 5;
 
-          verifyWarning = verifyHasEmpty || notAllFilled ? true : false;
-        }
+  //         verifyWarning = verifyHasEmpty || notAllFilled ? true : false;
+  //       }
 
-        // if we did not go into search data --> no specialty exists
-        if (returnedInfo.length === 1) {
-          storedTags = "";
-          likes = 0;
-          // no data in search = never submitted profile
-          profileWarning = true;
-        } else {
-          // michelle 5/16: 这两句原来前面有let  名字也不太一样 你可以直接替换掉
-          doctorSpecialty = returnedInfo[0].profile.specialty;
-          doctorHospital = returnedInfo[0].profile.hospital;
+  //       // if we did not go into search data --> no specialty exists
+  //       if (returnedInfo.length === 1) {
+  //         storedTags = "";
+  //         likes = 0;
+  //         // no data in search = never submitted profile
+  //         profileWarning = true;
+  //       } else {
+  //         // michelle 5/16: 这两句原来前面有let  名字也不太一样 你可以直接替换掉
+  //         doctorSpecialty = returnedInfo[0].profile.specialty;
+  //         doctorHospital = returnedInfo[0].profile.hospital;
 
-          let doctorInfo = returnedInfo[1].data;
+  //         let doctorInfo = returnedInfo[1].data;
 
-          // let doctorInfo = returnedInfo[1].data[specialty].hospitals[hospital].doctors[username];
-          storedTags = doctorInfo.tags ? doctorInfo.tags : "";
-          likes = doctorInfo.likes ? doctorInfo.likes : 0;
+  //         // let doctorInfo = returnedInfo[1].data[specialty].hospitals[hospital].doctors[username];
+  //         storedTags = doctorInfo.tags ? doctorInfo.tags : "";
+  //         likes = doctorInfo.likes ? doctorInfo.likes : 0;
 
-          // has data in search data = has submitted profile
-          profileWarning = false;
-        }
+  //         // has data in search data = has submitted profile
+  //         profileWarning = false;
+  //       }
 
-        setState({
-          userType: returnedInfo[0].userType,
-          profilePic: returnedInfo[0].imgSrc,
-          tags: storedTags,
-          username: username,
-          likes: likes,
+  //       setState({
+  //         userType: returnedInfo[0].userType,
+  //         profilePic: returnedInfo[0].imgSrc,
+  //         tags: storedTags,
+  //         username: username,
+  //         likes: likes,
 
-          // michelle 5/16: 这两句是新加的
-          specialty: doctorSpecialty,
-          hospital: doctorHospital,
+  //         // michelle 5/16: 这两句是新加的
+  //         specialty: doctorSpecialty,
+  //         hospital: doctorHospital,
 
-          // verifyShowWarning: verifyWarning,
-          // profileShowWarning: profileWarning
-        });
+  //         // verifyShowWarning: verifyWarning,
+  //         // profileShowWarning: profileWarning
+  //       });
 
-        // set profileShowWarning in account.js
-        props.setProfileWarning(profileWarning);
-        props.setVerifyWarning(verifyWarning);
+  //       // set profileShowWarning in account.js
+  //       props.setProfileWarning(profileWarning);
+  //       props.setVerifyWarning(verifyWarning);
 
-        // if (username) {
-        setRenderCount(1);
-        // }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  //       // if (username) {
+  //       setRenderCount(1);
+  //       // }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
-  // overall fetching function
-  let fetchData = async () => {
-    // wait for the first async function to finish before peoceeding
-    return await getStoredCredentials().then((res) => {
-      // add result from the first async function to returnedInfo
-      const credentials = res.data.credentials;
-      returnedInfo.push(credentials);
-      // check to see if a field returned from the first async function exists
-      if (credentials.userType === "doctor" && credentials.profile.specialty) {
-        // if yes, use it to proceed the second async function
-        return getSpecialtyData(
-          credentials.username,
-          credentials.profile.specialty,
-          credentials.profile.hospital
-        );
-      }
-      // }
-    });
-  };
+  // // overall fetching function
+  // let fetchData = async () => {
+  //   // wait for the first async function to finish before peoceeding
+  //   return await getStoredCredentials().then((res) => {
+  //     // add result from the first async function to returnedInfo
+  //     const credentials = res.data.credentials;
+  //     returnedInfo.push(credentials);
+  //     // check to see if a field returned from the first async function exists
+  //     if (credentials.userType === "doctor" && credentials.profile.specialty) {
+  //       // if yes, use it to proceed the second async function
+  //       return getSpecialtyData(
+  //         credentials.username,
+  //         credentials.profile.specialty,
+  //         credentials.profile.hospital
+  //       );
+  //     }
+  //     // }
+  //   });
+  // };
 
-  let getStoredCredentials = async () => {
-    // let userStoredCredentials = await props.storedCredentials;
-    try {
-      let userStoredCredentials = await axios.get("/user");
-      return userStoredCredentials;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // let getStoredCredentials = async () => {
+  //   // let userStoredCredentials = await props.storedCredentials;
+  //   try {
+  //     let userStoredCredentials = await axios.get("/user");
+  //     return userStoredCredentials;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  let getSpecialtyData = async (username, searchSpecialty, searchHospital) => {
-    let specialtyData = await axios.get("/doctorprofile", {
-      params: {
-        username,
-        specialty: searchSpecialty,
-        hospital: searchHospital.replace(/\s+/g, ""),
-      },
-    });
-    return specialtyData;
-  };
+  // let getSpecialtyData = async (username, searchSpecialty, searchHospital) => {
+  //   let specialtyData = await axios.get("/doctorprofile", {
+  //     params: {
+  //       username,
+  //       specialty: searchSpecialty,
+  //       hospital: searchHospital.replace(/\s+/g, ""),
+  //     },
+  //   });
+  //   return specialtyData;
+  // };
 
   // reads new image and sets state
   const uploadProfilePicture = (event) => {
@@ -242,7 +291,7 @@ function DocSideNav(props) {
       reader.readAsDataURL(uploaded);
     }
     reader.onload = () => {
-      setState({
+      setDoctorInfo({
         ...userInfo,
         profilePic: reader.result,
       });
@@ -251,45 +300,54 @@ function DocSideNav(props) {
 
   // wait for the newly uploaded image to be updated to state and post to firebase
   useEffect(() => {
-    if (renderCount === 1) {
-      return postProfilePic();
-    }
-  }, [userInfo.profilePic]);
-
-  const postProfilePic = () => {
-    waitProfileUpdate()
-      .then((imgSrc) => {
-        const imgSrcVar = {
-          imgSrc: imgSrc,
+    // if (renderCount === 1) {
+    //   return postProfilePic();
+    // }
+    if (doctorInfo.profilePic) {
+      props.changeProfilePic(doctorInfo.profilePic);
+      if (userInfo.specialty) {
+        const updateInfo = {
+          specialty: userInfo.specialty,
+          hospital: userInfo.hospital,
+          username: userInfo.username,
+          imgSrc: doctorInfo.profilePic,
         };
-        props.changeProfilePic(imgSrcVar);
+        props.updateDoctorProfilePic(updateInfo);
+      }
+    }
+  }, [doctorInfo.profilePic]);
 
-        // michelle 5/16: 下面这个if是新加上去的
+  // const postProfilePic = () => {
+  //   waitProfileUpdate()
+  //     .then((imgSrc) => {
+  //       props.changeProfilePic(imgSrcVar);
 
-        // if the user has specialty stored in file (the user is a doctor and has submitted their profile)
-        if (userInfo.specialty) {
-          const updateInfo = {
-            specialty: userInfo.specialty,
-            hospital: userInfo.hospital,
-            username: userInfo.username,
-            imgSrc: imgSrc,
-          };
-          props.updateDoctorProfilePic(updateInfo);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  //       // michelle 5/16: 下面这个if是新加上去的
 
-  let waitProfileUpdate = async () => {
-    let newProfilePic = await userInfo.profilePic;
-    return newProfilePic;
-  };
+  //       // if the user has specialty stored in file (the user is a doctor and has submitted their profile)
+  //       if (userInfo.specialty) {
+  //         const updateInfo = {
+  //           specialty: userInfo.specialty,
+  //           hospital: userInfo.hospital,
+  //           username: userInfo.username,
+  //           imgSrc: imgSrc,
+  //         };
+  //         props.updateDoctorProfilePic(updateInfo);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
+  // let waitProfileUpdate = async () => {
+  //   let newProfilePic = await doctorInfo.profilePic;
+  //   return newProfilePic;
+  // };
 
   // create a tag list that contains all tags for this doctor
-  let tagList = userInfo.tags ? (
-    userInfo.tags.map((tag) => {
+  let tagList = doctorInfo.tags ? (
+    doctorInfo.tags.map((tag) => {
       return (
         <Fragment key={tag.tagName}>
           <li key={tag.tagName}>
@@ -314,7 +372,7 @@ function DocSideNav(props) {
     setSelectedIndex(index);
   };
 
-  if (!userInfo.username) {
+  if (renderCount === 0) {
     // loading spinner if prop data is not yet available
     return (
       <div>
@@ -327,6 +385,8 @@ function DocSideNav(props) {
   } else {
     return (
       <Fragment>
+        {console.log(renderCount)}
+
         <div className={classes.root}>
           <List component="nav">
             <Box
@@ -359,7 +419,7 @@ function DocSideNav(props) {
                     <Avatar
                       className={classes.img}
                       alt="doctor profile picture"
-                      src={userInfo.profilePic}
+                      src={doctorInfo.profilePic}
                     />
                   </Badge>
                 </label>
@@ -374,7 +434,7 @@ function DocSideNav(props) {
                   {/* Likes */}
                   <FavoriteIcon style={{ color: "red" }} />
                   <Typography variant="body2" color="primary">
-                    &nbsp;{userInfo.likes}
+                    &nbsp;{doctorInfo.likes}
                   </Typography>
                 </Box>
               ) : (

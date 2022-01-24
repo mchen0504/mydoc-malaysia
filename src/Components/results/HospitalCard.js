@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual hospital card
 export default function HospitalCard(props) {
   const classes = useStyles();
+  const { hospInfo } = props;
 
   const handleClick = () => {
     props.setProfileBackToDestination("resultsPage");
@@ -64,11 +65,13 @@ export default function HospitalCard(props) {
 
   let cardImage = (
     <div style={{ width: 150, height: 150 }}>
-      <img className={classes.img} src={props.resultData["imgSrc"]}></img>
+      {/* <img className={classes.img} src={props.resultData["imgSrc"]}></img> */}
+      <img className={classes.img} src={hospInfo.imgSrc}></img>
     </div>
   );
 
-  let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
+  // let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
+  let hospLikes = hospInfo.likes ? hospInfo.likes : 0;
 
   return (
     <Card
@@ -85,20 +88,23 @@ export default function HospitalCard(props) {
           <CardContent>
             {/* hospital details */}
             <Typography variant="h6" color="primary">
-              {props.resultData["HospitalName"]}
+              {/* {props.resultData["HospitalName"]} */}
+              {hospInfo.name}
             </Typography>
             <br></br>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Address: </strong>
-              <span>{props.resultData["Address"]}</span>
+              {/* <span>{props.resultData["Address"]}</span> */}
+              <span>{hospInfo.address}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Related Specialty: </strong>
-              <span>{props.resultData["RelateSpecialty"]}</span>
+              <span>{hospInfo.relatedSpecialty}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Phone: </strong>
-              <span>{props.resultData["Phone"]}</span>
+              {/* <span>{props.resultData["Phone"]}</span> */}
+              <span>{hospInfo.phone}</span>
             </Typography>
 
             <br></br>

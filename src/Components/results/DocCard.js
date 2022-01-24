@@ -55,35 +55,15 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual doctor card
 export default function DocCard(props) {
   const classes = useStyles();
-
-  // const locationParts = useLocation().pathname.split("/");
-  // const specialty = locationParts[1];
-  // const hospital = locationParts[2];
-  // const name = locationParts[3];
-
-  // coost[(DocInfo, setDocInfo)] = useState();
-
-  // useEffect(() => {
-  //   try {
-  //     const data = axios.get("/two", {
-  //       params: {
-  //         specialty,
-  //         hospital,
-  //         name,
-  //       },
-  //     });
-  //     setDocInfo(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // });
+  const { docInfo } = props;
 
   // create language strings
-  let language = "";
-  props.resultData["Language"].forEach((lang) => {
-    language = language + ", " + lang;
+  let languages = "";
+  // props.resultData["Language"].forEach((lang) => {
+  docInfo.languages.forEach((lang) => {
+    languages = languages + ", " + lang;
   });
-  language = language.substring(1);
+  languages = languages.substring(1);
 
   const handleClick = () => {
     props.updateTargetDoc(props.resultData);
@@ -96,16 +76,15 @@ export default function DocCard(props) {
   // let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
   let cardImage = (
     <div style={{ width: 150, height: 150 }}>
-      <img className={classes.img} src={props.resultData["imgSrc"]}></img>
+      {/* <img className={classes.img} src={props.resultData["imgSrc"]}></img> */}
+      <img className={classes.img} src={docInfo.imgSrc}></img>
     </div>
   );
 
-  let docLikes;
-  if (props.resultData["NumberOfLikes"]) {
-    docLikes = props.resultData["NumberOfLikes"];
-  } else {
-    docLikes = 0;
-  }
+  // if (props.resultData["NumberOfLikes"]) {
+  //   docLikes = props.resultData["NumberOfLikes"];
+  // }
+  let likes = docInfo.likes ? docInfo.likes : 0;
 
   return (
     <Card
@@ -121,27 +100,31 @@ export default function DocCard(props) {
           <CardContent>
             {/* doctor details */}
             <Typography variant="h6" color="primary">
-              {"Dr. " + props.resultData["DocName"]}
+              {/* {"Dr. " + props.resultData["DocName"]} */}
+              {"Dr. " + docInfo.name}
             </Typography>
             <br></br>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Specialty: </strong>{" "}
-              <span>{props.resultData["Specialty"]}</span>
+              {/* <span>{props.resultData["Specialty"]}</span> */}
+              <span>{docInfo.specialty}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Hospital: </strong>
-              <span>{props.resultData["Hospital"]}</span>
+              {/* <span>{props.resultData["Hospital"]}</span> */}
+              <span>{docInfo.hospital}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Languages: </strong>
-              <span>{language}</span>
+              <span>{languages}</span>
             </Typography>
             <br></br>
             {/* private tag */}
             <Chip
               color="secondary"
               size="small"
-              label={props.resultData["Type"]}
+              // label={props.resultData["Type"]}
+              label={docInfo.type}
             ></Chip>
           </CardContent>
         </Grid>
@@ -151,7 +134,7 @@ export default function DocCard(props) {
             <div align="center">
               <FavoriteIcon style={{ color: "red" }} />
               <Typography variant="body2" color="primary">
-                {docLikes.toLocaleString(navigator.language, {
+                {likes.toLocaleString(navigator.language, {
                   minimumFractionDigits: 0,
                 })}
               </Typography>
