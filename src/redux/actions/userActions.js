@@ -29,6 +29,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       return userCredential.user.getIdToken();
     })
     .then((idToken) => {
+      console.log(idToken);
       setAuthorizationHeader(idToken);
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });

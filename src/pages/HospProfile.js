@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { connect } from "react-redux";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HospProfile(props) {
+function HospProfile(props) {
   const classes = useStyles();
   window.scrollTo(0, 0);
   const backToPage = props.profileBackToDestination;
@@ -32,32 +33,24 @@ export default function HospProfile(props) {
   const [userInfo, setUserInfo] = React.useState();
 
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const res = await axios.get("/hosptwo", {
-          params: {
-            hospital,
-            specialty,
-          },
-        });
+    axios
+      .get("/hosptwo", {
+        params: {
+          hospital,
+          specialty,
+        },
+      })
+      .then((res) => {
         setHospInfo(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getProfile();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   useEffect(() => {
-    const getUserInfo = () => {
-      props.storedCredentials.then((res) => {
-        setUserInfo(res);
-      });
-    };
-    if (hospInfo) {
-      getUserInfo();
-    }
-  }, []);
+    setUserInfo(props.storedCredentials);
+  }, [props.storedCredentials]);
 
   if (!hospInfo) {
     return (
@@ -86,3 +79,9 @@ export default function HospProfile(props) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  storedCredentials: state.user.credentials,
+});
+
+export default connect(mapStateToProps)(HospProfile);

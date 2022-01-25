@@ -79,16 +79,16 @@ const useStyles = makeStyles((theme) => ({
 //Doctor Account 左边的navigation
 function DocSideNav(props) {
   const classes = useStyles();
-  const { userInfo } = props;
+  const { userInfo, docInfo } = props;
 
   // determine if useEffect will be called: don't call if renderCount = 1
   const [renderCount, setRenderCount] = React.useState(0);
 
   const [doctorInfo, setDoctorInfo] = React.useState({
     // userType: "",
+    username: "",
     profilePic: "",
     tags: [],
-    // username: "",
     likes: 0,
 
     // michelle 5/16: 这边新加了两个state： specialty 和 hospital
@@ -124,25 +124,26 @@ function DocSideNav(props) {
         verifyWarning = verifyHasEmpty || notAllFilled ? true : false;
       }
 
-      // if doctor submitted profile
-      if (userInfo.userType === "doctor" || userInfo.profile?.specialty) {
-        axios
-          .get("/doctorprofile", {
-            params: {
-              username: userInfo.username,
-              specialty: userInfo.profile.specialty,
-              hospital: userInfo.profile.hospital,
-            },
-          })
-          .then((data) => {
-            tags = data.tags ? data.tags : "";
-            likes = data.likes ? data.likes : 0;
-          })
-          .catch((err) => console.error(err));
+      // is a doctor and has submitted profile
+      if (docInfo) {
+        // axios
+        //   .get("/doctorprofile", {
+        //     params: {
+        //       username: userInfo.username,
+        //       specialty: userInfo.profile.specialty,
+        //       hospital: userInfo.profile.hospital,
+        //     },
+        //   })
+        //   .then((data) => {
+        tags = docInfo.tags ? docInfo.tags : "";
+        likes = docInfo.likes ? docInfo.likes : 0;
+        // })
+        // .catch((err) => console.error(err));
         profileWarning = false;
       }
 
       setDoctorInfo({
+        username: userInfo.username,
         profilePic: userInfo.imgSrc,
         tags,
         likes,
@@ -155,7 +156,7 @@ function DocSideNav(props) {
       // if (username) {
       setRenderCount(1);
     }
-  }, [userInfo]);
+  }, [userInfo, docInfo]);
 
   // to store fetched data
   // let returnedInfo = [];
@@ -291,6 +292,16 @@ function DocSideNav(props) {
       reader.readAsDataURL(uploaded);
     }
     reader.onload = () => {
+      props.changeProfilePic({ imgSrc: reader.result });
+      if (userInfo.specialty) {
+        const updateInfo = {
+          specialty: userInfo.specialty,
+          hospital: userInfo.hospital,
+          username: userInfo.username,
+          imgSrc: reader.result,
+        };
+        props.updateDoctorProfilePic(updateInfo);
+      }
       setDoctorInfo({
         ...userInfo,
         profilePic: reader.result,
@@ -299,23 +310,23 @@ function DocSideNav(props) {
   };
 
   // wait for the newly uploaded image to be updated to state and post to firebase
-  useEffect(() => {
-    // if (renderCount === 1) {
-    //   return postProfilePic();
-    // }
-    if (doctorInfo.profilePic) {
-      props.changeProfilePic(doctorInfo.profilePic);
-      if (userInfo.specialty) {
-        const updateInfo = {
-          specialty: userInfo.specialty,
-          hospital: userInfo.hospital,
-          username: userInfo.username,
-          imgSrc: doctorInfo.profilePic,
-        };
-        props.updateDoctorProfilePic(updateInfo);
-      }
-    }
-  }, [doctorInfo.profilePic]);
+  // useEffect(() => {
+  //   // if (renderCount === 1) {
+  //   //   return postProfilePic();
+  //   // }
+  //   if (doctorInfo.profilePic) {
+  //     props.changeProfilePic(doctorInfo.profilePic);
+  //     if (userInfo.specialty) {
+  //       const updateInfo = {
+  //         specialty: userInfo.specialty,
+  //         hospital: userInfo.hospital,
+  //         username: userInfo.username,
+  //         imgSrc: doctorInfo.profilePic,
+  //       };
+  //       props.updateDoctorProfilePic(updateInfo);
+  //     }
+  //   }
+  // }, [doctorInfo.profilePic]);
 
   // const postProfilePic = () => {
   //   waitProfileUpdate()
@@ -372,8 +383,7 @@ function DocSideNav(props) {
     setSelectedIndex(index);
   };
 
-  if (renderCount === 0) {
-    // loading spinner if prop data is not yet available
+  if (!doctorInfo.username) {
     return (
       <div>
         <CircularProgress
@@ -385,8 +395,6 @@ function DocSideNav(props) {
   } else {
     return (
       <Fragment>
-        {console.log(renderCount)}
-
         <div className={classes.root}>
           <List component="nav">
             <Box

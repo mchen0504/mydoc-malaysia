@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 // doctor edit profile
 function DocEditProfile(props) {
   const classes = useStyles();
+  const { userInfo, docInfo } = props;
 
   // --------------------------- initialize states --------------------------- //
 
@@ -142,136 +143,248 @@ function DocEditProfile(props) {
   // get data
   // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
   useEffect(() => {
-    getStoredData();
-  }, []);
-
-  let getStoredData = async () => {
-    // let baseurl =
-    //   "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
-    try {
-      let storedSearchInfoData = await axios.get("/profile");
-      let specialtyListData = await axios.get("/specialtylist");
-      let conditionsListData = await axios.get("conditionlist");
-      let userInfoData = await axios.get("/user");
-      let userInfo = userInfoData.data.credentials;
-      let storedSearchInfo2 = storedSearchInfoData.data;
-      let specialtyList2 = specialtyListData.data;
-      let conditionsList2 = conditionsListData.data;
-      let dataSet = [
-        userInfo,
-        storedSearchInfo2,
-        specialtyList2,
-        conditionsList2,
-      ];
-      const allContents = {
-        credentials: dataSet[0],
-        doctorData: dataSet[1],
-        specialtyList: dataSet[2],
-        conditionsList: dataSet[3],
-      };
-
-      if (
-        allContents.credentials &&
-        allContents.doctorData &&
-        allContents.specialtyList &&
-        allContents.conditionsList &&
-        renderCount === 0 &&
-        Object.keys(allContents.doctorData).length > 0
-      ) {
-        let res = [
-          allContents.credentials,
-          allContents.doctorData,
-          allContents.specialtyList,
-          allContents.conditionsList,
-        ];
-        window.scrollTo(0, 0);
-        // data -> from doctor account
-        const userInfo = res[0].profile;
-
-        // data -> from specialty data
-        const searchInfo = res[1];
-
-        const apptThings = res[1].appointment;
-
-        // set state
-        setAllState({
-          ...allState,
-          // personal
-          firstName: userInfo.firstName,
-          lastName: userInfo.lastName,
-          gender: userInfo.gender,
-          yearsOfPractice: searchInfo.yearsOfPractice,
-
-          // work
-          hospital: searchInfo.hospital,
-          removedHospital: searchInfo.hospital,
-          type: searchInfo.type,
-          phone: searchInfo.phone,
-          buildingInfo: userInfo.buildingInfo,
-          street: userInfo.street,
-          city: userInfo.city,
-          state: userInfo.state,
-          postalCode: userInfo.postalCode,
-
-          // appt
-          call: apptThings.call.status,
-          online: apptThings.online.status,
-          email: apptThings.email.status,
-          onsite: apptThings.onsite.status,
-
-          callNumber: apptThings.call.content,
-          onlineLink: apptThings.online.content,
-          emailAddress: apptThings.email.content,
-
-          // expertise
-          specialty: searchInfo.specialty,
-          removedSpecialty: searchInfo.specialty,
-          qualifications: searchInfo.qualifications,
-          procedures: searchInfo.procedures,
-          conditions: searchInfo.conditions,
-          removedConditions: searchInfo.conditions,
-          languages: searchInfo.languages,
-
-          specOrNot: userInfo.specialty,
-          hospOrNot: userInfo.hospital,
-        });
+    const getData = async () => {
+      try {
+        let specialties = await axios.get("/specialtylist");
+        let conditions = await axios.get("/conditionlist");
 
         setList({
-          specialtyList: res[2],
-          conditionsList: res[3],
+          specialtyList: specialties,
+          conditionsList: conditions,
         });
 
-        setPublish(searchInfo.publish);
-        setRenderCount(1);
-      } else if (
-        allContents.credentials &&
-        allContents.doctorData &&
-        allContents.specialtyList &&
-        allContents.conditionsList &&
-        renderCount === 0 &&
-        Object.keys(allContents.specialtyList).length > 0
-      ) {
-        let res = [allContents.specialtyList, allContents.conditionsList];
-        setList({
-          specialtyList: res[0],
-          conditionsList: res[1],
-        });
-        setRenderCount(1);
-      } else if (
-        allContents.credentials &&
-        allContents.doctorData &&
-        allContents.specialtyList &&
-        allContents.conditionsList &&
-        renderCount === 0
-      ) {
-        setRenderCount(1);
+        if (docInfo) {
+          const profile = userInfo.profile;
+          const appt = docInfo.appointment;
+
+          setAllState({
+            ...allState,
+            // personal
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            gender: profile.gender,
+            yearsOfPractice: docInfo.yearsOfPractice,
+            // work
+            hospital: docInfo.hospital,
+            removedHospital: docInfo.hospital,
+            type: docInfo.type,
+            phone: docInfo.phone,
+            buildingInfo: profile.buildingInfo,
+            street: profile.street,
+            city: profile.city,
+            state: profile.state,
+            postalCode: profile.postalCode,
+            // appt
+            call: appt.call.status,
+            online: appt.online.status,
+            email: appt.email.status,
+            onsite: appt.onsite.status,
+            // contact
+            callNumber: appt.call.content,
+            onlineLink: appt.online.content,
+            emailAddress: appt.email.content,
+            // expertise
+            specialty: docInfo.specialty,
+            removedSpecialty: docInfo.specialty,
+            qualifications: docInfo.qualifications,
+            procedures: docInfo.procedures,
+            conditions: docInfo.conditions,
+            removedConditions: docInfo.conditions,
+            languages: docInfo.languages,
+
+            specOrNot: profile.specialty,
+            hospOrNot: profile.hospital,
+          });
+          setPublish(docInfo.publish);
+          setRenderCount(1);
+        }
+      } catch (err) {
+        console.error(err);
       }
-
-      return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
-    } catch (err) {
-      console.log(err);
+    };
+    if (userInfo && docInfo) {
+      getData();
     }
-  };
+  }, [userInfo, docInfo]);
+
+  // let getStoredData = async () => {
+  //   // let baseurl =
+  //   //   "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
+  //   try {
+  //     // let storedSearchInfoData = await axios.get("/profile");
+  //     let specialties = await axios.get("/specialtylist");
+  //     let conditions = await axios.get("conditionlist");
+  //     // let userInfoData = await axios.get("/user");
+  //     // let userInfo = userInfoData.data.credentials;
+  //     // let storedSearchInfo2 = storedSearchInfoData.data;
+  //     // let specialtyList2 = specialtyListData.data;
+  //     // let conditionsList2 = conditionsListData.data;
+  //     // let dataSet = [
+  //     //   userInfo,
+  //     //   storedSearchInfo2,
+  //     //   specialtyList2,
+  //     //   conditionsList2,
+  //     // ];
+  //     // const allContents = {
+  //     //   credentials: dataSet[0],
+  //     //   doctorData: dataSet[1],
+  //     //   specialtyList: dataSet[2],
+  //     //   conditionsList: dataSet[3],
+  //     // };
+
+  //     setList({
+  //       specialtyList: specialties,
+  //       conditionsList: conditions,
+  //     });
+
+  //     if (docInfo) {
+  //       profile = userInfo.profile;
+  //       appt = docInfo.appointment;
+
+  //       setAllState({
+  //         ...allState,
+  //         // personal
+  //         firstName: profile.firstName,
+  //         lastName: profile.lastName,
+  //         gender: profile.gender,
+  //         yearsOfPractice: docInfo.yearsOfPractice,
+  //         // work
+  //         hospital: docInfo.hospital,
+  //         removedHospital: docInfo.hospital,
+  //         type: docInfo.type,
+  //         phone: docInfo.phone,
+  //         buildingInfo: profile.buildingInfo,
+  //         street: profile.street,
+  //         city: profile.city,
+  //         state: profile.state,
+  //         postalCode: profile.postalCode,
+  //         // appt
+  //         call: appt.call.status,
+  //         online: appt.online.status,
+  //         email: appt.email.status,
+  //         onsite: appt.onsite.status,
+  //         // contact
+  //         callNumber: appt.call.content,
+  //         onlineLink: appt.online.content,
+  //         emailAddress: appt.email.content,
+  //         // expertise
+  //         specialty: docInfo.specialty,
+  //         removedSpecialty: docInfo.specialty,
+  //         qualifications: docInfo.qualifications,
+  //         procedures: docInfo.procedures,
+  //         conditions: docInfo.conditions,
+  //         removedConditions: docInfo.conditions,
+  //         languages: docInfo.languages,
+
+  //         specOrNot: profile.specialty,
+  //         hospOrNot: profile.hospital,
+  //       });
+  //       setPublish(docInfo.publish);
+  //       // setRenderCount(1);
+  //     }
+
+  //     // if (
+  //     //   allContents.credentials &&
+  //     //   allContents.doctorData &&
+  //     //   allContents.specialtyList &&
+  //     //   allContents.conditionsList &&
+  //     //   renderCount === 0 &&
+  //     //   Object.keys(allContents.doctorData).length > 0
+  //     // ) {
+  //     //   let res = [
+  //     //     allContents.credentials,
+  //     //     allContents.doctorData,
+  //     //     allContents.specialtyList,
+  //     //     allContents.conditionsList,
+  //     //   ];
+  //     //   window.scrollTo(0, 0);
+  //     //   // data -> from doctor account
+  //     //   const userInfo = res[0].profile;
+
+  //     //   // data -> from specialty data
+  //     //   const searchInfo = res[1];
+
+  //     //   const apptThings = res[1].appointment;
+
+  //     //   // set state
+  //     //   setAllState({
+  //     //     ...allState,
+  //     //     // personal
+  //     //     firstName: userInfo.firstName,
+  //     //     lastName: userInfo.lastName,
+  //     //     gender: userInfo.gender,
+  //     //     yearsOfPractice: searchInfo.yearsOfPractice,
+
+  //     //     // work
+  //     //     hospital: searchInfo.hospital,
+  //     //     removedHospital: searchInfo.hospital,
+  //     //     type: searchInfo.type,
+  //     //     phone: searchInfo.phone,
+  //     //     buildingInfo: userInfo.buildingInfo,
+  //     //     street: userInfo.street,
+  //     //     city: userInfo.city,
+  //     //     state: userInfo.state,
+  //     //     postalCode: userInfo.postalCode,
+
+  //     //     // appt
+  //     //     call: apptThings.call.status,
+  //     //     online: apptThings.online.status,
+  //     //     email: apptThings.email.status,
+  //     //     onsite: apptThings.onsite.status,
+
+  //     //     callNumber: apptThings.call.content,
+  //     //     onlineLink: apptThings.online.content,
+  //     //     emailAddress: apptThings.email.content,
+
+  //     //     // expertise
+  //     //     specialty: searchInfo.specialty,
+  //     //     removedSpecialty: searchInfo.specialty,
+  //     //     qualifications: searchInfo.qualifications,
+  //     //     procedures: searchInfo.procedures,
+  //     //     conditions: searchInfo.conditions,
+  //     //     removedConditions: searchInfo.conditions,
+  //     //     languages: searchInfo.languages,
+
+  //     //     specOrNot: userInfo.specialty,
+  //     //     hospOrNot: userInfo.hospital,
+  //     //   });
+
+  //     //   setList({
+  //     //     specialtyList: res[2],
+  //     //     conditionsList: res[3],
+  //     //   });
+
+  //     //   setPublish(searchInfo.publish);
+  //     //   setRenderCount(1);
+  //     // } else if (
+  //     //   allContents.credentials &&
+  //     //   allContents.doctorData &&
+  //     //   allContents.specialtyList &&
+  //     //   allContents.conditionsList &&
+  //     //   renderCount === 0 &&
+  //     //   Object.keys(allContents.specialtyList).length > 0
+  //     // ) {
+  //     //   let res = [allContents.specialtyList, allContents.conditionsList];
+  //     //   setList({
+  //     //     specialtyList: res[0],
+  //     //     conditionsList: res[1],
+  //     //   });
+  //     //   setRenderCount(1);
+  //     // } else if (
+  //     //   allContents.credentials &&
+  //     //   allContents.doctorData &&
+  //     //   allContents.specialtyList &&
+  //     //   allContents.conditionsList &&
+  //     //   renderCount === 0
+  //     // ) {
+  //     //   setRenderCount(1);
+  //     // }
+
+  //     // return [userInfo, storedSearchInfo2, specialtyList2, conditionsList2];
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   // -------------------- functions to change state ------------------------- //
 

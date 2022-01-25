@@ -58,8 +58,12 @@ export default function HospitalCard(props) {
   const handleClick = () => {
     props.setProfileBackToDestination("resultsPage");
     props.updateTargetHos(props.resultData);
+
+    let hospital = hospInfo?.name.replace(/\s+/g, "-");
+    let specialty = hospInfo?.relatedSpecialty.replace(" & ", "-");
+
     if (props.history != null) {
-      props.history.push("/hospprofile");
+      props.history.push(`/profile/${hospital}/${specialty}`);
     }
   };
 

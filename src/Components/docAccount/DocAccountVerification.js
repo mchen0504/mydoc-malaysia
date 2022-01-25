@@ -1,4 +1,8 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -10,13 +14,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
-// michelle 5/16: 加了这句
 import Alert from "@material-ui/lab/Alert";
-
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import { updateVerification } from "../../redux/actions/userActions";
 
@@ -27,9 +25,8 @@ const useStyles = makeStyles((theme) => ({
 // doctor account verification
 function DocAccountVerification(props) {
   const classes = useStyles();
+  const { userInfo } = props;
 
-  // determine if useEffect will be called: don't call if renderCount = 1
-  const [renderCount, setRenderCount] = React.useState(0);
   // submit success success message alert
   const [open, setOpen] = React.useState(false);
 
@@ -43,41 +40,17 @@ function DocAccountVerification(props) {
     hasEmpty: "",
   });
 
-  // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
-  // in firebase is successfully set to state)
   useEffect(() => {
-    if (renderCount === 0) {
-      return displayStoredData();
-    }
-  });
-
-  const displayStoredData = () => {
-    // call function to get data from returned props from firebase
-    getStoredData()
-      .then((data) => {
-        // const notAllFilled = !Object.values(res).some((x) => x !== " ");
-        if (data) {
-          let stored = {};
-          Object.keys(data).map((eachProp) => {
-            stored[eachProp] = data[eachProp];
-          });
-          stored.hasEmpty = Object.keys(data).length !== 5;
-          // set state
-          setState(stored);
-          // update renderCount to 1 to stop react from making any more useEffect call
-          setRenderCount(1);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
+    if (userInfo && userInfo.verification) {
+      let verifyInfo = userInfo.verification;
+      let stored = {};
+      Object.keys(verifyInfo).map((eachProp) => {
+        stored[eachProp] = verifyInfo[eachProp];
       });
-  };
-
-  // wait for returned props from firebase to be ready
-  let getStoredData = async () => {
-    let storedVerificationInfo = await props.storedVerificationInfo;
-    return storedVerificationInfo;
-  };
+      stored.hasEmpty = Object.keys(verifyInfo).length !== 5;
+      setState(stored);
+    }
+  }, [userInfo]);
 
   const editMedicalNumber = (event) => {
     setState({
@@ -124,27 +97,8 @@ function DocAccountVerification(props) {
         newVerification[eachProp] = currentInfo[eachProp];
       }
     });
-    console.log(newVerification);
-
-    // const newVerification = {
-    //   medicalRegistrationNumber: currentInfo["medicalRegistrationNumber"],
-    //   identityCardSrc: currentInfo["identityCardSrc"]
-    //     ? currentInfo["identityCardSrc"]
-    //     : " ",
-
-    //   identityCardName: currentInfo["identityCardName"]
-    //     ? currentInfo["identityCardName"]
-    //     : " ",
-    //   medicalDegreeSrc: currentInfo["medicalDegreeSrc"]
-    //     ? currentInfo["medicalDegreeSrc"]
-    //     : " ",
-    //   medicalDegreeName: currentInfo["medicalDegreeName"]
-    //     ? currentInfo["medicalDegreeName"]
-    //     : " ",
-    // };
     props.updateVerification(newVerification);
 
-    // michelle 5/16: 这里本来是openSuccessMsg  现在用setOpen(true)替换掉
     // open submit success message
     setOpen(true);
 
@@ -163,7 +117,6 @@ function DocAccountVerification(props) {
   };
 
   if (!currentInfo.medicalRegistrationNumber) {
-    // loading spinner if prop data is not yet available
     return (
       <div>
         <CircularProgress
@@ -195,8 +148,6 @@ function DocAccountVerification(props) {
 
             <br></br>
 
-            {/* michelle  5/16: 加了这句。 上面的box里面本来有snackbar  你把它删掉 用这个就行了*/}
-            {/* 本来有openSuccessMsg和closeSuccessMsg两个function  现在不用了 可以删掉*/}
             {open ? (
               <Alert style={{ marginBottom: "1rem" }}>
                 Successfully submitted!
@@ -207,7 +158,6 @@ function DocAccountVerification(props) {
 
             {currentInfo.hasEmpty ? (
               <Box display="flex" flexDirection="row">
-                {/* 现在是ACCOUNT NOT VERIFIED, 需要换icon 如果account pending/verified */}
                 <CancelIcon style={{ color: "red", marginRight: 10 }} />
                 <Typography variant="body1">
                   Account not verified<br></br>
@@ -259,7 +209,6 @@ function DocAccountVerification(props) {
                 </label>
               </Box>
             </Box>
-            {/* <Typography variant="body2">{(identityCard.name == "") ? storedIdentityCard : identityCard.name}</Typography> */}
             <Typography variant="body2">
               {currentInfo.identityCardName}
             </Typography>

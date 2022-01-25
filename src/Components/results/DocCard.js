@@ -68,8 +68,13 @@ export default function DocCard(props) {
   const handleClick = () => {
     props.updateTargetDoc(props.resultData);
     props.setProfileBackToDestination("resultsPage");
+
+    let hospital = docInfo?.hospital.replace(/\s+/g, "-");
+    let specialty = docInfo?.specialty.replace(" & ", "-");
+    let name = docInfo?.name.replace(/\s+/g, "-");
+
     if (props.history != null) {
-      props.history.push("/docprofile");
+      props.history.push(`/profile/${hospital}/${specialty}/${name}`);
     }
   };
 

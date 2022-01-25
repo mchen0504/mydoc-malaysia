@@ -158,31 +158,29 @@ function Test(props) {
   };
 
   useEffect(() => {
-    if (docInfo) {
-      const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
-      const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
+    const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
+    const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 
-      const listOfReports = [];
-      if (userInfo && userInfo.reportedDoctors) {
-        listOfReports = userInfo.reportedDoctors;
-      }
-
-      setState({
-        hasLiked: liked,
-        likedList: listOfLikes,
-        numLikes: docInfo.likes ? docInfo.likes : 0,
-
-        hasSaved: saved,
-        savedList: listOfSaves,
-
-        reportedList: listOfReports,
-        numReports: docInfo.report ? docInfo.report.reportCount : 0,
-        reportReasonsList: docInfo.report ? docInfo.report.reportReasons : [],
-
-        oneReason: "",
-      });
+    const listOfReports = [];
+    if (userInfo && userInfo.reportedDoctors) {
+      listOfReports = userInfo.reportedDoctors;
     }
-  }, [docInfo]);
+
+    setState({
+      hasLiked: liked,
+      likedList: listOfLikes,
+      numLikes: docInfo.likes ? docInfo.likes : 0,
+
+      hasSaved: saved,
+      savedList: listOfSaves,
+
+      reportedList: listOfReports,
+      numReports: docInfo.report ? docInfo.report.reportCount : 0,
+      reportReasonsList: docInfo.report ? docInfo.report.reportReasons : [],
+
+      oneReason: "",
+    });
+  }, [docInfo, userInfo]);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -237,7 +235,6 @@ function Test(props) {
     axios
       .post("/updatelikeddoctors", likedList)
       .then(() => {
-        console.log(updateInfo.likes);
         props.updateDoctorLikes(updateInfo);
       })
       .catch((error) => console.error(error));
@@ -256,8 +253,7 @@ function Test(props) {
     props.setDocInfo(newDocList);
 
     // set database
-    let newDatabase;
-    newDatabase = props.database;
+    let newDatabase = props.database;
     let hospitalId = docInfo.hospital.replace(/\s/g, "");
     let docID = docInfo.username.replace(/\s/g, "");
 

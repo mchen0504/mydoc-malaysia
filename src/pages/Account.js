@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
 
@@ -15,8 +17,6 @@ import DocEditProfile from "../components/docAccount/DocEditProfile";
 
 //eshin加的 5/4/2020
 import LikeHistorySaved from "../components/docAccount/LikeHistorySaved";
-
-import { connect } from "react-redux";
 
 // material ui style
 const useStyles = makeStyles((theme) => ({
@@ -34,12 +34,32 @@ function Account(props) {
   const classes = useStyles();
 
   const [userInfo, setUserInfo] = React.useState();
+  const [docInfo, setDocInfo] = React.useState();
   const [profileShowWarning, setWarningProfile] = React.useState("");
   const [verifyShowWarning, setWarningVerify] = React.useState("");
 
   useEffect(() => {
     setUserInfo(props.storedCredentials);
   }, [props.storedCredentials]);
+
+  useEffect(() => {
+    if (userInfo) {
+      if (userInfo.userType === "doctor" && userInfo.profile.specialty) {
+        axios
+          .get("/doctorprofile", {
+            params: {
+              username: userInfo.username,
+              specialty: userInfo.profile.specialty,
+              hospital: userInfo.profile.hospital,
+            },
+          })
+          .then((res) => {
+            setDocInfo(res.data);
+          })
+          .catch((err) => console.error(err));
+      }
+    }
+  }, [userInfo]);
 
   const setProfileWarning = (value) => {
     setWarningProfile(value);
@@ -56,7 +76,11 @@ function Account(props) {
   if (index === 0) {
     rightPanel =
       userInfo?.userType === "doctor" ? (
-        <DocEditProfile setProfileWarning={setProfileWarning} />
+        <DocEditProfile
+          setProfileWarning={setProfileWarning}
+          userInfo={userInfo}
+          docInfo={docInfo}
+        />
       ) : (
         <LikeHistorySaved
           {...props}
@@ -69,6 +93,7 @@ function Account(props) {
     mobileScreen = (
       <DocSideNav
         userInfo={userInfo}
+        docInfo={docInfo}
         profileShowWarning={profileShowWarning}
         setProfileWarning={setProfileWarning}
         verifyShowWarning={verifyShowWarning}
@@ -76,14 +101,36 @@ function Account(props) {
       />
     );
   } else if (index === 1) {
-    rightPanel = <DocEditProfile setProfileWarning={setProfileWarning} />;
-    mobileScreen = <DocEditProfile setProfileWarning={setProfileWarning} />;
-  } else if (index === 2) {
     rightPanel = (
-      <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+      <DocEditProfile
+        setProfileWarning={setProfileWarning}
+        userInfo={userInfo}
+        docInfo={docInfo}
+      />
     );
     mobileScreen = (
-      <LikeHistorySaved {...props} database={props.database} saveLike="saved" />
+      <DocEditProfile
+        setProfileWarning={setProfileWarning}
+        userInfo={userInfo}
+        docInfo={docInfo}
+      />
+    );
+  } else if (index === 2) {
+    rightPanel = (
+      <LikeHistorySaved
+        {...props}
+        database={props.database}
+        saveLike="saved"
+        userInfo={userInfo}
+      />
+    );
+    mobileScreen = (
+      <LikeHistorySaved
+        {...props}
+        database={props.database}
+        saveLike="saved"
+        userInfo={userInfo}
+      />
     );
   } else if (index === 3) {
     rightPanel = (
@@ -91,6 +138,7 @@ function Account(props) {
         {...props}
         database={props.database}
         saveLike="likeHistory"
+        userInfo={userInfo}
       />
     );
     mobileScreen = (
@@ -98,6 +146,7 @@ function Account(props) {
         {...props}
         database={props.database}
         saveLike="likeHistory"
+        userInfo={userInfo}
       />
     );
   } else if (index === 4) {
@@ -105,12 +154,14 @@ function Account(props) {
       <DocAccountVerification
         verifyShowWarning={verifyShowWarning}
         setVerifyWarning={setVerifyWarning}
+        userInfo={userInfo}
       />
     );
     mobileScreen = (
       <DocAccountVerification
         verifyShowWarning={verifyShowWarning}
         setVerifyWarning={setVerifyWarning}
+        userInfo={userInfo}
       />
     );
   } else {
@@ -129,6 +180,7 @@ function Account(props) {
           <Grid item md={4} lg={3}>
             <DocSideNav
               userInfo={userInfo}
+              docInfo={docInfo}
               profileShowWarning={profileShowWarning}
               setProfileWarning={setProfileWarning}
               verifyShowWarning={verifyShowWarning}

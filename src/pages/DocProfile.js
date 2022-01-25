@@ -36,33 +36,25 @@ function DocProfile(props) {
   const [userInfo, setUserInfo] = React.useState();
 
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const res = await axios.get("/two", {
-          params: {
-            hospital,
-            specialty,
-            name,
-          },
-        });
+    axios
+      .get("/two", {
+        params: {
+          hospital,
+          specialty,
+          name,
+        },
+      })
+      .then((res) => {
         setDocInfo(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getProfile();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   useEffect(() => {
-    const getUserInfo = () => {
-      props.storedCredentials.then((res) => {
-        setUserInfo(res);
-      });
-    };
-    if (docInfo) {
-      getUserInfo();
-    }
-  }, []);
+    setUserInfo(props.storedCredentials);
+  }, [props.storedCredentials]);
 
   if (!docInfo) {
     return (

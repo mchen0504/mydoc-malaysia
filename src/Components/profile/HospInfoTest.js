@@ -8,6 +8,7 @@ import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
+import axios from "axios";
 
 //icons
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -143,8 +144,8 @@ function HospInfoTest(props) {
       list = userInfo[type].hospitals;
       const index = userInfo[type].hospitals.findIndex(
         (hospital) =>
-          hospital.username.replace(/\s/g, "").toLowerCase() ===
-          hospInfo.username.replace(/\s/g, "").toLowerCase()
+          hospital.name.replace(/\s/g, "").toLowerCase() ===
+          hospInfo.name.replace(/\s/g, "").toLowerCase()
       );
       if (index !== -1) {
         likedSaved = true;
@@ -154,126 +155,108 @@ function HospInfoTest(props) {
   };
 
   useEffect(() => {
-    if (hospInfo) {
-      const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
-      const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
+    const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
+    const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 
-      const listOfReports = [];
-      if (userInfo && userInfo.reportedHospitals) {
-        listOfReports = userInfo.reportedHospitals;
-      }
-
-      setState({
-        hasLiked: liked,
-        likedList: listOfLikes,
-        numLikes: hospInfo.likes ? hospInfo.likes : 0,
-
-        hasSaved: saved,
-        savedList: listOfSaves,
-
-        reportedList: listOfReports,
-        numReports: hospInfo.report ? hospInfo.report.reportCount : 0,
-        reportReasonsList: hospInfo.report ? hospInfo.report.reportReasons : [],
-        oneReason: "",
-      });
+    const listOfReports = [];
+    if (userInfo && userInfo.reportedHospitals) {
+      listOfReports = userInfo.reportedHospitals;
     }
-  }, [hospInfo]);
+
+    setState({
+      hasLiked: liked,
+      likedList: listOfLikes,
+      numLikes: hospInfo.likes ? hospInfo.likes : 0,
+
+      hasSaved: saved,
+      savedList: listOfSaves,
+
+      reportedList: listOfReports,
+      numReports: hospInfo.report ? hospInfo.report.reportCount : 0,
+      reportReasonsList: hospInfo.report ? hospInfo.report.reportReasons : [],
+      oneReason: "",
+    });
+  }, [hospInfo, userInfo]);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // when the like button is pressed
   const toggleLikeUnlike = () => {
-    // the user has liked this hospital before
+    let newLikedList = [...likeSaveInfo.likedList];
+    let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
-      let likedListCopy = likeSaveInfo.likedList;
-      let index = likedListCopy.findIndex(
+      let index = newLikedList.findIndex(
         (hospital) => hospital.name === hospInfo.name
       );
       // remove this hospital from the user like list
-      likedListCopy.splice(index, 1);
-      setState((prevState) => {
-        prevState.numLikes = prevState.numLikes - 1;
-        prevState.hasLiked = false;
-        prevState.likedList = likedListCopy;
-        return {
-          ...prevState,
-        };
-      });
+      newLikedList.splice(index, 1);
+      newLikes = newLikes - 1;
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: false,
+        likedList: newLikedList,
+      }));
     } else {
+      newLikes = newLikes + 1;
       const newHospInfo = {
         name: hospInfo.name,
-        address: hospInfo.address,
-        likes: likeSaveInfo.numLikes,
-        phone: hospInfo.phone,
         relatedSpecialty: hospInfo.relatedSpecialty,
-        type: hospInfo.type,
         address: hospInfo.address,
         phone: hospInfo.phone,
+        type: hospInfo.type,
         imgSrc: hospInfo.imgSrc,
+        likes: newLikes,
       };
-
-      likeSaveInfo.likedList.push(newHospInfo);
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.numLikes = prevState.numLikes + 1;
-          prevState.hasLiked = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newLikedList.push(newHospInfo);
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: true,
+        likedList: newLikedList,
+      }));
     }
-    toggleLike();
+
+    let updateInfo = {
+      hospital: hospInfo.name,
+      specialty: hospInfo.relatedSpecialty,
+      likes: newLikes,
+    };
+
+    toggleLike(updateInfo, newLikedList);
+    updateLocalHospList(newLikes);
   };
 
-  const toggleLike = () => {
-    waitLikeUpdate()
-      .then((res) => {
-        props.changeHospLikeStatus(likeSaveInfo.likedList);
-        const updateInfo = {
-          specialty: hospInfo.relatedSpecialty,
-          hospital: hospInfo.name.replace(/\s/g, ""),
-          likes: res[1],
-        };
+  const toggleLike = (updateInfo, likedList) => {
+    axios
+      .post("/updatelikedhospitals", likedList)
+      .then(() => {
         props.updateHospitalLikes(updateInfo);
-        updateLocalDocList(updateInfo);
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => console.error(error));
   };
 
-  let waitLikeUpdate = async () => {
-    let [likedList, likes] = await Promise.all([
-      likeSaveInfo.likedList,
-      likeSaveInfo.numLikes,
-    ]);
-    return [likedList, likes];
-  };
-
-  const updateLocalDocList = (updateInfo) => {
+  const updateLocalHospList = (newLikes) => {
     // set location target list location
-    let newHosList = [];
-    for (let hos in props.hospitalInfo) {
-      let hosItem = props.hospitalInfo[hos];
-      if (hosItem.name === hospInfo.name) {
-        hosItem.NumberOfLikes = likeSaveInfo.numLikes;
-        hosItem.likes = likeSaveInfo.numLikes;
+    let newHospList = [];
+    for (let hosp in hospInfo) {
+      let hospItem = hospInfo[hosp];
+      if (hospItem.name === hospInfo.name) {
+        hospItem.NumberOfLikes = newLikes;
+        hospItem.likes = newLikes;
       }
-      newHosList.push(hosItem);
+      newHospList.push(hospItem);
     }
-    props.sethospitalInfo(newHosList);
+    props.sethospitalInfo(newHospList);
 
     // set database
-    let newDatabase;
-    newDatabase = props.database;
-    let hospitalId = updateInfo["hospital"].replace(/\s/g, "");
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["likes"] =
-      likeSaveInfo.numLikes;
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId][
-      "NumberOfLikes"
-    ] = likeSaveInfo.numLikes;
+    let newDatabase = props.database;
+    let hospitalId = hospInfo.name.replace(/\s/g, "");
+
+    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].likes =
+      newLikes;
+    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].NumberOfLikes =
+      newLikes;
     props.setDatabase(newDatabase);
   };
 
@@ -286,51 +269,36 @@ function HospInfoTest(props) {
 
   // when the save button is pressed
   const toggleSaveUnsave = () => {
-    // the user has saved this hospital before
+    let newSavedList = [...likeSaveInfo.savedList];
     if (likeSaveInfo.hasSaved) {
-      let savedListCopy = likeSaveInfo.savedList;
-      let index = savedListCopy.findIndex(
+      let index = newSavedList.findIndex(
         (hospital) => hospital.name === hospInfo.name
       );
       // remove this hospital from the user saved list
-      savedListCopy.splice(index, 1);
-
-      setState({
-        ...likeSaveInfo,
-        savedList: savedListCopy,
+      newSavedList.splice(index, 1);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
         hasSaved: false,
-      });
+      }));
     } else {
-      // the newly saved hospital's information to be added to the user's saved hospital list
-      const newHospInfo = {
-        name: hospInfo.name.replace(/\s/g, ""),
-        address: hospInfo.address,
-        likes: likeSaveInfo.numLikes,
-        phone: hospInfo.phone,
+      let newHospInfo = {
+        name: hospInfo.name,
         relatedSpecialty: hospInfo.relatedSpecialty,
+        address: hospInfo.address,
+        phone: hospInfo.phone,
         type: hospInfo.type,
+        imgSrc: hospInfo.imgSrc,
+        likes: likeSaveInfo.numLikes,
       };
-      likeSaveInfo.savedList.push(newHospInfo);
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.hasSaved = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newSavedList.push(newHospInfo);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
+        hasSaved: true,
+      }));
     }
-    updateUserSave();
-  };
-
-  const updateUserSave = async () => {
-    try {
-      let savedList = await likeSaveInfo.savedList;
-      props.changeHospSaveStatus(savedList);
-    } catch (err) {
-      console.error(err);
-    }
+    props.changeHospSaveStatus(newSavedList);
   };
 
   // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
@@ -358,11 +326,6 @@ function HospInfoTest(props) {
       oneReason: oneReason,
     });
   };
-
-  //   if (!hospInfo) {
-  //     props.history.push("/");
-  //     window.location.reload();
-  //   }
 
   const reported = likeSaveInfo.reportedList.includes(hospInfo?.name);
 

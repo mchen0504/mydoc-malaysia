@@ -87,8 +87,9 @@ function LikeHistorySaved(props) {
   // const [hospitalCards, setHospitalCards] = React.useState([]); //display by doctor as default
 
   const [stored, setStored] = React.useState({
-    doctors: null,
-    hospitals: null,
+    username: "",
+    doctors: [],
+    hospitals: [],
   });
 
   const handleDisplay = (event, newDisplay) => {
@@ -102,23 +103,20 @@ function LikeHistorySaved(props) {
   const [databaseInfo, setDatabase] = React.useState({});
 
   useEffect(() => {
-    if (userInfo) {
-      console.log("has userInfo, getting...");
-      console.log(userInfo);
-      let stored = userInfo[displayType];
-      let doctors = [];
-      let hospitals = [];
+    let doctors = [];
+    let hospitals = [];
 
-      if (stored) {
-        doctors = stored.doctors && stored.doctors;
-        hospitals = stored.hospitals && stored.hospitals;
-      }
-
-      setStored({
-        doctors,
-        hospitals,
-      });
+    let stored = userInfo[displayType];
+    if (stored) {
+      doctors = stored.doctors ? stored.doctors : [];
+      hospitals = stored.hospitals ? stored.hospitals : [];
     }
+
+    setStored({
+      username: userInfo.username,
+      doctors,
+      hospitals,
+    });
   }, [userInfo]);
 
   const doctorCards =
@@ -296,10 +294,9 @@ function LikeHistorySaved(props) {
   //   }
   // };
 
-  if (stored.doctors === null || stored.hospitals === null) {
+  if (!stored.username) {
     return (
       <div>
-        {console.log(stored.doctors)}
         <CircularProgress
           color="secondary"
           style={{ marginLeft: "45%", marginTop: "5%" }}
@@ -309,8 +306,6 @@ function LikeHistorySaved(props) {
   } else {
     return (
       <a id="likehistory" className={classes.anchor}>
-        {console.log(stored.doctors)}
-
         <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
           <Grid item xs={10} md={8}>
