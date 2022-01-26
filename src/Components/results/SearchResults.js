@@ -9,13 +9,13 @@ import Pagination from "@material-ui/lab/Pagination";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // components
 import CovidAlert from "../Alert";
 import DocCard from "./DocCard";
 import HospitalCard from "./HospitalCard";
 import Empty from "./SearchNotFound";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
   HospitalType,
@@ -118,7 +118,7 @@ export default function SearchResultsFilter(props) {
           <DocCard
             {...props}
             updateTargetDoc={props.updateTargetDoc}
-            resultData={props.docInfo[i]}
+            docInfo={props.docInfo[i]}
             key={i}
           />
         );
@@ -144,7 +144,7 @@ export default function SearchResultsFilter(props) {
         let component = (
           <HospitalCard
             {...props}
-            resultData={props.hospitalInfo[i]}
+            hospInfo={props.hospitalInfo[i]}
             key={i}
             updateTargetHos={props.updateTargetHos}
           />

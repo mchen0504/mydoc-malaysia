@@ -141,7 +141,6 @@ export default function Header(props) {
   return (
     <div className={classes.container}>
       <CovidAlert />
-
       <div className={classes.root}>
         <Grid container spacing={0}>
           <Grid item xs={1} sm={1} md={1} lg={2}></Grid>
@@ -160,30 +159,7 @@ export default function Header(props) {
                   Quick access to doctor information in Malaysia
                 </Typography>
                 <br></br>
-                {/* <SearchTabs
-                  getKeyWords={props.getKeyWords}
-                  getSearchMethod={props.getSearchMethod}
-                  setSearchMethod={props.setSearchMethod}
-                  setKeywords={props.setKeywords}
-                  conditionListForInput={props.conditionListForInput}
-                  specialtyListForInput={props.specialtyListForInput}
-                  startSearch = {props.startSearch}
-                  conditionLabel={props.conditionLabel} 
-                  changeConditionLabel={props.changeConditionLabel} 
-                />
-                <Location getLocationValue={props.getLocationValue} currentLocation={props.currentLocation}></Location>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.search}
-                  startIcon={<SearchIcon />}
-                  fullWidth
-                  onClick={props.startSearch}
-                >
-                  Search
-                </Button> */}
                 {headerDisplay}
-                {/* 5/9/2020eshin 加的， 这个需要再condition tab才出现, 麻烦你了*/}
                 <br></br>
                 <br></br>
                 {/* <BodyPartsDialog /> */}

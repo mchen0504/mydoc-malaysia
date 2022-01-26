@@ -10,6 +10,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import DocInfo from "../profile/DocDetailedInfo";
+import DocAccountVerification from "../docAccount/DocAccountVerification";
 
 const useStyles = makeStyles((theme) => ({
   root: {

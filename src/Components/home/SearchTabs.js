@@ -228,7 +228,7 @@ export default function SearchTabs(props) {
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Search by doctor's name"
+              label="Search by doctor name"
               variant="filled"
               onChange={getTextFieldValue}
               onKeyPress={(ev) => {
@@ -260,7 +260,7 @@ export default function SearchTabs(props) {
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Search by hospital's name"
+              label="Search by hospital name"
               onChange={getTextFieldValue}
               onKeyPress={(ev) => {
                 if (ev.key === "Enter") {
