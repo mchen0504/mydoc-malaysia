@@ -32,35 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//filter specialty
-const filterSpecialtyOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.specialty,
-});
-
-//filter doctor
-const filterDocOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.name,
-});
-
-//filter hospital
-const filterHospOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.hospName,
-});
-
-//filter condition
-const filterConditionOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.condition,
-});
-
-function TabPanel(props) {
-  const { children, value, index } = props;
-  return value === index && <Box mt={2}>{children}</Box>;
-}
-
 const StyledTabs = withStyles({
   indicator: {
     display: "flex",
@@ -92,9 +63,15 @@ const StyledTab = withStyles((theme) => ({
   },
 }))((props) => <Tab disableRipple {...props} />);
 
+function TabPanel(props) {
+  const { children, value, index } = props;
+  return value === index && <Box mt={2}>{children}</Box>;
+}
+
 // Search Box for Specialty, Doctor, Hospital, Condition
 export default function SearchTabs(props) {
   const classes = useStyles();
+
   const conditions = props.conditionListForInput;
   const specialties = props.specialtyListForInput;
 
@@ -113,10 +90,9 @@ export default function SearchTabs(props) {
       method = "Condition";
     }
     setValue(newValue);
-    props.getSearchMethod(method);
+    props.setSearchType(method);
   };
 
-  // He Chen 2020 5/22
   let docNames = [];
   let hospNames = [];
 
@@ -130,7 +106,7 @@ export default function SearchTabs(props) {
         let doctorsList = hospital.doctors;
         for (let docId in doctorsList) {
           if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
-            docNames.push({ name: doctorsList[docId].name });
+            docNames.push({ docName: doctorsList[docId].name });
           }
         }
       }
@@ -142,37 +118,45 @@ export default function SearchTabs(props) {
   };
 
   getDocHosNameList();
-  // He Chen 2020 5/22 ends
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchMethod("Specialty");
-      props.getKeyWords(newValue.specialty);
+      props.setSearchType("Specialty");
+      props.setSearchValue(newValue.specialty);
     }
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.name);
+      props.setSearchValue(newValue.name);
     }
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.hospName);
+      props.setSearchValue(newValue.hospName);
     }
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.changeConditionLabel(newValue.condition, "normal");
+      props.setSearchValue(newValue.condition);
+      props.setConditionLabel("");
     }
   };
 
   const getTextFieldValue = (event) => {
     setkeyword(event.target.value);
-    props.getKeyWords(event.target.value);
+    props.setSearchValue(event.target.value);
   };
+
+  const filterOptions = (searchType) => {
+    createFilterOptions({
+      matchFrom: "start",
+      stringify: (option) => option[searchType],
+    });
+  };
+
   return (
     <div>
       <div className={classes.tabContainer}>
@@ -194,7 +178,7 @@ export default function SearchTabs(props) {
           onChange={handleSpecialtySearchKeyChange}
           options={specialties}
           getOptionLabel={(option) => option.specialty}
-          filterOptions={filterSpecialtyOptions}
+          filterOptions={filterOptions("specialty")}
           disabled={
             props.database === undefined ||
             props.specialtyListForInput === undefined
@@ -220,7 +204,7 @@ export default function SearchTabs(props) {
           freeSolo
           options={docNames}
           getOptionLabel={(option) => option.name}
-          filterOptions={filterDocOptions}
+          filterOptions={filterOptions("docName")}
           disabled={
             props.database === undefined ||
             props.specialtyListForInput === undefined
@@ -252,7 +236,7 @@ export default function SearchTabs(props) {
           freeSolo
           options={hospNames}
           getOptionLabel={(option) => option.hospName}
-          filterOptions={filterHospOptions}
+          filterOptions={filterOptions("hospName")}
           disabled={
             props.database === undefined ||
             props.specialtyListForInput === undefined
@@ -283,7 +267,7 @@ export default function SearchTabs(props) {
           onChange={handleConditionSearchKeyChange}
           options={conditions}
           getOptionLabel={(option) => option.condition}
-          filterOptions={filterConditionOptions}
+          filterOptions={filterOptions("condition")}
           disabled={
             props.database === undefined ||
             props.conditionListForInput === undefined ||

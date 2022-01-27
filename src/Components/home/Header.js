@@ -76,21 +76,34 @@ const useStyles = makeStyles((theme) => ({
 export default function Header(props) {
   const classes = useStyles();
 
-  useEffect(() => {
-    if (props.searchBegin) {
-      return props.doMainSearch(props);
-    }
-  });
+  // useEffect(() => {
+  //   if (props.searchBegin) {
+  //     return props.doMainSearch(props);
+  //   }
+  // });
+
+  const [searchType, setSearchType] = useState("Specialty");
+  const [searchValue, setSearchValue] = useState();
 
   let renderBodyParts = null;
-  if (props.searchMethod === "Condition") {
+  if (props.searchType === "Condition") {
     renderBodyParts = (
       <BodyPartsDialog
+        setKeywords={props.setKeywords}
+        setConditionLabel={props.setConditionLabel}
         changeConditionLabel={props.changeConditionLabel}
         bodyPartsDic={props.bodyPartsDic}
       />
     );
   }
+
+  const handleSubmit = () => {
+    props.setConditionLabel("");
+    if (props.history != null) {
+      let searchKeyword = searchValue.replace(/\s+/g, "-");
+      props.history.push(`/results/${searchType}/${searchKeyword}`);
+    }
+  };
 
   let headerDisplay;
   if (
@@ -111,14 +124,16 @@ export default function Header(props) {
         <SearchTabs
           database={props.database}
           getKeyWords={props.getKeyWords}
-          getSearchMethod={props.getSearchMethod}
-          setSearchMethod={props.setSearchMethod}
+          // getSearchMethod={props.getSearchMethod}
+          // setSearchMethod={props.setSearchMethod}
+          setSearchType={setSearchType}
+          setSearchValue={setSearchValue}
           setKeywords={props.setKeywords}
           conditionListForInput={props.conditionListForInput}
           specialtyListForInput={props.specialtyListForInput}
           startSearch={props.startSearch}
           conditionLabel={props.conditionLabel}
-          changeConditionLabel={props.changeConditionLabel}
+          setConditionLabel={props.setConditionLabel}
         />
         <Location
           getLocationValue={props.getLocationValue}
@@ -130,7 +145,7 @@ export default function Header(props) {
           className={classes.search}
           startIcon={<SearchIcon />}
           fullWidth
-          onClick={props.startSearch}
+          onClick={handleSubmit}
         >
           Search
         </Button>

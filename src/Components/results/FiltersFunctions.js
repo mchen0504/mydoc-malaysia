@@ -13,7 +13,10 @@ export function HospitalType(props) {
   const [value, setValue] = React.useState("both");
 
   const handleChange = (event) => {
-    props.filterHosType(event.target.value);
+    props.setFilters((filters) => ({
+      ...filters,
+      hosType: event.target.value,
+    }));
     setValue(event.target.value);
   };
 
@@ -43,26 +46,24 @@ export function Languages(props) {
     Tamil: false,
     Cantonese: false,
   });
-  const [changeLanguage, setChangeLanguage] = React.useState(true);
+  // const [changeLanguage, setChangeLanguage] = React.useState(true);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
-    setChangeLanguage(true);
   };
 
   useEffect(() => {
-    if (changeLanguage) {
-      let languagesList = [];
-      for (let key in state) {
-        if (state[key]) {
-          languagesList.push(key);
-        }
+    let languagesList = [];
+    for (let key in state) {
+      if (state[key]) {
+        languagesList.push(key);
       }
-      props.filterLanguageList(languagesList)
     }
-    return setChangeLanguage(false);
-
-  });
+    props.setFilters((filters) => ({
+      ...filters,
+      languageList: languagesList,
+    }));
+  }, [state]);
 
   const { English, Malay, Mandarin, Tamil, Cantonese } = state;
 
@@ -128,40 +129,39 @@ export function YearsOfPractice(props) {
     twenty: false,
   });
 
-  const [yearChange, setYearChange] = React.useState(false);
+  // const [yearChange, setYearChange] = React.useState(false);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
-    setYearChange(true);
+    // setYearChange(true);
   };
 
   useEffect(() => {
-    if (yearChange) {
-      let yearRangeTrans = {
-        oneyear: [0, 1],
-        onetofive: [1, 5],
-        sixtoten: [6, 10],
-        eleventotwenty: [11, 20],
-        twenty: [20, 100],
-      };
-      let yearRange = [1000, -1];
-      for (let key in state) {
-        if (state[key]) {
-          let min = yearRangeTrans[key][0];
-          let max = yearRangeTrans[key][1];
-          if (yearRange[0] >= min) {
-            yearRange[0] = min;
-          }
-          if (yearRange[1] <= max) {
-            yearRange[1] = max;
-          }
+    let yearRangeTrans = {
+      oneyear: [0, 1],
+      onetofive: [1, 5],
+      sixtoten: [6, 10],
+      eleventotwenty: [11, 20],
+      twenty: [20, 100],
+    };
+    let yearRange = [1000, -1];
+    for (let key in state) {
+      if (state[key]) {
+        let min = yearRangeTrans[key][0];
+        let max = yearRangeTrans[key][1];
+        if (yearRange[0] >= min) {
+          yearRange[0] = min;
+        }
+        if (yearRange[1] <= max) {
+          yearRange[1] = max;
         }
       }
-      props.filterYear(yearRange);
     }
-    return setYearChange(false);
-
-  });
+    props.setFilters((filters) => ({
+      ...filters,
+      yearOfPractice: yearRange,
+    }));
+  }, [state]);
 
   const { oneyear, onetofive, sixtoten, eleventotwenty, twenty } = state;
 
@@ -172,7 +172,11 @@ export function YearsOfPractice(props) {
       <FormGroup>
         <FormControlLabel
           control={
-            <Checkbox checked={oneyear} onChange={handleChange} name="oneyear" />
+            <Checkbox
+              checked={oneyear}
+              onChange={handleChange}
+              name="oneyear"
+            />
           }
           label="< 1 year"
         />
@@ -224,7 +228,7 @@ export function Location(props) {
     between30minsTo1hour: false,
     between1hourTo2hours: false,
     between2hoursTo3hours: false,
-    over3hours: false
+    over3hours: false,
   });
 
   const [timeDomain, settimeDomain] = React.useState(true);
@@ -254,7 +258,6 @@ export function Location(props) {
       props.filterDrivingTime(timeRange);
     }
     return settimeDomain(false);
-
   });
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -266,7 +269,7 @@ export function Location(props) {
     between30minsTo1hour,
     between1hourTo2hours,
     between2hoursTo3hours,
-    over3hours
+    over3hours,
   } = state;
 
   return (
@@ -276,7 +279,11 @@ export function Location(props) {
       <FormGroup>
         <FormControlLabel
           control={
-            <Checkbox checked={lessThan30mins} onChange={handleChange} name="lessThan30mins" />
+            <Checkbox
+              checked={lessThan30mins}
+              onChange={handleChange}
+              name="lessThan30mins"
+            />
           }
           label="< 30mins"
         />
@@ -312,7 +319,11 @@ export function Location(props) {
         />
         <FormControlLabel
           control={
-            <Checkbox checked={over3hours} onChange={handleChange} name="over3hours" />
+            <Checkbox
+              checked={over3hours}
+              onChange={handleChange}
+              name="over3hours"
+            />
           }
           label="> 3hours"
         />

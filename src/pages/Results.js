@@ -1,63 +1,54 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 import SearchResults from "../components/results/SearchResults";
 import Navbar from "../components/Navbar";
 
-export default function Results() {
-  const { database } = props;
-
+export default function Results(props) {
   const locationParts = useLocation().pathname.split("/");
   const searchType = locationParts[2];
-  const searchValue = locationParts[3];
+  const searchValue = locationParts[3].replace(/-/g, " ");
   const reportMax = 50;
 
   const [docInfo, setDocInfo] = useState([]);
   const [hospitalInfo, sethospitalInfo] = useState([]);
-  const [docInfoCopy, setDocInfoCopy] = useState([]);
-  const [hospitalInfoCopy, sethospitalInfoCopy] = useState([]);
+  const [filtered, setFiltered] = useState({
+    docInfo: [],
+    HospitalInfo: [],
+  });
 
-  const [searchingState, setSearchingState] = React.useState("in-progress");
+  const [filters, setFilters] = useState({
+    hosType: "both",
+    languageList: [],
+    yearOfPractice: [1000, -1],
+  });
 
-  const doMainSearch = (pageProps) => {
-    if (hospitalInfo.length != 0 || docInfo.length != 0) {
-      sethospitalInfo([]);
-      setDocInfo([]);
-      sethospitalInfoCopy([]);
-      setDocInfoCopy([]);
-      setSearchingState("in-progress");
-    }
+  // const [searchingState, setSearchingState] = React.useState("in-progress");
 
-    if (pageProps.history != null) {
-      pageProps.history.push("/results");
-    }
+  useEffect(() => {
+    axios
+      .get("/alldata")
+      .then((res) => {
+        console.log(res.data);
+        let userKeyWords = searchValue.replace(/-/g, " ").toLowerCase();
+        let searchResults = getSearchInfo(userKeyWords, res.data);
+        sethospitalInfo(searchResults.newHosData);
+        setDocInfo(searchResults.newDocData);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
-    if (searchBegin) {
-      let userKeyWords = searchValue.replace(/-/g, "").toLowerCase();
-      let newDocData = [];
-      let newHosData = [];
-      let searchResults = getSearchInfo(userKeyWords);
-      newDocData = searchResults.newDocData;
-      newHosData = searchResults.newHosData;
-      sethospitalInfo(newHosData);
-      setDocInfo(newDocData);
-      sethospitalInfoCopy(newHosData);
-      setDocInfoCopy(newDocData);
-      setSearchingState("finished");
-    }
-
-    return function resetSearchStatus() {
-      setSearchBegin(false);
-    };
-  };
-
-  let getSearchInfo = (userKeyWords) => {
+  const getSearchInfo = (userKeyWords, data) => {
+    console.log("in method");
     let newDocData = [];
     let newHosData = [];
     if (searchType == "Specialty") {
-      for (let specialty in database) {
+      for (let specialty in data) {
         if (specialty.replace(/\s/g, "").toLowerCase() == userKeyWords) {
-          for (let hospital in database[specialty].hospitals) {
-            let hospitalInfo = database[specialty].hospitals[hospital];
+          for (let hospital in data[specialty].hospitals) {
+            let hospitalInfo = data[specialty].hospitals[hospital];
             if (
               hospitalInfo.report == null ||
               hospitalInfo.report.reportCount < reportMax
@@ -79,9 +70,9 @@ export default function Results() {
         }
       }
     } else if (searchType == "Doctor") {
-      for (let specialty in database) {
-        for (let hos in database[specialty].hospitals) {
-          let potentialHos = database[specialty].hospitals[hos];
+      for (let specialty in data) {
+        for (let hos in data[specialty].hospitals) {
+          let potentialHos = data[specialty].hospitals[hos];
           let docFound = 0;
           for (let doctor in potentialHos.doctors) {
             let targetDoctor = potentialHos.doctors[doctor];
@@ -114,9 +105,9 @@ export default function Results() {
         }
       }
     } else if (searchType == "Hospital") {
-      for (let specialty in database) {
-        for (let hos in database[specialty].hospitals) {
-          let potentialHos = database[specialty].hospitals[hos];
+      for (let specialty in data) {
+        for (let hos in data[specialty].hospitals) {
+          let potentialHos = data[specialty].hospitals[hos];
           let hosNameMacth = potentialHos.name
             .replace(/\s/g, "")
             .toLowerCase()
@@ -144,15 +135,15 @@ export default function Results() {
         }
       }
     } else {
-      for (let specialty in database) {
-        let conditionList = database[specialty].conditions;
+      for (let specialty in data) {
+        let conditionList = data[specialty].conditions;
         conditionList = conditionList.map((item) => {
           return item.toLowerCase().replace(/\s/g, "");
         });
         let conditionMatch = conditionList.includes(userKeyWords);
         if (conditionMatch) {
-          for (let hos in database[specialty].hospitals) {
-            let potentialHos = database[specialty].hospitals[hos];
+          for (let hos in data[specialty].hospitals) {
+            let potentialHos = data[specialty].hospitals[hos];
             if (
               potentialHos.report == null ||
               potentialHos.report.reportCount < reportMax
@@ -211,10 +202,110 @@ export default function Results() {
     };
   };
 
+  useEffect(() => {
+    console.log(docInfo);
+    let newDocList = docInfo;
+    let newHospitalList = hospitalInfo;
+
+    if (docInfo.length > 0 && hospitalInfo.length > 0) {
+      docInfo.forEach((doctor) => {
+        let validateType =
+          doctor.type.toLowerCase() == filters.hosType.toLowerCase() ||
+          filters.hosType.toLowerCase() == "both";
+        let validateLanguage =
+          filters.languageList.every(
+            (element) => doctor.languages.indexOf(element) > -1
+          ) || filters.languageList == [];
+        let validateYear =
+          (filters.yearOfPractice[0] <= doctor.yearsOfPractice &&
+            filters.yearOfPractice[1] >= doctor.yearsOfPractice) ||
+          filters.yearOfPractice[0] == 1000;
+
+        if (validateType && validateLanguage && validateYear) {
+          newDocList.push(doctor);
+        }
+      });
+
+      hospitalInfo.forEach((hos) => {
+        let validateType =
+          hos.type.toLowerCase() == filters.hosType.toLowerCase() ||
+          filters.hosType.toLowerCase() == "both";
+        let validateLanguage =
+          filters.languageList.every(
+            (element) => hos.languages.indexOf(element) > -1
+          ) || filters.languageList == [];
+
+        if (validateType && validateLanguage) {
+          newHospitalList.push(hos);
+        }
+      });
+
+      setFiltered({
+        docInfo: newDocList,
+        hospitalInfo: newHospitalList,
+      });
+    }
+  }, [docInfo, hospitalInfo, filters]);
+
+  // const filterFunction = () => {
+  //   let newDocList = docInfo;
+  //   let newHospitalList = hospitalInfo;
+  //   docInfo.forEach((doctor) => {
+  //     let validateType =
+  //       doctor.type.toLowerCase() == filters.hosType.toLowerCase() ||
+  //       filters.hosType.toLowerCase() == "both";
+  //     let validateLanguage =
+  //       filters.languageList.every(
+  //         (element) => doctor.languages.indexOf(element) > -1
+  //       ) || languageList == [];
+
+  //     let validateYear =
+  //       (filters.yearOfPractice[0] <= doctor.yearsOfPractice &&
+  //         filters.yearOfPractice[1] >= doctor.yearsOfPractice) ||
+  //       filters.yearOfPractice[0] == 1000;
+  //     if (validateType && validateLanguage && validateYear) {
+  //       newDocList.push(doctor);
+  //     }
+  //   });
+
+  //   hospitalInfo.forEach((hos) => {
+  //     let validateType =
+  //       hos.type.toLowerCase() == filters.hosType.toLowerCase() ||
+  //       filters.hosType.toLowerCase() == "both";
+  //     let validateLanguage =
+  //       filters.languageList.every(
+  //         (element) => hos.languages.indexOf(element) > -1
+  //       ) || filters.languageList == [];
+
+  //     if (validateType && validateLanguage) {
+  //       newHospitalList.push(hos);
+  //     }
+  //   });
+
+  //   setFiltered({
+  //     docInfo: newDocList,
+  //     hospitalInfo: newHospitalList,
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (filterBegin) {
+  //     filterFunction();
+  //     return setFilterBegin(false);
+  //   }
+  // });
+
   return (
     <div>
+      {console.log(docInfo)}
       <Navbar currentPage="results" {...props} />
-      <SearchResults {...props} />
+      <SearchResults
+        filtered={filtered}
+        // searchingState={searchingState}
+        searchType={searchType}
+        filters={filters}
+        setFilters={setFilters}
+      />
     </div>
   );
 }

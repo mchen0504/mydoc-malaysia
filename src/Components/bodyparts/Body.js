@@ -48,7 +48,8 @@ export default function BodyPartsDialog(props) {
   };
 
   const handleSubmit = () => {
-    props.changeConditionLabel(selectedCondition, "body");
+    props.setKeywords(selectedCondition);
+    props.setConditionLabel(selectedCondition);
     setOpen(false);
   };
 

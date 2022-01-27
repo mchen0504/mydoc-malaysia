@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -56,20 +56,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResultsFilter(props) {
   const classes = useStyles();
+  const { filtered, searchingState, searchType, filters, setFilters } = props;
 
   //store state - whether user clicks on display by doctor or display by hospital
-  const [display, setDisplay] = React.useState("doctor"); //display by doctor as default
+  const [doctors, setDoctors] = useState();
+  const [hospitals, setHospitals] = useState();
+
+  const [display, setDisplay] = useState("doctor"); //display by doctor as default
   const handleDisplay = (event, newDisplay) => {
     if (newDisplay != null) {
       setDisplay(newDisplay);
-      props.setyearOfPractice([1000, -1]);
-      props.setDrivingTime([1000, -1]);
+      props.setFilters((filters) => ({
+        ...filters,
+        yearOfPractice: [1000, -1],
+      }));
       setPage(1);
     }
   };
 
   //store state of pages
-  const [page, setPage] = React.useState(1); //page 1 as default
+  const [page, setPage] = useState(1); //page 1 as default
   const maxPage = 5;
 
   const handlePageChange = (event, value) => {
@@ -77,56 +83,54 @@ export default function SearchResultsFilter(props) {
     setPage(value);
   };
 
-  if (props.searchingState == "in-progress" && !props.keywords) {
-    props.history.push("/");
-    window.location.reload();
-  }
+  // if (props.searchingState == "in-progress" && !props.keywords) {
+  //   props.history.push("/");
+  //   window.location.reload();
+  // }
+
+  useEffect(() => {
+    if (filtered) {
+      setDoctors(filtered.docInfo);
+      setHospitals(filtered.hospitalInfo);
+    }
+  }, [filtered]);
 
   // create cards for doctors based on results
   let pageNavCount;
   if (display == "doctor") {
-    pageNavCount = Math.ceil(props.docInfo.length / maxPage);
+    pageNavCount = Math.ceil(doctors?.length / maxPage);
   } else {
-    pageNavCount = Math.ceil(props.hospitalInfo.length / maxPage);
+    pageNavCount = Math.ceil(hospitals?.length / maxPage);
   }
   // find the index of the first card in the page
   let cardStartIndex = (page - 1) * maxPage;
   let cardEndIndex = 0;
   // find the index of the last card in the page
   if (display == "doctor") {
-    if (cardStartIndex + maxPage >= props.docInfo.length) {
-      cardEndIndex = props.docInfo.length;
+    if (cardStartIndex + maxPage >= doctors?.length) {
+      cardEndIndex = doctors?.length;
     } else {
       cardEndIndex = maxPage + cardStartIndex;
     }
   } else {
-    if (cardStartIndex + maxPage >= props.hospitalInfo.length) {
-      cardEndIndex = props.hospitalInfo.length;
+    if (cardStartIndex + maxPage >= hospitals?.length) {
+      cardEndIndex = hospitals?.length;
     } else {
       cardEndIndex = maxPage + cardStartIndex;
     }
   }
 
-  // He Chen Changed 2020
   let allDoccards = [];
   let allHosCards = [];
   if (display == "doctor") {
-    // // he chen
-    if (props.docInfo.length != 0 && props.docInfo != null) {
+    if (doctors?.length != 0 && doctors != null) {
       for (let i = cardStartIndex; i < cardEndIndex; i++) {
-        let component = (
-          <DocCard
-            {...props}
-            updateTargetDoc={props.updateTargetDoc}
-            docInfo={props.docInfo[i]}
-            key={i}
-          />
-        );
+        let component = <DocCard {...props} docInfo={doctors[i]} key={i} />;
         allDoccards.push(component);
       }
     } else {
       let component;
-      if (props.searchingState == "in-progress") {
+      if (searchingState == "in-progress") {
         component = (
           <CircularProgress
             color="secondary"
@@ -139,21 +143,16 @@ export default function SearchResultsFilter(props) {
       allDoccards.push(component);
     }
   } else {
-    if (props.hospitalInfo.length != 0 && props.hospitalInfo != null) {
+    if (hospitals?.length != 0 && hospitals != null) {
       for (let i = cardStartIndex; i < cardEndIndex; i++) {
         let component = (
-          <HospitalCard
-            {...props}
-            hospInfo={props.hospitalInfo[i]}
-            key={i}
-            updateTargetHos={props.updateTargetHos}
-          />
+          <HospitalCard {...props} hospInfo={hospitals[i]} key={i} />
         );
         allHosCards.push(component);
       }
     } else {
       let component;
-      if (props.searchingState == "in-progress") {
+      if (searchingState == "in-progress") {
         component = (
           <CircularProgress
             color="secondary"
@@ -168,7 +167,7 @@ export default function SearchResultsFilter(props) {
   }
 
   let docHosbuttonGroup = [];
-  if (props.searchMethod != "Doctor") {
+  if (searchType != "Doctor") {
     docHosbuttonGroup = (
       <ToggleButtonGroup value={display} exclusive onChange={handleDisplay}>
         <ToggleButton value="doctor" color="primary">
@@ -187,13 +186,14 @@ export default function SearchResultsFilter(props) {
 
   let dataInfoNotesDoc = "Display results by doctors";
   let dataInfoNotesHos = "Display results by hospitals";
-  if (props.searchMethod == "Hospital") {
+  if (searchType == "Hospital") {
     dataInfoNotesDoc = "Doctors related to " + '"' + props.keywords + '"';
     dataInfoNotesHos = "Hospitals related to " + '"' + props.keywords + '"';
   }
 
   return (
     <Fragment>
+      {console.log(filtered)}
       <Hidden smDown>
         <div className={classes.root}>
           <Drawer
@@ -214,17 +214,17 @@ export default function SearchResultsFilter(props) {
               >
                 <br></br>
                 <br></br>
-                <HospitalType filterHosType={props.filterHosType} />
+                <HospitalType setFilters={setFilters} />
                 <br></br>
                 <br></br>
-                <Languages filterLanguageList={props.filterLanguageList} />
+                <Languages setFilters={setFilters} />
                 <br></br>
                 <br></br>
                 {/* If display by doctor, filter sidebar will show years of practice;
             if display by hospital, filter sidebar will show location */}
                 {/* {display === "doctor" ? <YearsOfPractice filterYear={props.filterYear} /> : <Location filterDrivingTime={props.filterDrivingTime} />} */}
                 {display === "doctor" && (
-                  <YearsOfPractice filterYear={props.filterYear} />
+                  <YearsOfPractice setFilters={setFilters} />
                 )}
               </Box>
             </div>
@@ -297,11 +297,7 @@ export default function SearchResultsFilter(props) {
           <Grid item xs={1}></Grid>
 
           <Grid item xs={5} align="left">
-            <FilterButtonPhone
-              display={display}
-              filterLanguageList={props.filterLanguageList}
-              filterHosType={props.filterHosType}
-            />
+            <FilterButtonPhone display={display} setFilters={setFilters} />
           </Grid>
           <Grid item xs={5} align="right">
             <div className={classes.toggleContainer}>{docHosbuttonGroup}</div>
