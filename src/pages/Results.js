@@ -5,11 +5,13 @@ import SearchResults from "../components/results/SearchResults";
 import Navbar from "../components/Navbar";
 
 export default function Results(props) {
-  const locationParts = useLocation().pathname.split("/");
+  const location = useLocation();
+  const locationParts = location.pathname.split("/");
   const searchType = locationParts[2];
-  const searchValue = locationParts[3].replace(/-/g, " ");
+  const searchValue = locationParts[3].replace(/-/g, "");
   const reportMax = 50;
 
+  const [isLoading, setLoading] = useState(false);
   const [docInfo, setDocInfo] = useState([]);
   const [hospitalInfo, sethospitalInfo] = useState([]);
   const [filtered, setFiltered] = useState({
@@ -26,11 +28,11 @@ export default function Results(props) {
   // const [searchingState, setSearchingState] = React.useState("in-progress");
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get("/alldata")
       .then((res) => {
-        console.log(res.data);
-        let userKeyWords = searchValue.replace(/-/g, " ").toLowerCase();
+        let userKeyWords = searchValue.toLowerCase();
         let searchResults = getSearchInfo(userKeyWords, res.data);
         sethospitalInfo(searchResults.newHosData);
         setDocInfo(searchResults.newDocData);
@@ -38,97 +40,90 @@ export default function Results(props) {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [location.key]);
 
   const getSearchInfo = (userKeyWords, data) => {
-    console.log("in method");
     let newDocData = [];
     let newHosData = [];
-    if (searchType == "Specialty") {
+    if (searchType === "Specialty") {
       for (let specialty in data) {
-        if (specialty.replace(/\s/g, "").toLowerCase() == userKeyWords) {
+        if (specialty.replace(/\s/g, "").toLowerCase() === userKeyWords) {
           for (let hospital in data[specialty].hospitals) {
-            let hospitalInfo = data[specialty].hospitals[hospital];
-            if (
-              hospitalInfo.report == null ||
-              hospitalInfo.report.reportCount < reportMax
-            ) {
-              newHosData.push(hospitalInfo);
-            }
-            for (let doctor in hospitalInfo.doctors) {
-              if (
-                !hospitalInfo.doctors[doctor].deleted &&
-                hospitalInfo.doctors[doctor].publish &&
-                (hospitalInfo.doctors[doctor].report == null ||
-                  hospitalInfo.doctors[doctor].report.reportCount < reportMax)
-              ) {
-                hospitalInfo.doctors[doctor].username = doctor;
-                newDocData.push(hospitalInfo.doctors[doctor]);
+            let hosp = data[specialty].hospitals[hospital];
+            if (!hosp.report || hosp.report.reportCount < reportMax) {
+              let docFound = 0;
+              for (let doctor in hosp.doctors) {
+                let doc = hosp.doctors[doctor];
+                if (
+                  !doc.deleted &&
+                  doc.publish &&
+                  (!doc.report || doc.report.reportCount < reportMax)
+                ) {
+                  doc.username = doc;
+                  newDocData.push(doc);
+                  docFound++;
+                }
+              }
+              if (docFound > 0) {
+                newHosData.push(hosp);
               }
             }
           }
         }
       }
-    } else if (searchType == "Doctor") {
+    } else if (searchType === "Doctor") {
       for (let specialty in data) {
-        for (let hos in data[specialty].hospitals) {
-          let potentialHos = data[specialty].hospitals[hos];
-          let docFound = 0;
-          for (let doctor in potentialHos.doctors) {
-            let targetDoctor = potentialHos.doctors[doctor];
-            if (
-              targetDoctor.name
-                .replace(/\s/g, "")
-                .toLowerCase()
-                .includes(userKeyWords)
-            ) {
+        for (let hospital in data[specialty].hospitals) {
+          let hosp = data[specialty].hospitals[hospital];
+          if (!hosp.report || hosp.report.reportCount < reportMax) {
+            let doctorsFound = 0;
+            for (let doctor in hosp.doctors) {
+              let doc = hosp.doctors[doctor];
               if (
-                !targetDoctor.deleted &&
-                (targetDoctor.report == null ||
-                  targetDoctor.report.reportCount < reportMax) &&
-                targetDoctor.publish
+                doc.name.replace(/\s/g, "").toLowerCase().includes(userKeyWords)
               ) {
-                targetDoctor.username = doctor;
-                newDocData.push(targetDoctor);
-                docFound++;
+                if (
+                  !doc.deleted &&
+                  (!doc.report || doc.report.reportCount < reportMax) &&
+                  doc.publish
+                ) {
+                  doc.username = doctor;
+                  newDocData.push(doc);
+                  doctorsFound++;
+                }
               }
             }
-            if (docFound == 1) {
-              if (
-                potentialHos.report == null ||
-                potentialHos.report.reportCount < reportMax
-              ) {
-                newHosData.push(potentialHos);
-              }
+            if (doctorsFound > 0) {
+              newHosData.push(hosp);
             }
           }
         }
       }
-    } else if (searchType == "Hospital") {
+    } else if (searchType === "Hospital") {
       for (let specialty in data) {
-        for (let hos in data[specialty].hospitals) {
-          let potentialHos = data[specialty].hospitals[hos];
-          let hosNameMacth = potentialHos.name
+        for (let hospital in data[specialty].hospitals) {
+          let hosp = data[specialty].hospitals[hospital];
+          let hosNameMatch = hosp.name
             .replace(/\s/g, "")
             .toLowerCase()
             .includes(userKeyWords);
-          if (hosNameMacth) {
-            if (
-              potentialHos.report == null ||
-              potentialHos.report.reportCount < reportMax
-            ) {
-              newHosData.push(potentialHos);
-            }
-            for (let doctor in potentialHos.doctors) {
-              let targetDoctor = potentialHos.doctors[doctor];
-              if (
-                !targetDoctor.deleted &&
-                (targetDoctor.report == null ||
-                  targetDoctor.report.reportCount < reportMax) &&
-                targetDoctor.publish
-              ) {
-                potentialHos.doctors[doctor].username = doctor;
-                newDocData.push(potentialHos.doctors[doctor]);
+          if (hosNameMatch) {
+            if (!hosp.report || hosp.report.reportCount < reportMax) {
+              let doctorsFound = 0;
+              for (let doctor in hosp.doctors) {
+                let doc = hosp.doctors[doctor];
+                if (
+                  !doc.deleted &&
+                  (!doc.report || doc.report.reportCount < reportMax) &&
+                  doc.publish
+                ) {
+                  doc.username = doctor;
+                  newDocData.push(doc);
+                  doctorsFound++;
+                }
+              }
+              if (doctorsFound > 0) {
+                newHosData.push(hosp);
               }
             }
           }
@@ -142,29 +137,29 @@ export default function Results(props) {
         });
         let conditionMatch = conditionList.includes(userKeyWords);
         if (conditionMatch) {
-          for (let hos in data[specialty].hospitals) {
-            let potentialHos = data[specialty].hospitals[hos];
-            if (
-              potentialHos.report == null ||
-              potentialHos.report.reportCount < reportMax
-            ) {
-              newHosData.push(potentialHos);
-            }
-            for (let doctor in potentialHos.doctors) {
-              let doctorCondition = potentialHos.doctors[doctor].conditions;
-              doctorCondition = doctorCondition.map((item) => {
-                return item.toLowerCase().replace(/\s/g, "");
-              });
-              let targetDoctor = potentialHos.doctors[doctor];
-              if (
-                doctorCondition.includes(userKeyWords) &&
-                !targetDoctor.deleted &&
-                (targetDoctor.report == null ||
-                  targetDoctor.report.reportCount < reportMax) &&
-                targetDoctor.publish
-              ) {
-                potentialHos.doctors[doctor].username = doctor;
-                newDocData.push(potentialHos.doctors[doctor]);
+          for (let hospital in data[specialty].hospitals) {
+            let hosp = data[specialty].hospitals[hospital];
+            if (!hosp.report || hosp.report.reportCount < reportMax) {
+              let doctorsFound = 0;
+              for (let doctor in hosp.doctors) {
+                let doc = hosp.doctors[doctor];
+                let doctorCondition = doc.conditions;
+                doctorCondition = doctorCondition.map((item) => {
+                  return item.toLowerCase().replace(/\s/g, "");
+                });
+                if (
+                  doctorCondition.includes(userKeyWords) &&
+                  !doc.deleted &&
+                  (!doc.report || doc.report.reportCount < reportMax) &&
+                  doc.publish
+                ) {
+                  doc.username = doctor;
+                  newDocData.push(doc);
+                  doctorsFound++;
+                }
+              }
+              if (doctorsFound > 1) {
+                newHosData.push(hosp);
               }
             }
           }
@@ -182,7 +177,7 @@ export default function Results(props) {
           return newItem;
         });
         targetDoc.conditions.forEach((condition) => {
-          if (conditionList.indexOf(condition) == -1) {
+          if (conditionList.indexOf(condition) === -1) {
             conditionList.push(condition);
           }
         });
@@ -203,23 +198,22 @@ export default function Results(props) {
   };
 
   useEffect(() => {
-    console.log(docInfo);
-    let newDocList = docInfo;
-    let newHospitalList = hospitalInfo;
+    let newDocList = [];
+    let newHospitalList = [];
 
     if (docInfo.length > 0 && hospitalInfo.length > 0) {
       docInfo.forEach((doctor) => {
         let validateType =
-          doctor.type.toLowerCase() == filters.hosType.toLowerCase() ||
-          filters.hosType.toLowerCase() == "both";
+          doctor.type.toLowerCase() === filters.hosType.toLowerCase() ||
+          filters.hosType.toLowerCase() === "both";
         let validateLanguage =
           filters.languageList.every(
             (element) => doctor.languages.indexOf(element) > -1
-          ) || filters.languageList == [];
+          ) || filters.languageList === [];
         let validateYear =
           (filters.yearOfPractice[0] <= doctor.yearsOfPractice &&
             filters.yearOfPractice[1] >= doctor.yearsOfPractice) ||
-          filters.yearOfPractice[0] == 1000;
+          filters.yearOfPractice[0] === 1000;
 
         if (validateType && validateLanguage && validateYear) {
           newDocList.push(doctor);
@@ -228,12 +222,12 @@ export default function Results(props) {
 
       hospitalInfo.forEach((hos) => {
         let validateType =
-          hos.type.toLowerCase() == filters.hosType.toLowerCase() ||
-          filters.hosType.toLowerCase() == "both";
+          hos.type.toLowerCase() === filters.hosType.toLowerCase() ||
+          filters.hosType.toLowerCase() === "both";
         let validateLanguage =
           filters.languageList.every(
             (element) => hos.languages.indexOf(element) > -1
-          ) || filters.languageList == [];
+          ) || filters.languageList === [];
 
         if (validateType && validateLanguage) {
           newHospitalList.push(hos);
@@ -247,64 +241,29 @@ export default function Results(props) {
     }
   }, [docInfo, hospitalInfo, filters]);
 
-  // const filterFunction = () => {
-  //   let newDocList = docInfo;
-  //   let newHospitalList = hospitalInfo;
-  //   docInfo.forEach((doctor) => {
-  //     let validateType =
-  //       doctor.type.toLowerCase() == filters.hosType.toLowerCase() ||
-  //       filters.hosType.toLowerCase() == "both";
-  //     let validateLanguage =
-  //       filters.languageList.every(
-  //         (element) => doctor.languages.indexOf(element) > -1
-  //       ) || languageList == [];
-
-  //     let validateYear =
-  //       (filters.yearOfPractice[0] <= doctor.yearsOfPractice &&
-  //         filters.yearOfPractice[1] >= doctor.yearsOfPractice) ||
-  //       filters.yearOfPractice[0] == 1000;
-  //     if (validateType && validateLanguage && validateYear) {
-  //       newDocList.push(doctor);
-  //     }
-  //   });
-
-  //   hospitalInfo.forEach((hos) => {
-  //     let validateType =
-  //       hos.type.toLowerCase() == filters.hosType.toLowerCase() ||
-  //       filters.hosType.toLowerCase() == "both";
-  //     let validateLanguage =
-  //       filters.languageList.every(
-  //         (element) => hos.languages.indexOf(element) > -1
-  //       ) || filters.languageList == [];
-
-  //     if (validateType && validateLanguage) {
-  //       newHospitalList.push(hos);
-  //     }
-  //   });
-
-  //   setFiltered({
-  //     docInfo: newDocList,
-  //     hospitalInfo: newHospitalList,
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if (filterBegin) {
-  //     filterFunction();
-  //     return setFilterBegin(false);
-  //   }
-  // });
-
   return (
-    <div>
-      {console.log(docInfo)}
-      <Navbar currentPage="results" {...props} />
+    <div key={location.key}>
+      <Navbar
+        currentPage="results"
+        {...props}
+        database={props.database}
+        conditionListForInput={props.conditionListForInput}
+        specialtyListForInput={props.specialtyListForInput}
+        searchType={props.searchType}
+        setFilters={setFilters}
+        setSearchType={props.setSearchType}
+        searchValue={props.searchValue}
+        setSearchValue={props.setSearchValue}
+      />
+      {console.log(filters)}
       <SearchResults
         filtered={filtered}
         // searchingState={searchingState}
         searchType={searchType}
         filters={filters}
         setFilters={setFilters}
+        isLoading={isLoading}
+        setLoading={setLoading}
       />
     </div>
   );

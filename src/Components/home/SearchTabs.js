@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 
-// material ui
 import { withStyles } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -75,8 +74,8 @@ export default function SearchTabs(props) {
   const conditions = props.conditionListForInput;
   const specialties = props.specialtyListForInput;
 
-  const [value, setValue] = React.useState(0);
-  const [keyword, setkeyword] = React.useState("");
+  const [value, setValue] = useState(0);
+  const [keyword, setkeyword] = useState("");
 
   const handleSearchMethodChange = (event, newValue) => {
     let method = "";
@@ -128,7 +127,7 @@ export default function SearchTabs(props) {
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchValue(newValue.name);
+      props.setSearchValue(newValue.docName);
     }
   };
 
@@ -203,7 +202,7 @@ export default function SearchTabs(props) {
           onChange={handleDoctorSearchKeyChange}
           freeSolo
           options={docNames}
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => option.docName}
           filterOptions={filterOptions("docName")}
           disabled={
             props.database === undefined ||
@@ -218,7 +217,6 @@ export default function SearchTabs(props) {
               onKeyPress={(ev) => {
                 if (ev.key === "Enter") {
                   props.getKeyWords(keyword);
-                  props.startSearch();
                 }
               }}
               className={classes.inputRoot}

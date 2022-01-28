@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual doctor card
 export default function DocCard(props) {
   const classes = useStyles();
+  const history = useHistory();
   const { docInfo } = props;
 
   // create language strings
@@ -67,16 +69,20 @@ export default function DocCard(props) {
   languages = languages.substring(1);
 
   const handleClick = () => {
-    props.updateTargetDoc(props.resultData);
-    props.setProfileBackToDestination("resultsPage");
+    // props.setProfileBackToDestination("resultsPage");
 
     let hospital = docInfo?.hospital.replace(/\s+/g, "-");
-    let specialty = docInfo?.specialty.replace(" & ", "-");
+    let specialty;
+    if (docInfo?.specialty.includes("&")) {
+      specialty = docInfo?.specialty.replace(" & ", "-");
+    } else {
+      specialty = docInfo?.specialty.replace(/\s+/g, "-");
+    }
     let name = docInfo?.name.replace(/\s+/g, "-");
 
-    if (props.history != null) {
-      props.history.push(`/profile/${hospital}/${specialty}/${name}`);
-    }
+    // if (props.history != null) {
+    history.push(`/profile/${hospital}/${specialty}/${name}`);
+    // }
   };
 
   // let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;

@@ -73,6 +73,8 @@ if (token) {
 function App() {
   const [docInfo, setDocInfo] = useState([]);
   const [hospitalInfo, sethospitalInfo] = useState([]);
+  const [searchType, setSearchType] = useState("Specialty");
+  const [searchValue, setSearchValue] = useState();
   const [docInfoCopy, setDocInfoCopy] = useState([]);
   const [hospitalInfoCopy, sethospitalInfoCopy] = useState([]);
   const [searchMethod, setSearchMethod] = React.useState("Specialty");
@@ -205,359 +207,6 @@ function App() {
     setTargetHos(hospital);
   };
 
-  // const filterFunction = () => {
-  //   let newDocList = [];
-  //   let newHospitalList = [];
-  //   docInfoCopy.forEach((doctor) => {
-  //     let validateType =
-  //       doctor.type.toLowerCase() == hosType.toLowerCase() ||
-  //       hosType.toLowerCase() == "both";
-  //     let validateLanguage =
-  //       languageList.every(
-  //         (element) => doctor.languages.indexOf(element) > -1
-  //       ) || languageList == [];
-
-  //     let validateYear =
-  //       (yearOfPractice[0] <= doctor.yearsOfPractice &&
-  //         yearOfPractice[1] >= doctor.yearsOfPractice) ||
-  //       yearOfPractice[0] == 1000;
-  //     if (validateType && validateLanguage && validateYear) {
-  //       newDocList.push(doctor);
-  //     }
-  //   });
-
-  //   hospitalInfoCopy.forEach((hos) => {
-  //     let validateType =
-  //       hos.type.toLowerCase() == hosType.toLowerCase() ||
-  //       hosType.toLowerCase() == "both";
-  //     let validateLanguage =
-  //       languageList.every((element) => hos.languages.indexOf(element) > -1) ||
-  //       languageList == [];
-
-  //     let validateDrivingTime =
-  //       (hos.timeOfDriving >= drivingTime[0] &&
-  //         hos.timeOfDriving <= drivingTime[1]) ||
-  //       drivingTime[0] == 1000;
-  //     if (validateType && validateLanguage && validateDrivingTime) {
-  //       newHospitalList.push(hos);
-  //     }
-  //   });
-  //   setDocInfo(newDocList);
-  //   sethospitalInfo(newHospitalList);
-  // };
-
-  // useEffect(() => {
-  //   if (filterBegin) {
-  //     filterFunction();
-  //     return setFilterBegin(false);
-  //   }
-  // });
-
-  // const doMainSearch = (pageProps) => {
-  //   if (hospitalInfo.length != 0 || docInfo.length != 0) {
-  //     sethospitalInfo([]);
-  //     setDocInfo([]);
-  //     sethospitalInfoCopy([]);
-  //     setDocInfoCopy([]);
-  //     setSearchingState("in-progress");
-  //   }
-
-  //   if (pageProps.history != null) {
-  //     pageProps.history.push("/results");
-  //   }
-
-  //   if (searchBegin) {
-  //     let rootData = database;
-  //     let userKeyWords = keywords.replace(/\s/g, "").toLowerCase();
-  //     let newDocData = [];
-  //     let newHosData = [];
-  //     let searchResults = getNewDocAndHospital(rootData, userKeyWords);
-  //     newDocData = searchResults.newDocData;
-  //     newHosData = searchResults.newHosData;
-  //     sethospitalInfo(newHosData);
-  //     setDocInfo(newDocData);
-  //     sethospitalInfoCopy(newHosData);
-  //     setDocInfoCopy(newDocData);
-  //     setSearchingState("finished");
-  //   }
-
-  //   return function resetSearchStatus() {
-  //     setSearchBegin(false);
-  //   };
-  // };
-
-  // // get duration from selected location and destination
-  // const getDuration = async (origin, destination) => {
-  //   let distanceInfo = await axios.get(
-  //     proxyurl + "https://maps.googleapis.com/maps/api/distancematrix/json",
-  //     {
-  //       params: {
-  //         origins: origin,
-  //         destinations: destination,
-  //         key: "",
-  //       },
-  //     }
-  //   );
-  //   let duration;
-  //   if (
-  //     distanceInfo.data.rows.length > 0 &&
-  //     distanceInfo.data.rows[0].elements.length > 0 &&
-  //     distanceInfo.data.rows[0].elements[0].status === "OK"
-  //   ) {
-  //     duration =
-  //       (await distanceInfo.data.rows[0].elements[0].duration.value) / 3600;
-  //   } else {
-  //     duration = -1;
-  //   }
-  //   return duration;
-  // };
-
-  // const getDataByDoctorSearch = (
-  //   newDocData,
-  //   newHosData,
-  //   userKeyWords,
-  //   potentialHos
-  // ) => {
-  //   let docFound = 0;
-  //   for (let doctor in potentialHos.doctors) {
-  //     let targetDoctor = potentialHos.doctors[doctor];
-  //     if (
-  //       targetDoctor.name
-  //         .replace(/\s/g, "")
-  //         .toLowerCase()
-  //         .includes(userKeyWords.replace(/\s/g, "").toLowerCase())
-  //     ) {
-  //       if (
-  //         !targetDoctor.deleted &&
-  //         (targetDoctor.report == null ||
-  //           targetDoctor.report.reportCount < reportMax) &&
-  //         targetDoctor.publish
-  //       ) {
-  //         targetDoctor.username = doctor;
-  //         newDocData.push(targetDoctor);
-  //         docFound++;
-  //       }
-  //     }
-  //     if (docFound == 1) {
-  //       if (
-  //         potentialHos.report == null ||
-  //         potentialHos.report.reportCount < reportMax
-  //       ) {
-  //         newHosData.push(potentialHos);
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const getDataBySpecialtySearch = (
-  //   hospitalInfo,
-  //   newHosData,
-  //   newDocData,
-  //   location,
-  //   duration
-  // ) => {
-  //   if (
-  //     hospitalInfo.report == null ||
-  //     hospitalInfo.report.reportCount < reportMax
-  //   ) {
-  //     newHosData.push(hospitalInfo);
-  //   }
-  //   for (let doctor in hospitalInfo.doctors) {
-  //     if (
-  //       !hospitalInfo.doctors[doctor].deleted &&
-  //       hospitalInfo.doctors[doctor].publish &&
-  //       (hospitalInfo.doctors[doctor].report == null ||
-  //         hospitalInfo.doctors[doctor].report.reportCount < reportMax)
-  //     ) {
-  //       hospitalInfo.doctors[doctor].userName = doctor;
-  //       if (location) {
-  //         hospitalInfo.doctors[doctor].timeOfDriving = duration;
-  //       }
-  //       newDocData.push(hospitalInfo.doctors[doctor]);
-  //     }
-  //   }
-  // };
-
-  // // he chen newest
-  // let getNewDocAndHospital = (rootData, userKeyWords) => {
-  //   let newDocData = [];
-  //   let newHosData = [];
-  //   if (searchMethod == "Specialty") {
-  //     for (let specialty in rootData) {
-  //       if (specialty.replace(/\s/g, "").toLowerCase() == userKeyWords) {
-  //         if (location == "") {
-  //           for (let hospital in rootData[specialty].hospitals) {
-  //             let hospitalInfo = rootData[specialty].hospitals[hospital];
-  //             getDataBySpecialtySearch(
-  //               hospitalInfo,
-  //               newHosData,
-  //               newDocData,
-  //               location,
-  //               ""
-  //             );
-  //           }
-  //         } else {
-  //           for (let hospital in rootData[specialty].hospitals) {
-  //             let hospitalInfo = rootData[specialty].hospitals[hospital];
-  //             let potentialLocation = hospitalInfo.address;
-  //             let duration = getDuration(location, potentialLocation);
-  //             if (duration < 1.5 && duration >= 0) {
-  //               hospitalInfo.timeOfDriving = duration;
-  //               getDataBySpecialtySearch(
-  //                 hospitalInfo,
-  //                 newHosData,
-  //                 newDocData,
-  //                 location,
-  //                 duration
-  //               );
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   } else if (searchMethod == "Doctor") {
-  //     for (let specialty in rootData) {
-  //       for (let hos in rootData[specialty].hospitals) {
-  //         let potentialHos = rootData[specialty].hospitals[hos];
-  //         if (location == "") {
-  //           getDataByDoctorSearch(
-  //             newDocData,
-  //             newHosData,
-  //             userKeyWords,
-  //             potentialHos
-  //           );
-  //         } else {
-  //           let potentialLocation = potentialHos.address;
-  //           let duration = getDuration(location, potentialLocation);
-  //           if (duration < 1.5 && duration >= 0) {
-  //             getDataByDoctorSearch(
-  //               newDocData,
-  //               newHosData,
-  //               userKeyWords,
-  //               potentialHos
-  //             );
-  //           }
-  //         }
-  //       }
-  //     }
-  //   } else if (searchMethod == "Hospital") {
-  //     for (let specialty in rootData) {
-  //       for (let hos in rootData[specialty].hospitals) {
-  //         let potentialHos = rootData[specialty].hospitals[hos];
-  //         let locationMatch = true;
-  //         let hosNameMacth = potentialHos.name
-  //           .replace(/\s/g, "")
-  //           .toLowerCase()
-  //           .includes(userKeyWords);
-  //         if (hosNameMacth) {
-  //           if (location != "") {
-  //             let potentialLocation = potentialHos.address;
-  //             let duration = getDuration(location, potentialLocation);
-  //             if (duration > 1.5 || duration <= 0) {
-  //               locationMatch = false;
-  //             }
-  //           }
-  //           if (locationMatch) {
-  //             if (
-  //               potentialHos.report == null ||
-  //               potentialHos.report.reportCount < reportMax
-  //             ) {
-  //               newHosData.push(potentialHos);
-  //             }
-  //             for (let doctor in potentialHos.doctors) {
-  //               let targetDoctor = potentialHos.doctors[doctor];
-  //               if (
-  //                 !targetDoctor.deleted &&
-  //                 (targetDoctor.report == null ||
-  //                   targetDoctor.report.reportCount < reportMax) &&
-  //                 targetDoctor.publish
-  //               ) {
-  //                 potentialHos.doctors[doctor].userName = doctor;
-  //                 newDocData.push(potentialHos.doctors[doctor]);
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     for (let specialty in rootData) {
-  //       let conditionList = rootData[specialty].conditions;
-  //       conditionList = conditionList.map(function (item) {
-  //         return item.toLowerCase().replace(/\s/g, "");
-  //       });
-  //       let locationMatch = true;
-  //       let conditionMatch = conditionList.includes(userKeyWords);
-  //       if (conditionMatch) {
-  //         for (let hos in rootData[specialty].hospitals) {
-  //           let potentialHos = rootData[specialty].hospitals[hos];
-  //           let potentialLocation = potentialHos.address;
-  //           if (location != "") {
-  //             let duration = getDuration(location, potentialLocation);
-  //             if (duration > 1.5 || duration <= 0) {
-  //               locationMatch = false;
-  //             }
-  //           }
-  //           if (locationMatch) {
-  //             if (
-  //               potentialHos.report == null ||
-  //               potentialHos.report.reportCount < reportMax
-  //             ) {
-  //               newHosData.push(potentialHos);
-  //             }
-  //             for (let doctor in potentialHos.doctors) {
-  //               let doctorCondition = potentialHos.doctors[doctor].conditions;
-  //               doctorCondition = doctorCondition.map(function (item) {
-  //                 return item.toLowerCase().replace(/\s/g, "");
-  //               });
-  //               let targetDoctor = potentialHos.doctors[doctor];
-  //               if (
-  //                 doctorCondition.includes(userKeyWords) &&
-  //                 !targetDoctor.deleted &&
-  //                 (targetDoctor.report == null ||
-  //                   targetDoctor.report.reportCount < reportMax) &&
-  //                 targetDoctor.publish
-  //               ) {
-  //                 potentialHos.doctors[doctor].userName = doctor;
-  //                 newDocData.push(potentialHos.doctors[doctor]);
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   newHosData.forEach((hos) => {
-  //     let conditionList = [];
-  //     for (let doctor in hos.doctors) {
-  //       let targetDoc = hos.doctors[doctor];
-  //       targetDoc.conditions = targetDoc.conditions.map((item) => {
-  //         let newItem = item.toLowerCase();
-  //         newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
-  //         return newItem;
-  //       });
-  //       targetDoc.conditions.forEach((condition) => {
-  //         if (conditionList.indexOf(condition) == -1) {
-  //           conditionList.push(condition);
-  //         }
-  //       });
-  //     }
-  //     hos.conditions = conditionList;
-  //   });
-
-  //   newDocData.sort((a, b) => {
-  //     return b.likes - a.likes;
-  //   });
-  //   newHosData.sort((a, b) => {
-  //     return b.likes - a.likes;
-  //   });
-  //   return {
-  //     newDocData: newDocData,
-  //     newHosData: newHosData,
-  //   };
-  // };
-
   const renderHome = (renderProps) => {
     return (
       <Home
@@ -590,6 +239,8 @@ function App() {
       <Results
         {...renderProps}
         database={database}
+        conditionListForInput={conditionListForInput}
+        specialtyListForInput={specialtyListForInput}
         // setDocInfo={setDocInfo}
         // sethospitalInfo={sethospitalInfo}
         // docInfo={docInfo}
@@ -614,6 +265,10 @@ function App() {
         // specialtyListForInput={specialtyListForInput}
         profileBackToDestination={profileBackToDestination}
         setProfileBackToDestination={setProfileBackToDestination}
+        searchType={searchType}
+        setSearchType={setSearchType}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
         // searchingState={searchingState}
         // setyearOfPractice={setyearOfPractice}
         // setDrivingTime={setyearOfPractice}
@@ -634,7 +289,6 @@ function App() {
         // doMainSearch={doMainSearch}
         getLocationValue={getLocationValue}
         getKeyWords={getKeyWords}
-        startSearch={startSearch}
         searchBegin={searchBegin}
         setSearchMethod={setSearchMethod}
         setKeywords={setKeywords}
@@ -661,7 +315,6 @@ function App() {
         // doMainSearch={doMainSearch}
         getLocationValue={getLocationValue}
         getKeyWords={getKeyWords}
-        startSearch={startSearch}
         searchBegin={searchBegin}
         setSearchMethod={setSearchMethod}
         setKeywords={setKeywords}

@@ -1,9 +1,8 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -16,41 +15,6 @@ import Autocomplete, {
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 import GlobalLocation from "./GlobalLocation";
-
-//filter specialty
-const filterSpecialtyOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.specialty,
-});
-
-//filter doctor
-const filterDocOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.name,
-});
-
-//filter hospital
-const filterHospOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.hospName,
-});
-
-//filter condition
-const filterConditionOptions = createFilterOptions({
-  matchFrom: "start",
-  stringify: (option) => option.condition,
-});
-
-// specialties options
-// const specialties = [
-//   { specialty: "Allergy and Immunology" },
-//   { specialty: "Anesthesiology" },
-//   { specialty: "Gastroenterology" },
-// ];
-// doctor name options
-
-// Conditions options
-// const conditions = [{ condition: "A" }, { condition: "B" }];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -132,12 +96,13 @@ const StyledTab = withStyles((theme) => ({
 // Used in GlobalSearch.js inside the dialog
 export default function GlobalSearchTabs(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const [keyword, setkeyword] = React.useState("");
+  const history = useHistory();
+
+  const [value, setValue] = useState(0);
+  const [keyword, setkeyword] = useState("");
   let specialties = props.specialtyListForInput;
   let conditions = props.conditionListForInput;
 
-  // He Chen 2020 5/22
   let docNames = [];
   let hospNames = [];
 
@@ -151,7 +116,7 @@ export default function GlobalSearchTabs(props) {
         let doctorsList = hospital.doctors;
         for (let docId in doctorsList) {
           if (doctorsList[docId].publish && !doctorsList[docId].deleted) {
-            docNames.push({ name: doctorsList[docId].name });
+            docNames.push({ docName: doctorsList[docId].name });
           }
         }
       }
@@ -176,48 +141,57 @@ export default function GlobalSearchTabs(props) {
       method = "Condition";
     }
     setValue(newValue);
-    props.getSearchMethod(method);
+    props.setSearchType(method);
   };
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.specialty);
+      props.setSearchValue(newValue.specialty);
     }
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.name);
+      props.setSearchValue(newValue.docName);
     }
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.hospName);
+      props.setSearchValue(newValue.hospName);
     }
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.getKeyWords(newValue.condition);
+      props.setSearchValue(newValue.condition);
     }
   };
 
   const getTextFieldValue = (event) => {
     setkeyword(event.target.value);
-    props.getKeyWords(event.target.value);
+    props.setSearchValue(event.target.value);
   };
 
-  const hadleSearch = () => {
+  const filterOptions = (searchType) => {
+    createFilterOptions({
+      matchFrom: "start",
+      stringify: (option) => option[searchType],
+    });
+  };
+
+  const handleSearch = () => {
     props.handleClose();
-    props.startSearch();
+    console.log(props.searchType);
+    console.log(props.searchValue);
+    props.setFilters({
+      hosType: "both",
+      languageList: [],
+      yearOfPractice: [1000, -1],
+    });
+    let searchKeyword = props.searchValue.replace(/\s+/g, "-");
+    history.push(`/results/${props.searchType}/${searchKeyword}`);
   };
-
-  useEffect(() => {
-    if (props.searchBegin) {
-      return props.doMainSearch(props);
-    }
-  });
 
   return (
     <div className={classes.verticalTabContainer}>
@@ -261,7 +235,7 @@ export default function GlobalSearchTabs(props) {
           options={specialties}
           onChange={handleSpecialtySearchKeyChange}
           getOptionLabel={(option) => option.specialty}
-          filterOptions={filterSpecialtyOptions}
+          filterOptions={filterOptions("specialty")}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -274,7 +248,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick={hadleSearch}
+          onClick={handleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -292,8 +266,8 @@ export default function GlobalSearchTabs(props) {
           onChange={handleDoctorSearchKeyChange}
           freeSolo
           options={docNames}
-          getOptionLabel={(option) => option.name}
-          filterOptions={filterDocOptions}
+          getOptionLabel={(option) => option.docName}
+          filterOptions={filterOptions("docName")}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -307,7 +281,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick={hadleSearch}
+          onClick={handleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -326,7 +300,7 @@ export default function GlobalSearchTabs(props) {
           options={hospNames}
           freeSolo
           getOptionLabel={(option) => option.hospName}
-          filterOptions={filterHospOptions}
+          filterOptions={filterOptions("hospName")}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -340,7 +314,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick={hadleSearch}
+          onClick={handleSearch}
           variant="contained"
           color="secondary"
           size="md"
@@ -358,7 +332,7 @@ export default function GlobalSearchTabs(props) {
           onChange={handleConditionSearchKeyChange}
           options={conditions}
           getOptionLabel={(option) => option.condition}
-          filterOptions={filterConditionOptions}
+          filterOptions={filterOptions("condition")}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -371,7 +345,7 @@ export default function GlobalSearchTabs(props) {
         <GlobalLocation />
         <br></br>
         <Button
-          onClick={hadleSearch}
+          onClick={handleSearch}
           variant="contained"
           color="secondary"
           size="md"

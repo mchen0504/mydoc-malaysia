@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -53,18 +54,19 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual hospital card
 export default function HospitalCard(props) {
   const classes = useStyles();
+  const history = useHistory();
   const { hospInfo } = props;
 
   const handleClick = () => {
-    props.setProfileBackToDestination("resultsPage");
-    props.updateTargetHos(props.resultData);
+    // props.setProfileBackToDestination("resultsPage");
+    // props.updateTargetHos(props.resultData);
 
     let hospital = hospInfo?.name.replace(/\s+/g, "-");
     let specialty = hospInfo?.relatedSpecialty.replace(" & ", "-");
 
-    if (props.history != null) {
-      props.history.push(`/profile/${hospital}/${specialty}`);
-    }
+    // if (props.history != null) {
+    history.push(`/profile/${hospital}/${specialty}`);
+    // }
   };
 
   let cardImage = (

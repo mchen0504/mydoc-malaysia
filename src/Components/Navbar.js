@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Logo from "../img/login/logo.svg";
 import LogoWhite from "../img/login/logo-white.svg";
 
 // material ui
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
@@ -24,7 +24,7 @@ import UserMenu from "./UserMenu";
 import GlobalSearch from "./GlobalSearch";
 
 // material ui style
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   appbar: {
     [theme.breakpoints.down("sm")]: {
       background: "transparent",
@@ -47,90 +47,89 @@ const styles = (theme) => ({
     align: "left",
     position: "relative",
   },
-});
+}));
 
-class Navbar extends Component {
-  toHome = (event) => {
+function Navbar(props) {
+  const classes = useStyles();
+  const toHome = (event) => {
     window.location.replace("/");
   };
 
-  render() {
-    const { classes, ...other } = this.props;
-    const { authenticated } = this.props;
+  // const { classes, ...other } = props;
+  const { authenticated } = props;
 
-    let globalSearch = null;
-    if (
-      this.props.currentPage !== "Home" &&
-      this.props.currentPage !== "signUp" &&
-      this.props.currentPage !== "login" &&
-      this.props.currentPage !== "account"
-    ) {
-      globalSearch = (
-        <Box style={{ cursor: "pointer" }}>
-          <GlobalSearch {...this.props} />
-        </Box>
-      );
-    }
-
-    return (
-      <div>
-        <Box display="flex">
-          <AppBar className={classes.appbar} position="fixed">
-            <Toolbar className="nav-container">
-              <Box flexGrow={1}>
-                <Button onClick={this.toHome}>
-                  <Hidden only={["xs", "sm"]}>
-                    <img src={Logo} alt="logo" className={classes.logo} />
-                  </Hidden>
-                  <Hidden only={["md", "lg", "xl"]}>
-                    <img
-                      src={LogoWhite}
-                      alt="logo"
-                      className={classes.logowhite}
-                    />
-                  </Hidden>
-                </Button>
-              </Box>
-              {globalSearch}
-              <Box>
-                {authenticated ? (
-                  <Fragment>
-                    <UserMenu {...other} />
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    <Hidden only={["md", "lg", "xl"]}>
-                      <IconButton
-                        className={classes.iconButton}
-                        component={Link}
-                        to="/login"
-                      >
-                        <Avatar style={{ backgroundColor: "#003367" }}>
-                          <PersonIcon />
-                        </Avatar>
-                      </IconButton>
-                    </Hidden>
-                    <Hidden only={["xs", "sm"]}>
-                      <Button
-                        style={{ marginLeft: 20 }}
-                        size="small"
-                        variant="outlined"
-                        color="inherit"
-                        component={Link}
-                        to="/login"
-                      >
-                        Login / Sign up
-                      </Button>
-                    </Hidden>
-                  </Fragment>
-                )}
-              </Box>
-            </Toolbar>
-          </AppBar>
-        </Box>
-      </div>
+  let globalSearch = null;
+  if (
+    props.currentPage !== "Home" &&
+    props.currentPage !== "signUp" &&
+    props.currentPage !== "login" &&
+    props.currentPage !== "account"
+  ) {
+    globalSearch = (
+      <Box style={{ cursor: "pointer" }}>
+        <GlobalSearch {...props} />
+      </Box>
     );
   }
+
+  return (
+    <div>
+      <Box display="flex">
+        <AppBar className={classes.appbar} position="fixed">
+          <Toolbar className="nav-container">
+            <Box flexGrow={1}>
+              <Button onClick={toHome}>
+                <Hidden only={["xs", "sm"]}>
+                  <img src={Logo} alt="logo" className={classes.logo} />
+                </Hidden>
+                <Hidden only={["md", "lg", "xl"]}>
+                  <img
+                    src={LogoWhite}
+                    alt="logo"
+                    className={classes.logowhite}
+                  />
+                </Hidden>
+              </Button>
+            </Box>
+            {globalSearch}
+            <Box>
+              {authenticated ? (
+                <Fragment>
+                  <UserMenu {...props} />
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <Hidden only={["md", "lg", "xl"]}>
+                    <IconButton
+                      className={classes.iconButton}
+                      component={Link}
+                      to="/login"
+                    >
+                      <Avatar style={{ backgroundColor: "#003367" }}>
+                        <PersonIcon />
+                      </Avatar>
+                    </IconButton>
+                  </Hidden>
+                  <Hidden only={["xs", "sm"]}>
+                    <Button
+                      style={{ marginLeft: 20 }}
+                      size="small"
+                      variant="outlined"
+                      color="inherit"
+                      component={Link}
+                      to="/login"
+                    >
+                      Login / Sign up
+                    </Button>
+                  </Hidden>
+                </Fragment>
+              )}
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </Box>
+    </div>
+  );
 }
 
 Navbar.propTypes = {
@@ -141,4 +140,4 @@ const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Navbar));
+export default connect(mapStateToProps)(Navbar);

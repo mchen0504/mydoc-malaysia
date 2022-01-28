@@ -25,19 +25,19 @@ export default function DocInfo(props) {
   const { docInfo } = props;
 
   // create language List
-  let languageList = docInfo.languages.map((lang) => {
+  let languageList = docInfo.languages?.map((lang) => {
     let langCard = <p key={lang}>{lang}</p>;
     return langCard;
   });
 
   // create procedure List
-  let procList = docInfo.procedures.map((proc) => {
+  let procList = docInfo.procedures?.map((proc) => {
     let procCard = <p key={proc}>{proc}</p>;
     return procCard;
   });
 
   // create condition List
-  let conditionCardList = docInfo.conditions.map((condition) => {
+  let conditionCardList = docInfo.conditions?.map((condition) => {
     let conditionCard = <p key={condition}>{condition}</p>;
     return conditionCard;
   });

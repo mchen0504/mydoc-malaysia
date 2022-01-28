@@ -1,5 +1,6 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -75,15 +76,13 @@ const useStyles = makeStyles((theme) => ({
 // Landing page search
 export default function Header(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   // useEffect(() => {
   //   if (props.searchBegin) {
   //     return props.doMainSearch(props);
   //   }
   // });
-
-  const [searchType, setSearchType] = useState("Specialty");
-  const [searchValue, setSearchValue] = useState();
 
   let renderBodyParts = null;
   if (props.searchType === "Condition") {
@@ -99,10 +98,8 @@ export default function Header(props) {
 
   const handleSubmit = () => {
     props.setConditionLabel("");
-    if (props.history != null) {
-      let searchKeyword = searchValue.replace(/\s+/g, "-");
-      props.history.push(`/results/${searchType}/${searchKeyword}`);
-    }
+    let searchKeyword = props.searchValue.replace(/\s+/g, "-");
+    history.push(`/results/${props.searchType}/${searchKeyword}`);
   };
 
   let headerDisplay;
@@ -124,14 +121,11 @@ export default function Header(props) {
         <SearchTabs
           database={props.database}
           getKeyWords={props.getKeyWords}
-          // getSearchMethod={props.getSearchMethod}
-          // setSearchMethod={props.setSearchMethod}
-          setSearchType={setSearchType}
-          setSearchValue={setSearchValue}
+          setSearchType={props.setSearchType}
+          setSearchValue={props.setSearchValue}
           setKeywords={props.setKeywords}
           conditionListForInput={props.conditionListForInput}
           specialtyListForInput={props.specialtyListForInput}
-          startSearch={props.startSearch}
           conditionLabel={props.conditionLabel}
           setConditionLabel={props.setConditionLabel}
         />

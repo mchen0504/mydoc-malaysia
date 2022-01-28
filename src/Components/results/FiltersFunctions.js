@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,7 +10,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 //These filters functions are imported in 'SearchResult.js'
 // Filter: hospital type
 export function HospitalType(props) {
-  const [value, setValue] = React.useState("both");
+  const [value, setValue] = useState("both");
 
   const handleChange = (event) => {
     props.setFilters((filters) => ({
@@ -39,43 +39,84 @@ export function HospitalType(props) {
 
 // Filter: languages
 export function Languages(props) {
-  const [state, setState] = React.useState({
-    English: false,
-    Malay: false,
-    Mandarin: false,
-    Tamil: false,
-    Cantonese: false,
-  });
+  const [selectedLanguages, setSelectedLanguages] = useState(
+    props.filters?.languageList
+    // English: false,
+    // Malay: false,
+    // Mandarin: false,
+    // Tamil: false,
+    // Cantonese: false,
+  );
   // const [changeLanguage, setChangeLanguage] = React.useState(true);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  // useEffect(() => {
+  //   if (props.filters) {
+  //     setSelectedLanguages(props.filters.languagesList);
+  //   }
+  // }, [props.filters]);
 
-  useEffect(() => {
-    let languagesList = [];
-    for (let key in state) {
-      if (state[key]) {
-        languagesList.push(key);
-      }
+  const handleChange = (event) => {
+    console.log(selectedLanguages);
+    let languages = [...selectedLanguages];
+    if (languages.includes(event.target.name)) {
+      languages = languages.filter(
+        (language) => language !== event.target.name
+      );
+    } else {
+      languages = [...languages, event.target.name];
     }
+    setSelectedLanguages(languages);
     props.setFilters((filters) => ({
       ...filters,
-      languageList: languagesList,
+      languageList: languages,
     }));
-  }, [state]);
+    // setState({ ...state, [event.target.name]: event.target.checked });
+  };
 
-  const { English, Malay, Mandarin, Tamil, Cantonese } = state;
+  // useEffect(() => {
+  //   if (filters) {
+  //     setState(filters.languagesList);
+  //   }
+
+  //   // let languagesList = [];
+  //   // for (let key in state) {
+  //   //   if (state[key]) {
+  //   //     languagesList.push(key);
+  //   //   }
+  //   // }
+  //   // props.setFilters((filters) => ({
+  //   //   ...filters,
+  //   //   languageList: languagesList,
+  //   // }));
+  // }, [props.filters]);
+
+  // const { English, Malay, Mandarin, Tamil, Cantonese } = state;
+  const allLanguages = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];
 
   return (
     <FormControl component="fieldset">
+      {console.log(props.filters)}
       <FormLabel component="legend">Languages</FormLabel>
       <br></br>
       <FormGroup>
-        <FormControlLabel
+        {allLanguages.map((language) => {
+          return (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedLanguages?.includes(language)}
+                  onChange={handleChange}
+                  name={language}
+                />
+              }
+              label={language}
+            />
+          );
+        })}
+        {/* <FormControlLabel
           control={
             <Checkbox
-              checked={English}
+              checked={state.includes()}
               onChange={handleChange}
               name="English"
             />
@@ -113,7 +154,7 @@ export function Languages(props) {
             />
           }
           label="Cantonese"
-        />
+        /> */}
       </FormGroup>
     </FormControl>
   );
@@ -121,7 +162,7 @@ export function Languages(props) {
 
 // Filter: years of practice
 export function YearsOfPractice(props) {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     oneyear: false,
     onetofive: false,
     sixtoten: false,

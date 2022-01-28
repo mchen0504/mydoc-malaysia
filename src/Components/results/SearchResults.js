@@ -54,15 +54,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchResultsFilter(props) {
+export default function SearchResults(props) {
   const classes = useStyles();
-  const { filtered, searchingState, searchType, filters, setFilters } = props;
+  const {
+    filtered,
+    searchingState,
+    searchType,
+    filters,
+    setFilters,
+    isLoading,
+    setLoading,
+  } = props;
 
-  //store state - whether user clicks on display by doctor or display by hospital
   const [doctors, setDoctors] = useState();
   const [hospitals, setHospitals] = useState();
 
-  const [display, setDisplay] = useState("doctor"); //display by doctor as default
+  const [display, setDisplay] = useState("doctor");
   const handleDisplay = (event, newDisplay) => {
     if (newDisplay != null) {
       setDisplay(newDisplay);
@@ -90,8 +97,10 @@ export default function SearchResultsFilter(props) {
 
   useEffect(() => {
     if (filtered) {
+      console.log(filtered);
       setDoctors(filtered.docInfo);
       setHospitals(filtered.hospitalInfo);
+      if (doctors && hospitals) setLoading(false);
     }
   }, [filtered]);
 
@@ -152,7 +161,8 @@ export default function SearchResultsFilter(props) {
       }
     } else {
       let component;
-      if (searchingState == "in-progress") {
+      // if (searchingState == "in-progress") {
+      if (isLoading) {
         component = (
           <CircularProgress
             color="secondary"
@@ -194,6 +204,7 @@ export default function SearchResultsFilter(props) {
   return (
     <Fragment>
       {console.log(filtered)}
+      {console.log(filtered)}
       <Hidden smDown>
         <div className={classes.root}>
           <Drawer
@@ -217,7 +228,7 @@ export default function SearchResultsFilter(props) {
                 <HospitalType setFilters={setFilters} />
                 <br></br>
                 <br></br>
-                <Languages setFilters={setFilters} />
+                <Languages filters={filters} setFilters={setFilters} />
                 <br></br>
                 <br></br>
                 {/* If display by doctor, filter sidebar will show years of practice;
