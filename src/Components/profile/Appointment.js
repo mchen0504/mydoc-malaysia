@@ -43,9 +43,10 @@ const useStyles = makeStyles((theme) => ({
 //Make appointment section (used in Profile.js inside pages folder)
 export default function Appointment(props) {
   const classes = useStyles();
+  const { docInfo } = props;
 
   // create grid based on appointment list
-  let appointment = props.targetDoc["appointment"];
+  let appointment = docInfo?.appointment;
   let appointmentList = [];
   for (let appointmentType in appointment) {
     if (

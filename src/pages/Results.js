@@ -11,7 +11,7 @@ export default function Results(props) {
   const searchValue = locationParts[3].replace(/-/g, "");
   const reportMax = 50;
 
-  const [isLoading, setLoading] = useState(false);
+  const [searchState, setSearchState] = useState("in-progress");
   const [docInfo, setDocInfo] = useState([]);
   const [hospitalInfo, sethospitalInfo] = useState([]);
   const [filtered, setFiltered] = useState({
@@ -28,7 +28,7 @@ export default function Results(props) {
   // const [searchingState, setSearchingState] = React.useState("in-progress");
 
   useEffect(() => {
-    setLoading(true);
+    setSearchState("in-progress");
     axios
       .get("/alldata")
       .then((res) => {
@@ -36,6 +36,7 @@ export default function Results(props) {
         let searchResults = getSearchInfo(userKeyWords, res.data);
         sethospitalInfo(searchResults.newHosData);
         setDocInfo(searchResults.newDocData);
+        setSearchState("finished");
       })
       .catch((err) => {
         console.error(err);
@@ -59,7 +60,7 @@ export default function Results(props) {
                   doc.publish &&
                   (!doc.report || doc.report.reportCount < reportMax)
                 ) {
-                  doc.username = doc;
+                  doc.username = doctor;
                   newDocData.push(doc);
                   docFound++;
                 }
@@ -255,15 +256,12 @@ export default function Results(props) {
         searchValue={props.searchValue}
         setSearchValue={props.setSearchValue}
       />
-      {console.log(filters)}
       <SearchResults
         filtered={filtered}
-        // searchingState={searchingState}
+        searchState={searchState}
         searchType={searchType}
         filters={filters}
         setFilters={setFilters}
-        isLoading={isLoading}
-        setLoading={setLoading}
       />
     </div>
   );

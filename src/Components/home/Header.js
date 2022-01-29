@@ -121,7 +121,9 @@ export default function Header(props) {
         <SearchTabs
           database={props.database}
           getKeyWords={props.getKeyWords}
+          searchType={props.searchType}
           setSearchType={props.setSearchType}
+          searchValue={props.searchValue}
           setSearchValue={props.setSearchValue}
           setKeywords={props.setKeywords}
           conditionListForInput={props.conditionListForInput}

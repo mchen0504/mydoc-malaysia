@@ -56,15 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResults(props) {
   const classes = useStyles();
-  const {
-    filtered,
-    searchingState,
-    searchType,
-    filters,
-    setFilters,
-    isLoading,
-    setLoading,
-  } = props;
+  const { filtered, searchState, searchType, filters, setFilters } = props;
 
   const [doctors, setDoctors] = useState();
   const [hospitals, setHospitals] = useState();
@@ -97,10 +89,8 @@ export default function SearchResults(props) {
 
   useEffect(() => {
     if (filtered) {
-      console.log(filtered);
       setDoctors(filtered.docInfo);
       setHospitals(filtered.hospitalInfo);
-      if (doctors && hospitals) setLoading(false);
     }
   }, [filtered]);
 
@@ -133,46 +123,23 @@ export default function SearchResults(props) {
   let allHosCards = [];
   if (display == "doctor") {
     if (doctors?.length != 0 && doctors != null) {
-      for (let i = cardStartIndex; i < cardEndIndex; i++) {
-        let component = <DocCard {...props} docInfo={doctors[i]} key={i} />;
-        allDoccards.push(component);
-      }
+      let displayed = doctors.slice(cardStartIndex, cardEndIndex);
+      allDoccards = displayed.map((doctor) => {
+        return <DocCard {...props} docInfo={doctor} key={doctor.username} />;
+      });
     } else {
-      let component;
-      if (searchingState == "in-progress") {
-        component = (
-          <CircularProgress
-            color="secondary"
-            style={{ marginLeft: "47%", marginTop: "5%" }}
-          />
-        );
-      } else {
-        component = <Empty />;
-      }
-      allDoccards.push(component);
+      allDoccards = <Empty key="empty" />;
     }
   } else {
     if (hospitals?.length != 0 && hospitals != null) {
-      for (let i = cardStartIndex; i < cardEndIndex; i++) {
-        let component = (
-          <HospitalCard {...props} hospInfo={hospitals[i]} key={i} />
+      let displayed = hospitals.slice(cardStartIndex, cardEndIndex);
+      allHosCards = displayed.map((hospital) => {
+        return (
+          <HospitalCard {...props} hospInfo={hospital} key={hospital.name} />
         );
-        allHosCards.push(component);
-      }
+      });
     } else {
-      let component;
-      // if (searchingState == "in-progress") {
-      if (isLoading) {
-        component = (
-          <CircularProgress
-            color="secondary"
-            style={{ marginLeft: "45%", marginTop: "5%" }}
-          />
-        );
-      } else {
-        component = <Empty />;
-      }
-      allHosCards.push(component);
+      allHosCards = <Empty key="empty" />;
     }
   }
 
@@ -203,8 +170,6 @@ export default function SearchResults(props) {
 
   return (
     <Fragment>
-      {console.log(filtered)}
-      {console.log(filtered)}
       <Hidden smDown>
         <div className={classes.root}>
           <Drawer
@@ -240,105 +205,127 @@ export default function SearchResults(props) {
               </Box>
             </div>
           </Drawer>
-          <main className={classes.content}>
-            <Toolbar />
-            {/* Covid Alert */}
-            <div
-              className={classes.covidBox}
-              style={{ marginLeft: 30, marginRight: 30 }}
-            >
-              <CovidAlert />
-            </div>
-            {/* Search result content starts here */}
-            <Grid container spacing={0}>
-              <Grid item sm={9} lg={10}>
-                {/* if user clicks on 'doctor' button, then render 'display results by doctors; else 'display results by hospitals'*/}
+
+          {searchState == "in-progress" ? (
+            <CircularProgress
+              color="secondary"
+              style={{ marginLeft: "35%", marginTop: "20%" }}
+            />
+          ) : (
+            <main className={classes.content}>
+              <Toolbar />
+              {/* Covid Alert */}
+              <div
+                className={classes.covidBox}
+                style={{ marginLeft: 30, marginRight: 30 }}
+              >
+                <CovidAlert />
+              </div>
+              {/* Search result content starts here */}
+              <Grid container spacing={0}>
+                <Grid item sm={9} lg={10}>
+                  {display === "doctor" ? (
+                    <Typography
+                      style={{
+                        marginLeft: 30,
+                        marginTop: 30,
+                        marginBottom: 30,
+                      }}
+                      variant="h6"
+                      color="primary"
+                    >
+                      {dataInfoNotesDoc}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      style={{
+                        marginLeft: 30,
+                        marginTop: 30,
+                        marginBottom: 30,
+                      }}
+                      variant="h6"
+                      color="primary"
+                    >
+                      {dataInfoNotesHos}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item sm={3} lg={2}>
+                  {/* Display by Doctor/Hospital buttons */}
+                  <Fragment>
+                    <div className={classes.toggleContainer}>
+                      {docHosbuttonGroup}
+                    </div>
+                  </Fragment>
+                </Grid>
+              </Grid>
+              <div>
+                {/* if user clicks on display by 'doctor', then render doctor cards */}
                 {display === "doctor" ? (
-                  <Typography
-                    style={{ marginLeft: 30, marginTop: 30, marginBottom: 30 }}
-                    variant="h6"
-                    color="primary"
-                  >
-                    {dataInfoNotesDoc}
-                  </Typography>
+                  <Fragment>{allDoccards}</Fragment>
                 ) : (
-                  <Typography
-                    style={{ marginLeft: 30, marginTop: 30, marginBottom: 30 }}
-                    variant="h6"
-                    color="primary"
-                  >
-                    {dataInfoNotesHos}
-                  </Typography>
+                  <Fragment>{allHosCards}</Fragment>
                 )}
-              </Grid>
-              <Grid item sm={3} lg={2}>
-                {/* Display by Doctor/Hospital buttons */}
-                <Fragment>
-                  <div className={classes.toggleContainer}>
-                    {docHosbuttonGroup}
-                  </div>
-                </Fragment>
-              </Grid>
-            </Grid>
-            <div>
-              {/* if user clicks on display by 'doctor', then render doctor cards */}
-              {display === "doctor" ? (
-                <Fragment>{allDoccards}</Fragment>
-              ) : (
-                <Fragment>{allHosCards}</Fragment>
-              )}
-            </div>
-            {/* For pages at bottom */}
-            <Box display="flex" justifyContent="center">
-              <Pagination
-                count={pageNavCount}
-                page={page}
-                onChange={handlePageChange}
-                shape="rounded"
-                color="primary"
-              />
-            </Box>
-          </main>
+              </div>
+              {/* For pages at bottom */}
+              <Box display="flex" justifyContent="center">
+                <Pagination
+                  count={pageNavCount}
+                  page={page}
+                  onChange={handlePageChange}
+                  shape="rounded"
+                  color="primary"
+                />
+              </Box>
+            </main>
+          )}
         </div>
       </Hidden>
 
       {/* for small phone screens */}
-      <Hidden mdUp>
-        <Grid container spacing={0} style={{ marginTop: 20 }}>
-          <Grid item xs={1}></Grid>
+      {searchState == "in-progress" ? (
+        <CircularProgress
+          color="secondary"
+          style={{ marginLeft: "45%", marginTop: "20%" }}
+        />
+      ) : (
+        <Hidden mdUp>
+          <Grid container spacing={0} style={{ marginTop: 20 }}>
+            <Grid item xs={1}></Grid>
 
-          <Grid item xs={5} align="left">
-            <FilterButtonPhone display={display} setFilters={setFilters} />
+            <Grid item xs={5} align="left">
+              <FilterButtonPhone display={display} setFilters={setFilters} />
+            </Grid>
+            <Grid item xs={5} align="right">
+              <div className={classes.toggleContainer}>{docHosbuttonGroup}</div>
+            </Grid>
+            <Grid item xs={1}></Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <div className={classes.toggleContainer}>{docHosbuttonGroup}</div>
-          </Grid>
-          <Grid item xs={1}></Grid>
-        </Grid>
 
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          {/* If display by doctor, render DocCard; if display by Hospital, render HospitalCard */}
-          {display === "doctor" ? (
-            <Fragment>{allDoccards}</Fragment>
-          ) : (
-            <Fragment>{allHosCards}</Fragment>
-          )}
-        </Box>
-        <Box display="flex" justifyContent="center">
-          <Pagination
-            count={pageNavCount}
-            page={page}
-            onChange={handlePageChange}
-            shape="rounded"
-            color="primary"
-          />
-        </Box>
-      </Hidden>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {/* If display by doctor, render DocCard; if display by Hospital, render HospitalCard */}
+            {display === "doctor" ? (
+              <Fragment>{allDoccards}</Fragment>
+            ) : (
+              <Fragment>{allHosCards}</Fragment>
+            )}
+          </Box>
+          <Box display="flex" justifyContent="center">
+            <Pagination
+              count={pageNavCount}
+              page={page}
+              onChange={handlePageChange}
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+        </Hidden>
+      )}
     </Fragment>
   );
 }

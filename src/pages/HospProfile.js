@@ -8,8 +8,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Navbar from "../components/Navbar";
 import HospInfo from "../components/profile/HospInfo";
 import HospDetailedInfo from "../components/profile/HospDetailedInfo";
-import HospDetailedInfoTest from "../components/profile/HospDetailedInfoTest";
-import HospInfoTest from "../components/profile/HospInfoTest";
 
 const useStyles = makeStyles((theme) => ({
   line: {
@@ -66,16 +64,14 @@ function HospProfile(props) {
   return (
     <div>
       <Navbar currentPage="HosProfile" {...props} />
-      {/* <HospInfo {...props} backTo={backToPage} /> */}
-      <HospInfoTest
+      <HospInfo
         {...props}
-        backTo={backToPage}
+        // backTo={backToPage}
         hospInfo={hospInfo}
         userInfo={userInfo}
       />
       <hr className={classes.line}></hr>
-      {/* <HospDetailedInfo {...props} /> */}
-      <HospDetailedInfoTest {...props} hospInfo={hospInfo} />
+      <HospDetailedInfo {...props} hospInfo={hospInfo} />
     </div>
   );
 }

@@ -64,7 +64,8 @@ export default function Location() {
     let active = true;
 
     if (!autocompleteService.current && window.google) {
-      autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      autocompleteService.current =
+        new window.google.maps.places.AutocompleteService();
     }
     if (!autocompleteService.current) {
       return undefined;
@@ -89,6 +90,7 @@ export default function Location() {
   return (
     <div>
       <Autocomplete
+        disabled
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.description
         }
@@ -99,9 +101,9 @@ export default function Location() {
         renderInput={(params) => (
           <TextField
             {...params}
-            defaultValue = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
-            placeholder = 'Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur'
-            label="Enter a location"
+            defaultValue="Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur"
+            placeholder="Pantai Hospital Kuala Lumpur, Jalan Bukit Pantai, Bangsar, Kuala Lumpur, Federal Territory of Kuala Lumpur"
+            label="Location search is not currently available"
             onChange={handleChange}
             variant="outlined" //changed from filled to outlined
           />

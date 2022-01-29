@@ -41,8 +41,6 @@ import Hospprofile from "./pages/HospProfile";
 //新加的 5/1/2020
 import Hospspecialtyprofile from "./pages/HospSpecialtyProfile";
 import Account from "./pages/Account";
-import BodyPartsDialog from "./components/bodyparts/Body";
-import Test from "./components/profile/Test";
 
 // use themeFile from theme.js
 const theme = createMuiTheme(themeFile);
@@ -231,6 +229,10 @@ function App() {
         specialtyListForInput={specialtyListForInput}
         bodyPartsDic={bodyPartsDic}
         setConditionLabel={setConditionLabel}
+        searchType={searchType}
+        setSearchType={setSearchType}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
       />
     );
   };

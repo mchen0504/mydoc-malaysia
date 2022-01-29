@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -62,15 +60,12 @@ export default function DocCard(props) {
 
   // create language strings
   let languages = "";
-  // props.resultData["Language"].forEach((lang) => {
   docInfo.languages.forEach((lang) => {
     languages = languages + ", " + lang;
   });
   languages = languages.substring(1);
 
   const handleClick = () => {
-    // props.setProfileBackToDestination("resultsPage");
-
     let hospital = docInfo?.hospital.replace(/\s+/g, "-");
     let specialty;
     if (docInfo?.specialty.includes("&")) {
@@ -79,23 +74,15 @@ export default function DocCard(props) {
       specialty = docInfo?.specialty.replace(/\s+/g, "-");
     }
     let name = docInfo?.name.replace(/\s+/g, "-");
-
-    // if (props.history != null) {
     history.push(`/profile/${hospital}/${specialty}/${name}`);
-    // }
   };
 
-  // let cardImage =  <CardMedia component="img" className={classes.img} src = {props.resultData["imgSrc"]}></CardMedia>;
   let cardImage = (
     <div style={{ width: 150, height: 150 }}>
-      {/* <img className={classes.img} src={props.resultData["imgSrc"]}></img> */}
       <img className={classes.img} src={docInfo.imgSrc}></img>
     </div>
   );
 
-  // if (props.resultData["NumberOfLikes"]) {
-  //   docLikes = props.resultData["NumberOfLikes"];
-  // }
   let likes = docInfo.likes ? docInfo.likes : 0;
 
   return (

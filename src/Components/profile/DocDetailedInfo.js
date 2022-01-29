@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import Hidden from "@material-ui/core/Hidden";
+
 const useStyles = makeStyles((theme) => ({
   divider: {
     height: 2,
@@ -19,23 +20,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // for Qualifications, Languages, Procedures, Conditions section (used in DocProfile.js under pages folder)
-export default function DocInfo(props) {
+export default function DocDetailedInfo(props) {
   const classes = useStyles();
+  const { docInfo } = props;
 
   // create language List
-  let languageList = props.targetDoc.languages.map((lang) => {
+  let languageList = docInfo.languages?.map((lang) => {
     let langCard = <p key={lang}>{lang}</p>;
     return langCard;
   });
 
   // create procedure List
-  let procList = props.targetDoc.procedures.map((proc) => {
+  let procList = docInfo.procedures?.map((proc) => {
     let procCard = <p key={proc}>{proc}</p>;
     return procCard;
   });
 
   // create condition List
-  let conditionCardList = props.targetDoc.conditions.map((condition) => {
+  let conditionCardList = docInfo.conditions?.map((condition) => {
     let conditionCard = <p key={condition}>{condition}</p>;
     return conditionCard;
   });
@@ -51,9 +53,7 @@ export default function DocInfo(props) {
             </Typography>
             <Divider className={classes.divider} style={{ width: 120 }} />
             <br></br>
-            <Typography variant="body1">
-              {props.targetDoc["Qualifications"]}
-            </Typography>
+            <Typography variant="body1">{docInfo?.qualifications}</Typography>
           </Box>
           <Hidden smUp>
             <hr className={classes.line}></hr>

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 //components from docAccount folder
 import DocSideNav from "../components/docAccount/DocSideNav";
@@ -32,11 +33,11 @@ const useStyles = makeStyles((theme) => ({
 
 function Account(props) {
   const classes = useStyles();
-
-  const [userInfo, setUserInfo] = React.useState();
-  const [docInfo, setDocInfo] = React.useState();
-  const [profileShowWarning, setWarningProfile] = React.useState("");
-  const [verifyShowWarning, setWarningVerify] = React.useState("");
+  const [isLoading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState();
+  const [docInfo, setDocInfo] = useState();
+  const [profileShowWarning, setWarningProfile] = useState("");
+  const [verifyShowWarning, setWarningVerify] = useState("");
 
   useEffect(() => {
     setUserInfo(props.storedCredentials);
@@ -55,6 +56,7 @@ function Account(props) {
           })
           .then((res) => {
             setDocInfo(res.data);
+            setLoading(false);
           })
           .catch((err) => console.error(err));
       }
@@ -179,6 +181,7 @@ function Account(props) {
         <Grid container spacing={0}>
           <Grid item md={4} lg={3}>
             <DocSideNav
+              isLoading={isLoading}
               userInfo={userInfo}
               docInfo={docInfo}
               profileShowWarning={profileShowWarning}

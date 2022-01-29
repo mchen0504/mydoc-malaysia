@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -94,26 +95,31 @@ const useStyles = makeStyles((theme) => ({
 
 function DocInfo(props) {
   const classes = useStyles();
+  const location = useLocation();
+  const { docInfo, userInfo } = props;
 
   if (props.backTo === null) {
     props.history.push("/");
     window.location.reload();
   }
 
-  const backToRes = () => {
-    // likeHistory
-    if (props.history !== null) {
-      if (props.backTo === "resultsPage") {
-        props.history.push("/results");
-      } else if (props.backTo === "hospprofile") {
-        props.history.push("/hospprofile");
-      } else if (props.backTo === "likeHistory") {
-        props.history.push("/likehistory");
-      } else {
-        props.history.push("/saved");
-      }
-    }
-  };
+  // const backToRes = () => {
+  //   if (props.history !== null) {
+  //     if (props.backTo === "resultsPage") {
+  //       props.history.push("/results");
+  //     } else if (props.backTo === "hospprofile") {
+  //       let specialty = docInfo.specialty.replace(" & ", "-");
+  //       let hospital = docInfo.hospital.replace(/\s+/g, "-");
+  //       props.history.push(`/profile/${hospital}/${specialty}`);
+  //     } else if (props.backTo === "likeHistory") {
+  //       props.history.push("/likehistory");
+  //     } else {
+  //       props.history.push("/saved");
+  //     }
+  //   }
+  //   const { from } = location.state || { from: { pathname: "/" } };
+  //   history.push("/results/Specialty/Gastroenterology");
+  // };
 
   const authenticated = props.authenticated;
 
@@ -134,186 +140,130 @@ function DocInfo(props) {
     oneReason: "",
   });
 
-  // only get called once in the first render
+  const getUserLikeSaveInfo = (userInfo, type) => {
+    let list = [];
+    let likedSaved = false;
+
+    if (userInfo && userInfo[type] && userInfo[type].doctors) {
+      list = userInfo[type].doctors;
+      // if the user has liked this particular doctor before
+      const index = userInfo[type].doctors.findIndex(
+        (doctor) =>
+          doctor.username.replace(/\s/g, "").toLowerCase() ===
+          docInfo.username.replace(/\s/g, "").toLowerCase()
+      );
+      if (index !== -1) {
+        likedSaved = true;
+      }
+    }
+    return [list, likedSaved];
+  };
+
   useEffect(() => {
-    displayStoredData();
-  }, []);
+    const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
+    const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 
-  const displayStoredData = () => {
-    getStoredData()
-      .then((res) => {
-        // like
-        let listOfLikes;
-        let liked = false;
-        // if the user has never liked any doctors
-        if (!res.likeHistory) {
-          listOfLikes = [];
-        } else {
-          if (res.likeHistory.doctors) {
-            listOfLikes = res.likeHistory.doctors;
-            // if the user has liked this particular doctor before
-            const index = res.likeHistory.doctors.findIndex(
-              (doctor) =>
-                doctor.username.replace(/\s/g, "").toLowerCase() ===
-                props.targetDoc.userName.replace(/\s/g, "").toLowerCase()
-            );
-            if (index !== -1) {
-              liked = true;
-            }
-          } else {
-            listOfLikes = [];
-          }
-        }
+    const listOfReports = [];
+    if (userInfo && userInfo.reportedDoctors) {
+      listOfReports = userInfo.reportedDoctors;
+    }
 
-        // save
-        let listOfSaves;
-        let saved = false;
+    setState({
+      hasLiked: liked,
+      likedList: listOfLikes,
+      numLikes: docInfo.likes ? docInfo.likes : 0,
 
-        // if the user has never saved any doctors
-        if (!res.saved) {
-          listOfSaves = [];
-        } else {
-          if (res.saved.doctors) {
-            listOfSaves = res.saved.doctors;
-            // if the user has saved this particular doctor before
-            const index = res.saved.doctors.findIndex(
-              (doctor) =>
-                doctor.username.replace(/\s/g, "").toLowerCase() ===
-                props.targetDoc.userName.replace(/\s/g, "").toLowerCase()
-            );
-            if (index !== -1) {
-              saved = true;
-            }
-          } else {
-            listOfSaves = [];
-          }
-        }
-        setState({
-          username: res.username,
-          hasLiked: liked,
-          likedList: listOfLikes,
-          numLikes:
-            props.targetDoc.NumberOfLikes || props.targetDoc.likes
-              ? props.targetDoc.NumberOfLikes || props.targetDoc.likes
-              : 0,
+      hasSaved: saved,
+      savedList: listOfSaves,
 
-          hasSaved: saved,
-          savedList: listOfSaves,
+      reportedList: listOfReports,
+      numReports: docInfo.report ? docInfo.report.reportCount : 0,
+      reportReasonsList: docInfo.report ? docInfo.report.reportReasons : [],
 
-          reportedList: res.reportedDoctors ? res.reportedDoctors : [],
-          numReports: props.targetDoc.report
-            ? props.targetDoc.report.reportCount
-            : 0,
-          reportReasonsList: props.targetDoc.report
-            ? props.targetDoc.report.reportReasons
-            : [],
-
-          oneReason: "",
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // wait for returned props from firebase to be ready
-  let getStoredData = async () => {
-    let storedCredentials = await props.storedCredentials;
-    return storedCredentials;
-  };
+      oneReason: "",
+    });
+  }, [docInfo, userInfo]);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // when the like button is pressed
   const toggleLikeUnlike = () => {
-    // the user has liked this doctor before
+    let newLikedList = [...likeSaveInfo.likedList];
+    let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
-      let likedListCopy = likeSaveInfo.likedList;
-      let index = likedListCopy.findIndex(
-        (doctor) => doctor.username === props.targetDoc.userName
+      let index = newLikedList.findIndex(
+        (doctor) => doctor.username === docInfo.username
       );
-      // remove this doctor from the user like list
-      likedListCopy.splice(index, 1);
-      setState((prevState) => {
-        prevState.numLikes = prevState.numLikes - 1;
-        prevState.hasLiked = false;
-        prevState.likedList = likedListCopy;
-        return {
-          ...prevState,
-        };
-      });
+      newLikedList.splice(index, 1);
+      newLikes = newLikes - 1;
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: false,
+        likedList: newLikedList,
+      }));
     } else {
-      // the newly liked doctor's information to be added to the user's liked doctor list
+      newLikes = newLikes + 1;
       let newDocInfo = {
-        hospital: props.targetDoc.Hospital,
-        specialty: props.targetDoc.specialty,
-        username: props.targetDoc.userName,
+        hospital: docInfo.hospital,
+        specialty: docInfo.specialty,
+        username: docInfo.username,
+        name: docInfo.name,
+        imgSrc: docInfo.imgSrc,
+        languages: docInfo.languages,
+        type: docInfo.type,
+        likes: newLikes,
       };
-
-      likeSaveInfo.likedList.push(newDocInfo);
-
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.numLikes = prevState.numLikes + 1;
-          prevState.hasLiked = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newLikedList.push(newDocInfo);
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: true,
+        likedList: newLikedList,
+      }));
     }
 
     let updateInfo = {
-      specialty: props.targetDoc.specialty,
-      hospital: props.targetDoc.hospital,
-      username: props.targetDoc.userName,
-      likes: likeSaveInfo.numLikes,
+      specialty: docInfo.specialty,
+      hospital: docInfo.hospital,
+      username: docInfo.username,
+      likes: newLikes,
     };
-    toggleLike(likeSaveInfo.likedList, updateInfo);
-    updateLocalDocList(updateInfo);
+    toggleLike(updateInfo, newLikedList);
+    updateLocalDocList(newLikes);
   };
 
-  const toggleLike = (targetList, numberOfLikeInfoParam) => {
-    // let url =
-    //   "https://us-central1-mydoc-f3cd9.cloudfunctions.net/apiForSearch/postLikeInfo";
-    // let proxyurl = "https://cors-anywhere.herokuapp.com/";
-    // let params = {
-    //   userName: likeSaveInfo.username,
-    //   likedList: targetList,
-    // };
+  const toggleLike = (updateInfo, likedList) => {
     axios
-      .post("/updatelikeddoctors", likeSaveInfo.likedList)
+      .post("/updatelikeddoctors", likedList)
       .then(() => {
-        props.updateDoctorLikes(numberOfLikeInfoParam);
+        props.updateDoctorLikes(updateInfo);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
 
-  const updateLocalDocList = (updateInfo) => {
-    // set location target list location
+  const updateLocalDocList = (newLikes) => {
     let newDocList = [];
-    for (let doc in props.docInfo) {
-      let docItem = props.docInfo[doc];
-      if (docItem.DocName === props.targetDoc.DocName) {
-        docItem.NumberOfLikes = likeSaveInfo.numLikes;
-        docItem.likes = likeSaveInfo.numLikes;
+    for (let doc in docInfo) {
+      let docItem = docInfo[doc];
+      if (docItem.DocName === docInfo.name) {
+        docItem.NumberOfLikes = newLikes;
+        docItem.likes = newLikes;
       }
       newDocList.push(docItem);
     }
     props.setDocInfo(newDocList);
 
     // set database
-    let newDatabase;
-    newDatabase = props.database;
-    let hospitalId = updateInfo["hospital"].replace(/\s/g, "");
-    let docID = updateInfo["username"].replace(/\s/g, "");
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["doctors"][
+    let newDatabase = props.database;
+    let hospitalId = docInfo.hospital.replace(/\s/g, "");
+    let docID = docInfo.username.replace(/\s/g, "");
+
+    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[docID].likes =
+      newLikes;
+    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[
       docID
-    ]["likes"] = likeSaveInfo.numLikes;
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["doctors"][
-      docID
-    ]["NumberOfLikes"] = likeSaveInfo.numLikes;
+    ].NumberOfLikes = newLikes;
     props.setDatabase(newDatabase);
   };
 
@@ -326,53 +276,36 @@ function DocInfo(props) {
 
   // when the save button is pressed
   const toggleSaveUnsave = () => {
-    // the user has saved this doctor before
+    let newSavedList = [...likeSaveInfo.savedList];
     if (likeSaveInfo.hasSaved) {
-      let savedListCopy = likeSaveInfo.savedList;
-      let index = savedListCopy.findIndex(
-        (doctor) => doctor.username === props.targetDoc.userName
+      let index = newSavedList.findIndex(
+        (doctor) => doctor.username === docInfo.username
       );
-      // remove this doctor from the user saved list
-      savedListCopy.splice(index, 1);
-
-      setState({
-        ...likeSaveInfo,
-        savedList: savedListCopy,
+      newSavedList.splice(index, 1);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
         hasSaved: false,
-      });
+      }));
     } else {
-      // the newly saved doctor's information to be added to the user's saved doctor list
       let newDocInfo = {
-        hospital: props.targetDoc.Hospital,
-        languages: props.targetDoc.languages,
+        hospital: docInfo.hospital,
+        specialty: docInfo.specialty,
+        username: docInfo.username,
+        name: docInfo.name,
+        imgSrc: docInfo.imgSrc,
+        languages: docInfo.languages,
+        type: docInfo.type,
         likes: likeSaveInfo.numLikes,
-        name: props.targetDoc.DocName,
-        specialty: props.targetDoc.specialty,
-        type: props.targetDoc.type,
-        username: props.targetDoc.userName,
       };
-      likeSaveInfo.savedList.push(newDocInfo);
-
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.hasSaved = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newSavedList.push(newDocInfo);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
+        hasSaved: true,
+      }));
     }
-    updateUserSave();
-  };
-
-  const updateUserSave = async () => {
-    try {
-      let savedList = await likeSaveInfo.savedList;
-      props.changeDocSaveStatus(savedList);
-    } catch (err) {
-      console.error(err);
-    }
+    props.changeDocSaveStatus(newSavedList);
   };
 
   // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
@@ -402,7 +335,7 @@ function DocInfo(props) {
     });
   };
 
-  const reported = likeSaveInfo.reportedList.includes(props.targetDoc.userName);
+  const reported = likeSaveInfo.reportedList.includes(docInfo?.username);
   // reportedList
   // send report to database
   const submitReport = () => {
@@ -411,7 +344,7 @@ function DocInfo(props) {
     reasons.push(oneReason);
     let reportedList = likeSaveInfo.reportedList;
     if (!reported) {
-      reportedList.push(props.targetDoc.userName);
+      reportedList.push(docInfo.username);
     }
 
     // send to specialty doctor account
@@ -419,10 +352,9 @@ function DocInfo(props) {
       reportCount: likeSaveInfo.numReports + 1,
       reportReasons: reasons,
 
-      // *******hard code
-      specialty: props.targetDoc.specialty,
-      hospital: props.targetDoc.Hospital,
-      username: props.targetDoc.userName,
+      specialty: docInfo.specialty,
+      hospital: docInfo.hospital,
+      username: docInfo.username,
     };
     props.report(oneReport);
 
@@ -438,7 +370,7 @@ function DocInfo(props) {
       numReports: prevState.numReports + 1,
       reportReasonsList: [prevState.reportReasonsList, oneReason],
       oneReason: "",
-      reportedList: [prevState.reportedList, props.targetDoc.userName],
+      reportedList: [prevState.reportedList, docInfo.username],
     }));
   };
 
@@ -498,14 +430,14 @@ function DocInfo(props) {
 
       {/* For 'return to doctors' button (需要换成return to hospital， depending on user之前是怎么搜的) */}
       <Box display="flex" mt={3} mb={3} className={classes.returnBox}>
-        <Button
+        {/* <Button
           style={{ fontSize: 16, textTransform: "none" }}
           color="primary"
           onClick={backToRes}
           startIcon={<ArrowBackIosIcon />}
         >
           Return to {returnPageDesc}
-        </Button>
+        </Button> */}
       </Box>
 
       {/* 手机屏幕才会出现的格式：doctor照片在上面 ，like icon 在右上角*/}
@@ -515,11 +447,7 @@ function DocInfo(props) {
           <Grid item xs={6} align="center">
             {/* doctor image */}
             <div style={{ width: 150, height: 180 }}>
-              <img
-                className={classes.img}
-                src={props.targetDoc["imgSrc"]}
-                alt="docimg"
-              />
+              <img className={classes.img} src={docInfo?.imgSrc} alt="docimg" />
             </div>
           </Grid>
           {/* Like icon + number of likes */}
@@ -531,8 +459,8 @@ function DocInfo(props) {
               alignItems="center"
             >
               {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-              <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-              */}
+                <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
+                */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
@@ -570,7 +498,7 @@ function DocInfo(props) {
               <div style={{ width: 200, height: 250 }}>
                 <img
                   className={classes.img}
-                  src={props.targetDoc.imgSrc}
+                  src={docInfo?.imgSrc}
                   alt="docimg"
                 />
               </div>
@@ -579,7 +507,7 @@ function DocInfo(props) {
             {/* 手机屏幕出现的格式：doctor's name 在照片下面 */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
-                {"Dr. " + props.targetDoc.name}
+                {"Dr. " + docInfo?.name}
               </Typography>
             </Hidden>
 
@@ -763,7 +691,7 @@ function DocInfo(props) {
           {/* 大屏幕会出现的格式：doctor name 在右边 */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
-              {"Dr. " + props.targetDoc.name}
+              {"Dr. " + docInfo?.name}
             </Typography>
           </Hidden>
           <br></br>
@@ -776,24 +704,23 @@ function DocInfo(props) {
           {/* Doctor basic info */}
           <Box className={classes.profileGrid} mt={3} mb={3}>
             <Typography variant="body1" color="textPrimary">
-              <strong>Specialty: </strong>{" "}
-              <span>{props.targetDoc.specialty} </span>
+              <strong>Specialty: </strong> <span>{docInfo?.specialty} </span>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
               <strong>Years of Practice: </strong>{" "}
-              <span>{props.targetDoc.yearsOfPractice + " years"} </span>
+              <span>{docInfo?.yearsOfPractice + " years"} </span>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
               <strong>Hospital: </strong>
-              <span>{props.targetDoc.hospital}</span>
+              <span>{docInfo?.hospital}</span>
               {/* private tag */}
               <Chip
                 style={{ marginLeft: 10 }}
                 color="primary"
                 size="small"
-                label={props.targetDoc.type}
+                label={docInfo?.type}
               ></Chip>
             </Typography>
             <br></br>
@@ -801,20 +728,20 @@ function DocInfo(props) {
             <Box display="flex" flexDirection="row" mt={1}>
               <LocationOnOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetDoc.address}</span>
+                <span>{docInfo?.address}</span>
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" mt={1}>
               <PhoneOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetDoc.phone}</span>
+                <span>{docInfo?.phone}</span>
               </Typography>
             </Box>
           </Box>
 
           <DocTags
-            tagInfo={props.targetDoc.tags}
-            targetDoc={props.targetDoc}
+            docInfo={docInfo}
+            userInfo={userInfo}
             handleLoginOpen={handleLoginOpen}
           />
         </Grid>
@@ -829,8 +756,8 @@ function DocInfo(props) {
               alignItems="center"
             >
               {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-              <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-              */}
+                <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
+                */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
@@ -860,10 +787,8 @@ DocInfo.propTypes = {
   // like
   changeDocLikeStatus: PropTypes.func.isRequired,
   updateDoctorLikes: PropTypes.func.isRequired,
-
   // save
   changeDocSaveStatus: PropTypes.func.isRequired,
-
   // report
   sendReportedDoctors: PropTypes.func.isRequired,
   report: PropTypes.func.isRequired,
@@ -879,10 +804,8 @@ const mapActionsToProps = {
   // like
   changeDocLikeStatus,
   updateDoctorLikes,
-
   // save
   changeDocSaveStatus,
-
   // report
   sendReportedDoctors,
   report,

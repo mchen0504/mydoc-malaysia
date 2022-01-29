@@ -120,7 +120,6 @@ export default function SearchTabs(props) {
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchType("Specialty");
       props.setSearchValue(newValue.specialty);
     }
   };

@@ -95,7 +95,6 @@ export function Languages(props) {
 
   return (
     <FormControl component="fieldset">
-      {console.log(props.filters)}
       <FormLabel component="legend">Languages</FormLabel>
       <br></br>
       <FormGroup>

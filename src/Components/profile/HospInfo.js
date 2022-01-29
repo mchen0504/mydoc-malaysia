@@ -8,6 +8,7 @@ import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
+import axios from "axios";
 
 //icons
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -27,12 +28,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 //components
 import CovidAlert from "../Alert";
 import HospTags from "./HospTags";
-
-import PropTypes from "prop-types";
 
 import {
   changeHospLikeStatus,
@@ -43,11 +43,6 @@ import {
   updateHospitalLikes,
   reportHospital,
 } from "../../redux/actions/dataActions";
-
-// ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
-// ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
-// "hospital tags" used in this js is actually referred to the tags attached to a specialty in this hospital
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 const useStyles = makeStyles((theme) => ({
   covidBox: {
@@ -97,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
 
 function HospInfo(props) {
   const classes = useStyles();
+  const { hospInfo, userInfo } = props;
 
   const authenticated = props.authenticated;
 
@@ -130,197 +126,136 @@ function HospInfo(props) {
     likedList: [],
     numLikes: 0,
 
-    // save functionality
     hasSaved: false,
     savedList: [],
 
-    // report functionality
     reportedList: [],
     numReports: 0,
     reportReasonsList: [],
     oneReason: "",
   });
 
-  // only get called once in the first render
+  const getUserLikeSaveInfo = (userInfo, type) => {
+    let list = [];
+    let likedSaved = false;
+
+    if (userInfo && userInfo[type] && userInfo[type].hospitals) {
+      list = userInfo[type].hospitals;
+      const index = userInfo[type].hospitals.findIndex(
+        (hospital) =>
+          hospital.name.replace(/\s/g, "").toLowerCase() ===
+          hospInfo.name.replace(/\s/g, "").toLowerCase()
+      );
+      if (index !== -1) {
+        likedSaved = true;
+      }
+    }
+    return [list, likedSaved];
+  };
+
   useEffect(() => {
-    return displayStoredData();
-  }, []);
+    const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
+    const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 
-  const displayStoredData = () => {
-    // call function to get data from returned props from firebase
-    getStoredData()
-      .then((res) => {
-        // like
-        let listOfLikes;
-        let liked = false;
+    const listOfReports = [];
+    if (userInfo && userInfo.reportedHospitals) {
+      listOfReports = userInfo.reportedHospitals;
+    }
 
-        // if the user has never liked any hospitals
-        if (!res.likeHistory) {
-          listOfLikes = [];
-        } else {
-          if (res.likeHistory.hospitals) {
-            listOfLikes = res.likeHistory.hospitals;
-            // if the user has liked this particular hospital before
-            const index = res.likeHistory.hospitals.findIndex(
-              (hospital) =>
-                hospital.name.replace(/\s/g, "").toLowerCase() ===
-                props.targetHos.name.replace(/\s/g, "").toLowerCase()
-            );
-            if (index !== -1) {
-              liked = true;
-            }
-          } else {
-            listOfLikes = [];
-          }
-        }
+    setState({
+      hasLiked: liked,
+      likedList: listOfLikes,
+      numLikes: hospInfo.likes ? hospInfo.likes : 0,
 
-        // save
-        let listOfSaves;
-        let saved = false;
+      hasSaved: saved,
+      savedList: listOfSaves,
 
-        // if the user has never saved any hospitals
-        if (!res.saved) {
-          listOfSaves = [];
-        } else {
-          if (res.saved.hospitals) {
-            listOfSaves = res.saved.hospitals;
-            // if the user has saved this particular hospital before
-            const index = res.saved.hospitals.findIndex(
-              (hospital) =>
-                hospital.name.replace(/\s/g, "").toLowerCase() ===
-                props.targetHos.name.replace(/\s/g, "").toLowerCase()
-            );
-            if (index !== -1) {
-              saved = true;
-            }
-          } else {
-            listOfSaves = [];
-          }
-        }
-
-        setState({
-          hasLiked: liked,
-          likedList: listOfLikes,
-          numLikes: props.targetHos.likes ? props.targetHos.likes : 0,
-
-          hasSaved: saved,
-          savedList: listOfSaves,
-
-          reportedList: res.reportedHospitals ? res.reportedHospitals : [],
-          numReports: props.targetHos.report
-            ? props.targetHos.report.reportCount
-            : 0,
-          reportReasonsList: props.targetHos.report
-            ? props.targetHos.report.reportReasons
-            : [],
-          oneReason: "",
-        });
-
-        // setRenderCount(1);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // wait for returned props from firebase to be ready
-  let getStoredData = async () => {
-    let storedCredentials = await props.storedCredentials;
-    return storedCredentials;
-  };
+      reportedList: listOfReports,
+      numReports: hospInfo.report ? hospInfo.report.reportCount : 0,
+      reportReasonsList: hospInfo.report ? hospInfo.report.reportReasons : [],
+      oneReason: "",
+    });
+  }, [hospInfo, userInfo]);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // when the like button is pressed
   const toggleLikeUnlike = () => {
-    // the user has liked this hospital before
+    let newLikedList = [...likeSaveInfo.likedList];
+    let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
-      let likedListCopy = likeSaveInfo.likedList;
-      let index = likedListCopy.findIndex(
-        (hospital) => hospital.name === props.targetHos.name
+      let index = newLikedList.findIndex(
+        (hospital) => hospital.name === hospInfo.name
       );
       // remove this hospital from the user like list
-      likedListCopy.splice(index, 1);
-      setState((prevState) => {
-        prevState.numLikes = prevState.numLikes - 1;
-        prevState.hasLiked = false;
-        prevState.likedList = likedListCopy;
-        return {
-          ...prevState,
-        };
-      });
+      newLikedList.splice(index, 1);
+      newLikes = newLikes - 1;
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: false,
+        likedList: newLikedList,
+      }));
     } else {
+      newLikes = newLikes + 1;
       const newHospInfo = {
-        name: props.targetHos.name,
-        address: props.targetHos.address,
-        likes: likeSaveInfo.numLikes,
-        phone: props.targetHos.phone,
-        relatedSpecialty: props.targetHos.relatedSpecialty,
-        type: props.targetHos.type,
+        name: hospInfo.name,
+        relatedSpecialty: hospInfo.relatedSpecialty,
+        address: hospInfo.address,
+        phone: hospInfo.phone,
+        type: hospInfo.type,
+        imgSrc: hospInfo.imgSrc,
+        likes: newLikes,
       };
-
-      likeSaveInfo.likedList.push(newHospInfo);
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.numLikes = prevState.numLikes + 1;
-          prevState.hasLiked = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newLikedList.push(newHospInfo);
+      setState((prevState) => ({
+        ...prevState,
+        numLikes: newLikes,
+        hasLiked: true,
+        likedList: newLikedList,
+      }));
     }
-    toggleLike();
+
+    let updateInfo = {
+      hospital: hospInfo.name,
+      specialty: hospInfo.relatedSpecialty,
+      likes: newLikes,
+    };
+
+    toggleLike(updateInfo, newLikedList);
+    updateLocalHospList(newLikes);
   };
 
-  const toggleLike = () => {
-    waitLikeUpdate()
-      .then((res) => {
-        props.changeHospLikeStatus(likeSaveInfo.likedList);
-        const updateInfo = {
-          specialty: props.targetHos.relatedSpecialty,
-          hospital: props.targetHos.HospitalName.replace(/\s/g, ""),
-          likes: res[1],
-        };
+  const toggleLike = (updateInfo, likedList) => {
+    axios
+      .post("/updatelikedhospitals", likedList)
+      .then(() => {
         props.updateHospitalLikes(updateInfo);
-        updateLocalDocList(updateInfo);
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => console.error(error));
   };
 
-  let waitLikeUpdate = async () => {
-    let [likedList, likes] = await Promise.all([
-      likeSaveInfo.likedList,
-      likeSaveInfo.numLikes,
-    ]);
-    return [likedList, likes];
-  };
-
-  const updateLocalDocList = (updateInfo) => {
+  const updateLocalHospList = (newLikes) => {
     // set location target list location
-    let newHosList = [];
-    for (let hos in props.hospitalInfo) {
-      let hosItem = props.hospitalInfo[hos];
-      if (hosItem.name === props.targetHos.name) {
-        hosItem.NumberOfLikes = likeSaveInfo.numLikes;
-        hosItem.likes = likeSaveInfo.numLikes;
+    let newHospList = [];
+    for (let hosp in hospInfo) {
+      let hospItem = hospInfo[hosp];
+      if (hospItem.name === hospInfo.name) {
+        hospItem.NumberOfLikes = newLikes;
+        hospItem.likes = newLikes;
       }
-      newHosList.push(hosItem);
+      newHospList.push(hospItem);
     }
-    props.sethospitalInfo(newHosList);
+    props.sethospitalInfo(newHospList);
 
     // set database
-    let newDatabase;
-    newDatabase = props.database;
-    let hospitalId = updateInfo["hospital"].replace(/\s/g, "");
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId]["likes"] =
-      likeSaveInfo.numLikes;
-    newDatabase[updateInfo["specialty"]]["hospitals"][hospitalId][
-      "NumberOfLikes"
-    ] = likeSaveInfo.numLikes;
+    let newDatabase = props.database;
+    let hospitalId = hospInfo.name.replace(/\s/g, "");
+
+    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].likes =
+      newLikes;
+    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].NumberOfLikes =
+      newLikes;
     props.setDatabase(newDatabase);
   };
 
@@ -333,51 +268,36 @@ function HospInfo(props) {
 
   // when the save button is pressed
   const toggleSaveUnsave = () => {
-    // the user has saved this hospital before
+    let newSavedList = [...likeSaveInfo.savedList];
     if (likeSaveInfo.hasSaved) {
-      let savedListCopy = likeSaveInfo.savedList;
-      let index = savedListCopy.findIndex(
-        (hospital) => hospital.name === props.targetHos.name
+      let index = newSavedList.findIndex(
+        (hospital) => hospital.name === hospInfo.name
       );
       // remove this hospital from the user saved list
-      savedListCopy.splice(index, 1);
-
-      setState({
-        ...likeSaveInfo,
-        savedList: savedListCopy,
+      newSavedList.splice(index, 1);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
         hasSaved: false,
-      });
+      }));
     } else {
-      // the newly saved hospital's information to be added to the user's saved hospital list
-      const newHospInfo = {
-        name: props.targetHos.name.replace(/\s/g, ""),
-        address: props.targetHos.address,
+      let newHospInfo = {
+        name: hospInfo.name,
+        relatedSpecialty: hospInfo.relatedSpecialty,
+        address: hospInfo.address,
+        phone: hospInfo.phone,
+        type: hospInfo.type,
+        imgSrc: hospInfo.imgSrc,
         likes: likeSaveInfo.numLikes,
-        phone: props.targetHos.phone,
-        relatedSpecialty: props.targetHos.relatedSpecialty,
-        type: props.targetHos.type,
       };
-      likeSaveInfo.savedList.push(newHospInfo);
-      setState(
-        // add to the list if the list contains other doctors, otherwise use this doctor to start a list
-        (prevState) => {
-          prevState.hasSaved = true;
-          return {
-            ...prevState,
-          };
-        }
-      );
+      newSavedList.push(newHospInfo);
+      setState((prevState) => ({
+        ...prevState,
+        savedList: newSavedList,
+        hasSaved: true,
+      }));
     }
-    updateUserSave();
-  };
-
-  const updateUserSave = async () => {
-    try {
-      let savedList = await likeSaveInfo.savedList;
-      props.changeHospSaveStatus(savedList);
-    } catch (err) {
-      console.error(err);
-    }
+    props.changeHospSaveStatus(newSavedList);
   };
 
   // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
@@ -406,12 +326,7 @@ function HospInfo(props) {
     });
   };
 
-  if (!props.targetHos) {
-    props.history.push("/");
-    window.location.reload();
-  }
-
-  const reported = likeSaveInfo.reportedList.includes(props.targetHos.name);
+  const reported = likeSaveInfo.reportedList.includes(hospInfo?.name);
 
   // send hospital report to database
   const submitReport = () => {
@@ -420,7 +335,7 @@ function HospInfo(props) {
     reasons.push(oneReason);
     const reportedList = likeSaveInfo.reportedList;
     if (!reported) {
-      reportedList.push(props.targetHos.name);
+      reportedList.push(hospInfo.name);
     }
 
     // send to specialty doctor account
@@ -429,8 +344,8 @@ function HospInfo(props) {
       reportReasons: reasons,
 
       // *******hard code
-      specialty: props.targetHos.relatedSpecialty,
-      hospital: props.targetHos.name,
+      specialty: hospInfo.relatedSpecialty,
+      hospital: hospInfo.name,
     };
     props.reportHospital(oneReport);
 
@@ -446,7 +361,7 @@ function HospInfo(props) {
       numReports: prevState.numReports + 1,
       reportReasonsList: [prevState.reportReasonsList, oneReason],
       oneReason: "",
-      reportedList: [prevState.reportedList, props.targetHos.name],
+      reportedList: [prevState.reportedList, hospInfo.name],
     }));
   };
 
@@ -514,7 +429,7 @@ function HospInfo(props) {
             <div style={{ width: 150, height: 180 }}>
               <img
                 className={classes.img}
-                src={props.targetHos["imgSrc"]}
+                src={hospInfo?.imgSrc}
                 alt="hospimg"
               />
             </div>
@@ -568,7 +483,7 @@ function HospInfo(props) {
               <div style={{ width: 200, height: 250 }}>
                 <img
                   className={classes.img}
-                  src={props.targetHos["imgSrc"]}
+                  src={hospInfo?.imgSrc}
                   alt="hospimg"
                 />
               </div>
@@ -577,7 +492,7 @@ function HospInfo(props) {
             {/* 手机屏幕出现的格式：hospital name 在照片下面 */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
-                {props.targetHos["HospitalName"]}
+                {hospInfo?.name}
               </Typography>
             </Hidden>
 
@@ -762,7 +677,7 @@ function HospInfo(props) {
           {/* 大屏幕会出现的格式：hospital name 在右边 */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
-              {props.targetHos["HospitalName"]}
+              {hospInfo?.name}
               {/* private tag */}
               <Chip
                 style={{ marginLeft: 10 }}
@@ -782,14 +697,13 @@ function HospInfo(props) {
           <Box className={classes.profileGrid} mt={3} mb={3}>
             <Typography variant="body1" color="textPrimary">
               <strong>Official website: </strong>{" "}
-              <a href={props.targetHos["Web"]} style={{ color: "#003367" }}>
+              <a href={hospInfo?.website} style={{ color: "#003367" }}>
                 Link
               </a>
             </Typography>
 
             <Typography variant="body1" color="textPrimary">
-              <strong>Hours: </strong>{" "}
-              <span>Open {props.targetHos["hours"]}</span>
+              <strong>Hours: </strong> <span>Open {hospInfo?.hours}</span>
             </Typography>
 
             <Hidden smUp>
@@ -799,7 +713,7 @@ function HospInfo(props) {
                   style={{ marginLeft: 10 }}
                   color="primary"
                   size="small"
-                  label={props.targetHos["HospitalType"]}
+                  label={hospInfo?.type}
                 ></Chip>
               </Typography>
             </Hidden>
@@ -809,20 +723,25 @@ function HospInfo(props) {
             <Box display="flex" flexDirection="row" mt={1}>
               <LocationOnOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetHos["Address"]}</span>
+                <span>{hospInfo?.address}</span>
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" mt={1}>
               <PhoneOutlinedIcon style={{ marginRight: 10 }} />
               <Typography variant="body1" color="textPrimary">
-                <span>{props.targetHos["Phone"]}</span>
+                <span>{hospInfo?.phone}</span>
               </Typography>
             </Box>
           </Box>
           {/* edit Tag component (imported from HospTag.js) */}
+          {/* <HospTags
+            hospInfo={hospInfo}
+            userInfo={userInfo}
+            handleLoginOpen={handleLoginOpen}
+          /> */}
           <HospTags
-            tagInfo={props.targetHos["tags"]}
-            targetHos={props.targetHos}
+            hospInfo={hospInfo}
+            userInfo={userInfo}
             handleLoginOpen={handleLoginOpen}
           />
         </Grid>
@@ -836,15 +755,11 @@ function HospInfo(props) {
               justifyContent="center"
               alignItems="center"
             >
-              {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-              <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-              */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
                 <Fragment>
                   <IconButton onClick={() => handleLoginOpen("Recommend")}>
                     <FavoriteBorderOutlinedIcon style={{ color: "red" }} />

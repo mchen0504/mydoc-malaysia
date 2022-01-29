@@ -39,15 +39,20 @@ const useStyles = makeStyles((theme) => ({
 // Each indiivdual doctor card
 export default function TopRatedDocCard(props) {
   const classes = useStyles();
+  const { docInfo } = props;
 
-  const likes = props.targetDoc.likes ? props.targetDoc.likes : 0;
+  const likes = docInfo.likes ? docInfo.likes : 0;
 
   const handleOnclick = () => {
     props.setProfileBackToDestination("hospprofile");
-    console.log(props.targetDoc);
-    props.updateTargetDoc(props.targetDoc);
+    props.updateTargetDoc(docInfo);
+
+    let hospital = docInfo?.hospital.replace(/\s+/g, "-");
+    let specialty = docInfo?.specialty.replace(" & ", "-");
+    let name = docInfo?.name.replace(/\s+/g, "-");
+
     if (props.history != null) {
-      props.history.push("/docprofile");
+      props.history.push(`/profile/${hospital}/${specialty}/${name}`);
     }
   };
 
@@ -66,12 +71,12 @@ export default function TopRatedDocCard(props) {
               <CardMedia
                 component="img"
                 className={classes.img}
-                src={props.targetDoc.imgSrc}
+                src={docInfo?.imgSrc}
               ></CardMedia>
             </div>
             {/* doctor details */}
             <Typography variant="body1" color="primary">
-              {props.targetDoc.name}
+              {docInfo?.name}
             </Typography>
             <br></br>
             <Typography
@@ -79,8 +84,7 @@ export default function TopRatedDocCard(props) {
               color="textSecondary"
               align="center"
             >
-              <strong>Specialty: </strong>{" "}
-              <span>{props.targetDoc.specialty}</span>
+              <strong>Specialty: </strong> <span>{docInfo?.specialty}</span>
             </Typography>
             <br></br>
             {/* Like icon + number of likes */}

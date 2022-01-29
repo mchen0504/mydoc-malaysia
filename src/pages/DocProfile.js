@@ -9,9 +9,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Navbar from "../components/Navbar";
 import Appointment from "../components/profile/Appointment";
 import DocDetailedInfo from "../components/profile/DocDetailedInfo";
-import DocInfo from "../components/profile/DocDetailedInfoTest";
-import Test from "../components/profile/Test";
-import AppointmentTest from "../components/profile/AppointmentTest";
+import DocInfo from "../components/profile/DocInfo";
 
 const useStyles = makeStyles((theme) => ({
   line: {
@@ -70,19 +68,16 @@ function DocProfile(props) {
   return (
     <div>
       <Navbar currentPage="DocProfile" {...props} />
-      {/* <DocInfo {...this.props} backTo={backToPage} /> */}
-      <Test
+      <DocInfo
         {...props}
-        backTo={backToPage}
+        // backTo={backToPage}
         docInfo={docInfo}
         userInfo={userInfo}
       />
       <hr className={classes.line}></hr>
-      {/* <Appointment {...this.props} /> */}
-      <AppointmentTest {...props} docInfo={docInfo} />
+      <Appointment {...props} docInfo={docInfo} />
       <hr className={classes.line}></hr>
-      {/* <DocDetailedInfo {...this.props} /> */}
-      <DocInfo {...props} docInfo={docInfo} />
+      <DocDetailedInfo {...props} docInfo={docInfo} />
     </div>
   );
 }
