@@ -37,7 +37,10 @@ import {
   changeDocSaveStatus,
   sendReportedDoctors,
 } from "../../redux/actions/userActions";
-import { updateDoctorLikes, report } from "../../redux/actions/dataActions";
+import {
+  updateDoctorLikes,
+  reportDoctor,
+} from "../../redux/actions/dataActions";
 
 //components
 import CovidAlert from "../Alert";
@@ -234,12 +237,8 @@ function DocInfo(props) {
   };
 
   const toggleLike = (updateInfo, likedList) => {
-    axios
-      .post("/updatelikeddoctors", likedList)
-      .then(() => {
-        props.updateDoctorLikes(updateInfo);
-      })
-      .catch((error) => console.error(error));
+    props.changeDocLikeStatus(likedList);
+    props.updateDoctorLikes(updateInfo);
   };
 
   const updateLocalDocList = (newLikes) => {
@@ -356,7 +355,7 @@ function DocInfo(props) {
       hospital: docInfo.hospital,
       username: docInfo.username,
     };
-    props.report(oneReport);
+    props.reportDoctor(oneReport);
 
     // send to user account
     const sendToAccount = {
@@ -791,7 +790,7 @@ DocInfo.propTypes = {
   changeDocSaveStatus: PropTypes.func.isRequired,
   // report
   sendReportedDoctors: PropTypes.func.isRequired,
-  report: PropTypes.func.isRequired,
+  reportDoctor: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -807,8 +806,8 @@ const mapActionsToProps = {
   // save
   changeDocSaveStatus,
   // report
+  reportDoctor,
   sendReportedDoctors,
-  report,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(DocInfo);

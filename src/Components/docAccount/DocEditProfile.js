@@ -31,23 +31,22 @@ import { connect } from "react-redux";
 import Alert from "@material-ui/lab/Alert";
 
 import {
-  // to "specialties" collection
-  sendProfileToSpec,
-
   // to "users" collection
   sendAccountProfile,
-
-  // to "inputList" collection
-  sendSpecList,
-  sendCondList,
-
-  // disable original account if doctor has changed hospital/specialty in "specialties" collection
-  deleteProfileInSpec,
-  publish,
   getSpecProfile,
   getSpecList,
   getCondList,
 } from "../../redux/actions/userActions";
+import {
+  // to "inputList" collection
+  sendSpecList,
+  sendCondList,
+  // to "specialties" collection
+  sendProfileToSpec,
+  // disable original account if doctor has changed hospital/specialty in "specialties" collection
+  deleteProfileInSpec,
+  publish,
+} from "../../redux/actions/dataActions";
 
 const useStyles = makeStyles((theme) => ({
   anchor: {

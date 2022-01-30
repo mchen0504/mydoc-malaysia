@@ -21,7 +21,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import { changeProfilePic } from "../../redux/actions/userActions";
 import { updateDoctorProfilePic } from "../../redux/actions/dataActions";

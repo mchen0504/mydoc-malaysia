@@ -2,60 +2,97 @@
 import { LOADING_USER, GET_HOSP_DATA, GET_SEARCH_DATA } from "../types";
 import axios from "axios";
 
-// used in DocTags.js
-export const updateDoctorTags = (doctorTags) => (dispatch) => {
-  axios.post("/updatedoctortags", doctorTags).catch((err) => console.log(err));
+// send specialty list to database
+export const sendSpecList = (data) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post("/updatespecialtylist", data).catch((err) => console.error(err));
+};
+
+// send condition list to database
+export const sendCondList = (data) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post("/updateconditionlist", data).catch((err) => console.error(err));
+};
+
+// used in DocEditProfile.js
+export const sendProfileToSpec = (specData) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios
+    .post("/updatepublicprofile", specData)
+    .then(() => {
+      dispatch(getSpecProfile());
+    })
+    .catch((err) => console.error(err));
+};
+
+export const deleteProfileInSpec = (data) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post("/deleteoldprofile", data).catch((err) => console.error(err));
+};
+
+// publish
+export const publish = (data) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post("/publishprofile", data).catch((err) => console.error(err));
 };
 
 // used in DocTags.js
-export const updateDoctorLikes = (likes) => (dispatch) => {
-  axios.post("/updatedoctorlikes", likes).catch((err) => console.log(err));
+export const updateDoctorTags = (doctorTags) => () => {
+  axios
+    .post("/updatedoctortags", doctorTags)
+    .catch((err) => console.error(err));
+};
+
+// used in DocTags.js
+export const updateDoctorLikes = (likes) => () => {
+  axios.post("/updatedoctorlikes", likes).catch((err) => console.error(err));
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // used in HospTags.js
-export const updateHospTags = (hospTags) => (dispatch) => {
-  axios.post("/updatehospitaltags", hospTags).catch((err) => console.log(err));
+export const updateHospTags = (hospTags) => () => {
+  axios
+    .post("/updatehospitaltags", hospTags)
+    .catch((err) => console.error(err));
 };
 
 // used in HospTags.js
-export const updateHospitalLikes = (likes) => (dispatch) => {
-  axios.post("/updatehospitallikes", likes).catch((err) => console.log(err));
+export const updateHospitalLikes = (likes) => () => {
+  axios.post("/updatehospitallikes", likes).catch((err) => console.error(err));
 };
 
-// michelle 5/16: 只加了这个function
 // used in DocSideNav.js
-export const updateDoctorProfilePic = (imgSrc) => (dispatch) => {
+export const updateDoctorProfilePic = (imgSrc) => () => {
   axios
     .post("/updatedoctorprofilepic", imgSrc)
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 // // send doctors reported to user account
 // export const sendReportedDoctors = (data) => (dispatch) => {
 //   dispatch({ type: LOADING_USER });
-//   axios.post("/updatereporteddoctors", data).catch((err) => console.log(err));
+//   axios.post("/updatereporteddoctors", data).catch((err) => console.error(err));
 // };
 
 // // send hospitals reported to user account
 // export const sendReportedHospitals = (data) => (dispatch) => {
 //   dispatch({ type: LOADING_USER });
-//   axios.post("/updatereportedhospitals", data).catch((err) => console.log(err));
+//   axios.post("/updatereportedhospitals", data).catch((err) => console.error(err));
 // };
 
 // -------------------------------------------------------------------- //
 // 新加 5/14
 // 加了send report
-export const report = (data) => (dispatch) => {
+export const reportDoctor = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/report", data).catch((err) => console.log(err));
+  axios.post("/reportdoctor", data).catch((err) => console.error(err));
 };
 
 // 加了send hospital report
 export const reportHospital = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios.post("/reporthospital", data).catch((err) => console.log(err));
+  axios.post("/reporthospital", data).catch((err) => console.error(err));
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,7 +107,7 @@ export const getAllSearchData = () => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 export const getAllSearchDataHospital = () => (dispatch) => {
@@ -82,5 +119,5 @@ export const getAllSearchDataHospital = () => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };

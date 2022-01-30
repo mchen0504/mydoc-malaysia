@@ -96,9 +96,7 @@ function App() {
   const [bodyPartsDic, setBodyPartsDic] = React.useState(null);
   const [drivingTime, setDrivingTime] = React.useState([1000, -1]);
   const [conditionLabel, setConditionLabel] = React.useState("");
-  const [searchingState, setSearchingState] = React.useState("in-progress");
   const [database, setDatabase] = React.useState();
-  const reportMax = 50;
 
   useEffect(() => {
     if (database == null) {

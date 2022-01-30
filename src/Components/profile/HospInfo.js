@@ -227,12 +227,8 @@ function HospInfo(props) {
   };
 
   const toggleLike = (updateInfo, likedList) => {
-    axios
-      .post("/updatelikedhospitals", likedList)
-      .then(() => {
-        props.updateHospitalLikes(updateInfo);
-      })
-      .catch((error) => console.error(error));
+    props.changeHospLikeStatus(likedList);
+    props.updateHospitalLikes(updateInfo);
   };
 
   const updateLocalHospList = (newLikes) => {
