@@ -56,7 +56,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResults(props) {
   const classes = useStyles();
-  const { filtered, searchState, searchType, filters, setFilters } = props;
+  const {
+    setSearchState,
+    keyword,
+    filtered,
+    searchState,
+    searchType,
+    filters,
+    setFilters,
+  } = props;
 
   const [doctors, setDoctors] = useState();
   const [hospitals, setHospitals] = useState();
@@ -91,6 +99,7 @@ export default function SearchResults(props) {
     if (filtered) {
       setDoctors(filtered.docInfo);
       setHospitals(filtered.hospitalInfo);
+      setSearchState("finished");
     }
   }, [filtered]);
 
@@ -164,8 +173,8 @@ export default function SearchResults(props) {
   let dataInfoNotesDoc = "Display results by doctors";
   let dataInfoNotesHos = "Display results by hospitals";
   if (searchType == "Hospital") {
-    dataInfoNotesDoc = "Doctors related to " + '"' + props.keywords + '"';
-    dataInfoNotesHos = "Hospitals related to " + '"' + props.keywords + '"';
+    dataInfoNotesDoc = "Doctors related to " + '"' + keyword + '"';
+    dataInfoNotesHos = "Hospitals related to " + '"' + keyword + '"';
   }
 
   return (

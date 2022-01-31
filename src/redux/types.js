@@ -10,6 +10,7 @@ export const LOADING_USER = "LOADING_USER";
 export const GET_PROFILE = "GET_PROFILE";
 export const GET_SPECIALTY = "GET_SPECIALTY";
 export const GET_CONDITION = "GET_CONDITION";
+export const GET_INPUT_LIST = "GET_INPUT_LIST";
 
 // -------------------- ------------------------- //
 

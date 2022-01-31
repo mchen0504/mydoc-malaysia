@@ -101,6 +101,7 @@ export function Languages(props) {
         {allLanguages.map((language) => {
           return (
             <FormControlLabel
+              key={language}
               control={
                 <Checkbox
                   checked={selectedLanguages?.includes(language)}
@@ -112,48 +113,6 @@ export function Languages(props) {
             />
           );
         })}
-        {/* <FormControlLabel
-          control={
-            <Checkbox
-              checked={state.includes()}
-              onChange={handleChange}
-              name="English"
-            />
-          }
-          label="English"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={Malay} onChange={handleChange} name="Malay" />
-          }
-          label="Malay"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={Mandarin}
-              onChange={handleChange}
-              name="Mandarin"
-            />
-          }
-          label="Mandarin"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={Tamil} onChange={handleChange} name="Tamil" />
-          }
-          label="Tamil"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={Cantonese}
-              onChange={handleChange}
-              name="Cantonese"
-            />
-          }
-          label="Cantonese"
-        /> */}
       </FormGroup>
     </FormControl>
   );

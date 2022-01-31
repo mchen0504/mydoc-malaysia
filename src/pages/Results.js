@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import SearchResults from "../components/results/SearchResults";
 import Navbar from "../components/Navbar";
 
-export default function Results(props) {
+import { getData } from "../redux/actions/dataActions";
+
+function Results(props) {
   const location = useLocation();
   const locationParts = location.pathname.split("/");
   const searchType = locationParts[2];
   const searchValue = locationParts[3].replace(/-/g, "");
+  const keyword = locationParts[3].replace(/-/g, " ");
   const reportMax = 50;
 
   const [searchState, setSearchState] = useState("in-progress");
@@ -29,19 +33,20 @@ export default function Results(props) {
 
   useEffect(() => {
     setSearchState("in-progress");
-    axios
-      .get("/alldata")
-      .then((res) => {
-        let userKeyWords = searchValue.toLowerCase();
-        let searchResults = getSearchInfo(userKeyWords, res.data);
-        sethospitalInfo(searchResults.newHosData);
-        setDocInfo(searchResults.newDocData);
-        setSearchState("finished");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [location.key]);
+    props.getData();
+  }, []);
+
+  useEffect(() => {
+    if (props.searchData) {
+      let userKeyWords = searchValue.toLowerCase();
+      console.log(props.searchData);
+      let searchResults = getSearchInfo(userKeyWords, props.searchData);
+      console.log(searchResults);
+      sethospitalInfo(searchResults.newHosData);
+      setDocInfo(searchResults.newDocData);
+      // setSearchState("finished");
+    }
+  }, [location.key, props.searchData]);
 
   const getSearchInfo = (userKeyWords, data) => {
     let newDocData = [];
@@ -137,10 +142,12 @@ export default function Results(props) {
           return item.toLowerCase().replace(/\s/g, "");
         });
         let conditionMatch = conditionList.includes(userKeyWords);
+        console.log("found condition");
         if (conditionMatch) {
           for (let hospital in data[specialty].hospitals) {
             let hosp = data[specialty].hospitals[hospital];
             if (!hosp.report || hosp.report.reportCount < reportMax) {
+              console.log(hosp.name);
               let doctorsFound = 0;
               for (let doctor in hosp.doctors) {
                 let doc = hosp.doctors[doctor];
@@ -148,20 +155,26 @@ export default function Results(props) {
                 doctorCondition = doctorCondition.map((item) => {
                   return item.toLowerCase().replace(/\s/g, "");
                 });
+                console.log(doctorCondition);
+                console.log(doc);
                 if (
                   doctorCondition.includes(userKeyWords) &&
                   !doc.deleted &&
                   (!doc.report || doc.report.reportCount < reportMax) &&
                   doc.publish
                 ) {
+                  console.log(doctor);
                   doc.username = doctor;
                   newDocData.push(doc);
                   doctorsFound++;
                 }
               }
-              if (doctorsFound > 1) {
+              console.log(newDocData);
+              if (doctorsFound > 0) {
+                console.log(hosp);
                 newHosData.push(hosp);
               }
+              console.log(newHosData);
             }
           }
         }
@@ -172,16 +185,20 @@ export default function Results(props) {
       let conditionList = [];
       for (let doctor in hos.doctors) {
         let targetDoc = hos.doctors[doctor];
-        targetDoc.conditions = targetDoc.conditions.map((item) => {
+        targetDoc.conditions = targetDoc.conditions?.map((item) => {
           let newItem = item.toLowerCase();
           newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
           return newItem;
         });
-        targetDoc.conditions.forEach((condition) => {
-          if (conditionList.indexOf(condition) === -1) {
-            conditionList.push(condition);
+        // targetDoc.conditions?.forEach((condition) => {
+        // for (let condition in targetDoc.conditions) {
+        for (let i = 0; i < targetDoc.conditions?.length; i++) {
+          console.log(targetDoc.conditions[i]);
+          console.log(conditionList.indexOf(targetDoc.conditions[i]));
+          if (conditionList.indexOf(targetDoc.conditions[i]) === -1) {
+            conditionList.push(targetDoc.conditions[i]);
           }
-        });
+        }
       }
       hos.conditions = conditionList;
     });
@@ -244,6 +261,8 @@ export default function Results(props) {
 
   return (
     <div key={location.key}>
+      {console.log(searchState)}
+      {console.log(docInfo)}
       <Navbar
         currentPage="results"
         {...props}
@@ -257,6 +276,8 @@ export default function Results(props) {
         setSearchValue={props.setSearchValue}
       />
       <SearchResults
+        setSearchState={setSearchState}
+        keyword={keyword}
         filtered={filtered}
         searchState={searchState}
         searchType={searchType}
@@ -266,3 +287,18 @@ export default function Results(props) {
     </div>
   );
 }
+
+Results.propTypes = {
+  getData: PropTypes.func.isRequired,
+  searchData: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  searchData: state.data.searchInfo,
+});
+
+const mapActionsToProps = {
+  getData,
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(Results);

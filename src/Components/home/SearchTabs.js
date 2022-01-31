@@ -96,7 +96,7 @@ export default function SearchTabs(props) {
   let hospNames = [];
 
   const getDocHosNameList = () => {
-    let allInfo = props.database;
+    let allInfo = props.searchData;
     for (let spec in allInfo) {
       let targetSpec = allInfo[spec];
       for (let hos in targetSpec.hospitals) {
@@ -178,7 +178,7 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterOptions("specialty")}
           disabled={
-            props.database === undefined ||
+            props.searchData === undefined ||
             props.specialtyListForInput === undefined
           }
           renderInput={(params) => (
@@ -204,7 +204,7 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.docName}
           filterOptions={filterOptions("docName")}
           disabled={
-            props.database === undefined ||
+            props.searchData === undefined ||
             props.specialtyListForInput === undefined
           }
           renderInput={(params) => (
@@ -235,7 +235,7 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterOptions("hospName")}
           disabled={
-            props.database === undefined ||
+            props.searchData === undefined ||
             props.specialtyListForInput === undefined
           }
           renderInput={(params) => (
@@ -266,7 +266,7 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.condition}
           filterOptions={filterOptions("condition")}
           disabled={
-            props.database === undefined ||
+            props.searchData === undefined ||
             props.conditionListForInput === undefined ||
             props.specialtyListForInput === undefined
           }

@@ -152,8 +152,8 @@ function DocInfo(props) {
       // if the user has liked this particular doctor before
       const index = userInfo[type].doctors.findIndex(
         (doctor) =>
-          doctor.username.replace(/\s/g, "").toLowerCase() ===
-          docInfo.username.replace(/\s/g, "").toLowerCase()
+          doctor.username?.replace(/\s/g, "").toLowerCase() ===
+          docInfo.username?.replace(/\s/g, "").toLowerCase()
       );
       if (index !== -1) {
         likedSaved = true;
@@ -194,11 +194,14 @@ function DocInfo(props) {
     let newLikedList = [...likeSaveInfo.likedList];
     let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
+      console.log("unlike this doctor");
+      console.log(newLikes);
       let index = newLikedList.findIndex(
         (doctor) => doctor.username === docInfo.username
       );
       newLikedList.splice(index, 1);
       newLikes = newLikes - 1;
+      console.log(newLikes);
       setState((prevState) => ({
         ...prevState,
         numLikes: newLikes,
@@ -206,6 +209,8 @@ function DocInfo(props) {
         likedList: newLikedList,
       }));
     } else {
+      console.log("like this doctor");
+      console.log(newLikes);
       newLikes = newLikes + 1;
       let newDocInfo = {
         hospital: docInfo.hospital,
@@ -251,19 +256,19 @@ function DocInfo(props) {
       }
       newDocList.push(docItem);
     }
-    props.setDocInfo(newDocList);
+    // props.setDocInfo(newDocList);
 
     // set database
-    let newDatabase = props.database;
-    let hospitalId = docInfo.hospital.replace(/\s/g, "");
-    let docID = docInfo.username.replace(/\s/g, "");
+    // let newDatabase = props.database;
+    // let hospitalId = docInfo.hospital.replace(/\s/g, "");
+    // let docID = docInfo.username.replace(/\s/g, "");
 
-    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[docID].likes =
-      newLikes;
-    newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[
-      docID
-    ].NumberOfLikes = newLikes;
-    props.setDatabase(newDatabase);
+    // newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[docID].likes =
+    //   newLikes;
+    // newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[
+    //   docID
+    // ].NumberOfLikes = newLikes;
+    // props.setDatabase(newDatabase);
   };
 
   // if the user has liked this doctor before: filled heart, otherwise outlined heart
@@ -423,6 +428,7 @@ function DocInfo(props) {
 
   return (
     <div>
+      {console.log(likeSaveInfo.numLikes)}
       <div className={classes.covidBox}>
         <CovidAlert />
       </div>

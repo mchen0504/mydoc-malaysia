@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -30,8 +30,8 @@ function DocProfile(props) {
   const specialty = locationParts[3];
   const name = locationParts[4];
 
-  const [docInfo, setDocInfo] = React.useState();
-  const [userInfo, setUserInfo] = React.useState();
+  const [docInfo, setDocInfo] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
     axios
@@ -72,6 +72,7 @@ function DocProfile(props) {
         {...props}
         // backTo={backToPage}
         docInfo={docInfo}
+        setDocInfo={setDocInfo}
         userInfo={userInfo}
       />
       <hr className={classes.line}></hr>

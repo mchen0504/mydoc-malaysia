@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -94,7 +95,7 @@ const StyledTab = withStyles((theme) => ({
 
 // Global search tabs + search by specialty/doc/hosp/condition
 // Used in GlobalSearch.js inside the dialog
-export default function GlobalSearchTabs(props) {
+function GlobalSearchTabs(props) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -107,7 +108,8 @@ export default function GlobalSearchTabs(props) {
   let hospNames = [];
 
   const getDocHosNameList = () => {
-    let allInfo = props.database;
+    console.log(props.searchData);
+    let allInfo = props.searchData;
     for (let spec in allInfo) {
       let targetSpec = allInfo[spec];
       for (let hos in targetSpec.hospitals) {
@@ -359,3 +361,11 @@ export default function GlobalSearchTabs(props) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  searchData: state.data.searchInfo,
+  specialtyListForInput: state.data.specialtyList,
+  conditionListForInput: state.data.conditionList,
+});
+
+export default connect(mapStateToProps)(GlobalSearchTabs);

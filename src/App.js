@@ -16,18 +16,9 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import { SET_AUTHENTICATED } from "./redux/types";
 
-import {
-  logoutUser,
-  getUserData,
-  getSpecProfile,
-  getSpecList,
-  getCondList,
-} from "./redux/actions/userActions";
+import { logoutUser, getUserData } from "./redux/actions/userActions";
 
-import {
-  getAllSearchData,
-  getAllSearchDataHospital,
-} from "./redux/actions/dataActions";
+import { getData, getInputs } from "./redux/actions/dataActions";
 
 // pages
 import Home from "./pages/Home";
@@ -65,52 +56,34 @@ if (token) {
   }
 }
 
-// store.dispatch(getSpecList());
-// store.dispatch(getCondList());
+store.dispatch(getData());
+store.dispatch(getInputs());
 
 function App() {
   const [docInfo, setDocInfo] = useState([]);
   const [hospitalInfo, sethospitalInfo] = useState([]);
   const [searchType, setSearchType] = useState("Specialty");
   const [searchValue, setSearchValue] = useState();
-  const [docInfoCopy, setDocInfoCopy] = useState([]);
-  const [hospitalInfoCopy, sethospitalInfoCopy] = useState([]);
-  const [searchMethod, setSearchMethod] = React.useState("Specialty");
-  const [keywords, setKeywords] = React.useState("");
-  const [location, setLocation] = React.useState("");
-  const [searchBegin, setSearchBegin] = React.useState(false);
-  const [hosType, setHosType] = React.useState("both");
-  const [languageList, setLanguageList] = React.useState([]);
-  const [yearOfPractice, setyearOfPractice] = React.useState([1000, -1]);
-  const [filterlocation, setFilterlocation] = React.useState([]);
-  const [filterBegin, setFilterBegin] = React.useState(false);
-  const [targetDoc, setTargetDoc] = React.useState(null);
-  const [targetHos, setTargetHos] = React.useState(null);
+  const [searchMethod, setSearchMethod] = useState("Specialty");
+  const [keywords, setKeywords] = useState("");
+  const [location, setLocation] = useState("");
+  const [searchBegin, setSearchBegin] = useState(false);
+  // const [filterlocation, setFilterlocation] = useState([]);
+  const [targetDoc, setTargetDoc] = useState(null);
+  const [targetHos, setTargetHos] = useState(null);
   const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
-  // he chen Newest
-  const [conditionListForInput, setConditionListForInput] = React.useState();
-  const [specialtyListForInput, setSpecialtyListForInput] = React.useState();
-  const [profileBackToDestination, setProfileBackToDestination] =
-    React.useState();
-  const [bodyPartsDic, setBodyPartsDic] = React.useState(null);
-  const [drivingTime, setDrivingTime] = React.useState([1000, -1]);
-  const [conditionLabel, setConditionLabel] = React.useState("");
-  const [database, setDatabase] = React.useState();
+  const [profileBackToDestination, setProfileBackToDestination] = useState();
+  // const [drivingTime, setDrivingTime] = useState([1000, -1]);
+  const [conditionLabel, setConditionLabel] = useState("");
+  const [database, setDatabase] = useState();
 
   useEffect(() => {
-    if (database == null) {
-      axios.get("/alldata").then((res) => {
-        setDatabase(res.data);
-      });
-    }
-
-    if (conditionListForInput == null) {
-      axios.get("/inputs").then((res) => {
-        setConditionListForInput(res.data[0]);
-        setSpecialtyListForInput(res.data[1]);
-      });
-    }
+    // if (database == null) {
+    //   axios.get("/alldata").then((res) => {
+    //     setDatabase(res.data);
+    //   });
+    // }
 
     if (location == "") {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -131,17 +104,6 @@ function App() {
             );
           });
       });
-    }
-
-    if (bodyPartsDic == null) {
-      axios
-        .get("/bodyparts")
-        .then((res) => {
-          setBodyPartsDic(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     }
   });
 
@@ -168,32 +130,10 @@ function App() {
     setKeywords("");
   };
 
-  const startSearch = () => {
-    setConditionLabel("");
-    setSearchBegin(true);
-  };
-
-  const filterHosType = (type) => {
-    setHosType(type);
-    setFilterBegin(true);
-  };
-
-  const filterLanguageList = (lang) => {
-    setLanguageList(lang);
-    setFilterBegin(true);
-  };
-
-  // he chen newest
-  const filterYear = (range) => {
-    setyearOfPractice(range);
-    setFilterBegin(true);
-  };
-
-  // he chen newest
-  const filterDrivingTime = (range) => {
-    setDrivingTime(range);
-    setFilterBegin(true);
-  };
+  // const filterDrivingTime = (range) => {
+  //   setDrivingTime(range);
+  //   setFilterBegin(true);
+  // };
 
   const updateTargetDoc = (doctor) => {
     setTargetDoc(doctor);
@@ -207,25 +147,9 @@ function App() {
     return (
       <Home
         {...renderProps}
-        database={database}
-        // currentLocation={location}
-        setDocInfo={setDocInfo}
-        sethospitalInfo={sethospitalInfo}
-        // doMainSearch={doMainSearch}
-        // getLocationValue={getLocationValue}
-        // getKeyWords={getKeyWords}
-        // startSearch={startSearch}
-        // getSearchMethod={getSearchMethod}
-        // searchMethod={searchMethod}
-        // searchBegin={searchBegin}
-        // setSearchMethod={setSearchMethod}
-        // setKeywords={setKeywords}
-        // changeConditionLabel={changeConditionLabel}
+        // setDocInfo={setDocInfo}
+        // sethospitalInfo={sethospitalInfo}
         conditionLabel={conditionLabel}
-        // keywords={keywords}
-        conditionListForInput={conditionListForInput}
-        specialtyListForInput={specialtyListForInput}
-        bodyPartsDic={bodyPartsDic}
         setConditionLabel={setConditionLabel}
         searchType={searchType}
         setSearchType={setSearchType}
@@ -238,39 +162,13 @@ function App() {
     return (
       <Results
         {...renderProps}
-        database={database}
-        conditionListForInput={conditionListForInput}
-        specialtyListForInput={specialtyListForInput}
-        // setDocInfo={setDocInfo}
-        // sethospitalInfo={sethospitalInfo}
-        // docInfo={docInfo}
-        // hospitalInfo={hospitalInfo}
-        // doMainSearch={doMainSearch}
-        // getLocationValue={getLocationValue}
-        // getKeyWords={getKeyWords}
-        // startSearch={startSearch}
-        // searchBegin={searchBegin}
-        // setSearchMethod={setSearchMethod}
-        // keywords={keywords}
-        // setKeywords={setKeywords}
-        // searchMethod={searchMethod}
-        // getSearchMethod={getSearchMethod}
-        // filterHosType={filterHosType}
-        // filterLanguageList={filterLanguageList}
-        // filterYear={filterYear}
-        // filterDrivingTime={filterDrivingTime}
-        // updateTargetDoc={updateTargetDoc}
-        // updateTargetHos={updateTargetHos}
-        // conditionListForInput={conditionListForInput}
-        // specialtyListForInput={specialtyListForInput}
-        profileBackToDestination={profileBackToDestination}
-        setProfileBackToDestination={setProfileBackToDestination}
+        // database={database}
+        // profileBackToDestination={profileBackToDestination}
+        // setProfileBackToDestination={setProfileBackToDestination}
         searchType={searchType}
         setSearchType={setSearchType}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
-        // searchingState={searchingState}
-        // setyearOfPractice={setyearOfPractice}
         // setDrivingTime={setyearOfPractice}
       />
     );
@@ -280,24 +178,21 @@ function App() {
     return (
       <Docprofile
         {...renderProps}
-        database={database}
-        setDatabase={setDatabase}
-        setDocInfo={setDocInfo}
-        sethospitalInfo={sethospitalInfo}
-        docInfo={docInfo}
-        hospitalInfo={hospitalInfo}
-        // doMainSearch={doMainSearch}
-        getLocationValue={getLocationValue}
-        getKeyWords={getKeyWords}
-        searchBegin={searchBegin}
-        setSearchMethod={setSearchMethod}
-        setKeywords={setKeywords}
-        getSearchMethod={getSearchMethod}
-        targetDoc={targetDoc}
-        conditionListForInput={conditionListForInput}
-        specialtyListForInput={specialtyListForInput}
-        profileBackToDestination={profileBackToDestination}
-        setProfileBackToDestination={setProfileBackToDestination}
+        // database={database}
+        // setDatabase={setDatabase}
+        // setDocInfo={setDocInfo}
+        // sethospitalInfo={sethospitalInfo}
+        // docInfo={docInfo}
+        // hospitalInfo={hospitalInfo}
+        // getLocationValue={getLocationValue}
+        // getKeyWords={getKeyWords}
+        // searchBegin={searchBegin}
+        // setSearchMethod={setSearchMethod}
+        // setKeywords={setKeywords}
+        // getSearchMethod={getSearchMethod}
+        // targetDoc={targetDoc}
+        // profileBackToDestination={profileBackToDestination}
+        // setProfileBackToDestination={setProfileBackToDestination}
       />
     );
   };
@@ -306,23 +201,23 @@ function App() {
     return (
       <Hospprofile
         {...renderProps}
-        database={database}
-        setDatabase={setDatabase}
-        setDocInfo={setDocInfo}
-        sethospitalInfo={sethospitalInfo}
-        docInfo={docInfo}
-        hospitalInfo={hospitalInfo}
+        // database={database}
+        // setDatabase={setDatabase}
+        // setDocInfo={setDocInfo}
+        // sethospitalInfo={sethospitalInfo}
+        // docInfo={docInfo}
+        // hospitalInfo={hospitalInfo}
         // doMainSearch={doMainSearch}
-        getLocationValue={getLocationValue}
-        getKeyWords={getKeyWords}
-        searchBegin={searchBegin}
-        setSearchMethod={setSearchMethod}
-        setKeywords={setKeywords}
-        getSearchMethod={getSearchMethod}
-        updateTargetDoc={updateTargetDoc}
-        targetHos={targetHos}
-        profileBackToDestination={profileBackToDestination}
-        setProfileBackToDestination={setProfileBackToDestination}
+        // getLocationValue={getLocationValue}
+        // getKeyWords={getKeyWords}
+        // searchBegin={searchBegin}
+        // setSearchMethod={setSearchMethod}
+        // setKeywords={setKeywords}
+        // getSearchMethod={getSearchMethod}
+        // updateTargetDoc={updateTargetDoc}
+        // targetHos={targetHos}
+        // profileBackToDestination={profileBackToDestination}
+        // setProfileBackToDestination={setProfileBackToDestination}
       />
     );
   };

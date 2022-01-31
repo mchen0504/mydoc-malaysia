@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-//components
 import CovidAlert from "../Alert";
 import SearchTabs from "./SearchTabs";
 import Location from "./Location";
-
-//image
-import headerImg from "../../img/home/doctors-heart.png";
-
-// eshin新加的 5/9/2020
 import BodyPartsDialog from "../bodyparts/Body";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
+import headerImg from "../../img/home/doctors-heart.png";
 
 const useStyles = makeStyles((theme) => ({
   ...theme.home,
@@ -74,15 +70,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // Landing page search
-export default function Header(props) {
+function Header(props) {
   const classes = useStyles();
   const history = useHistory();
+  const [bodyPartsDic, setBodyPartsDic] = useState();
 
-  // useEffect(() => {
-  //   if (props.searchBegin) {
-  //     return props.doMainSearch(props);
-  //   }
-  // });
+  useEffect(() => {
+    axios
+      .get("/bodyparts")
+      .then((res) => {
+        setBodyPartsDic(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
 
   let renderBodyParts = null;
   if (props.searchType === "Condition") {
@@ -91,7 +93,7 @@ export default function Header(props) {
         setKeywords={props.setKeywords}
         setConditionLabel={props.setConditionLabel}
         changeConditionLabel={props.changeConditionLabel}
-        bodyPartsDic={props.bodyPartsDic}
+        bodyPartsDic={bodyPartsDic}
       />
     );
   }
@@ -104,10 +106,10 @@ export default function Header(props) {
 
   let headerDisplay;
   if (
+    !props.searchData &&
     !props.conditionListForInput &&
     !props.specialtyListForInput &&
-    !props.bodyPartsDic &&
-    !props.database
+    !bodyPartsDic
   ) {
     headerDisplay = (
       <CircularProgress
@@ -119,7 +121,7 @@ export default function Header(props) {
     headerDisplay = (
       <div>
         <SearchTabs
-          database={props.database}
+          searchData={props.searchData}
           getKeyWords={props.getKeyWords}
           searchType={props.searchType}
           setSearchType={props.setSearchType}
@@ -206,3 +208,11 @@ export default function Header(props) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  searchData: state.data.searchInfo,
+  specialtyListForInput: state.data.specialtyList,
+  conditionListForInput: state.data.conditionList,
+});
+
+export default connect(mapStateToProps)(Header);

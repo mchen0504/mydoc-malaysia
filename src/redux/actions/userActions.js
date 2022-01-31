@@ -71,19 +71,15 @@ export const signupGeneralUser =
         history.push(`/`);
       })
       .catch((err) => {
-        // console.error(err);
-        // if (err.response) {
         dispatch({
           type: SET_ERRORS,
           payload: err.code,
         });
-        // }
       });
   };
 
 //used in DoctorSignup.js
 export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
-  //send action with type LOADING_UI and catch the action in reducer
   dispatch({ type: LOADING_UI });
   const auth = getAuth();
   createUserWithEmailAndPassword(
@@ -101,7 +97,7 @@ export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
         .post("/createdbdoctoruser", newDoctorUserData)
         .then((res) => {
           dispatch({
-            type: SET_USER /* use in userReducer.js */,
+            type: SET_USER,
             payload: res.data,
           });
         })
@@ -110,12 +106,10 @@ export const signupDoctorUser = (newDoctorUserData, history) => (dispatch) => {
       history.push(`/`);
     })
     .catch((err) => {
-      // if (err.response) {
       dispatch({
         type: SET_ERRORS,
         payload: err.code,
       });
-      // }
     });
 };
 

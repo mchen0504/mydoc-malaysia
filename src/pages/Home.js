@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import Header from "../components/home/Header";
 import Problem from "../components/home/Problem";
 import Solution from "../components/home/Solution";
@@ -8,22 +8,20 @@ import Team from "../components/home/Team";
 import Footer from "../components/home/Footer";
 import Navbar from "../components/Navbar";
 
-class Home extends Component {
-  render() {
-    return (
-      <div>
-        {/* Change */}
-        <Navbar {...this.props} currentPage={"Home"} />
-        <Header {...this.props} />
-        <Problem />
-        <Solution />
-        <ListPractice />
-        <About />
-        <Team />
-        <Footer />
-      </div>
-    );
-  }
+function Home(props) {
+  return (
+    <div>
+      {/* Change */}
+      <Navbar {...props} currentPage={"Home"} />
+      <Header {...props} />
+      <Problem />
+      <Solution />
+      <ListPractice />
+      <About />
+      <Team />
+      <Footer />
+    </div>
+  );
 }
 
 export default Home;
