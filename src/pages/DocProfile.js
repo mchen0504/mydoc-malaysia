@@ -35,7 +35,7 @@ function DocProfile(props) {
 
   useEffect(() => {
     axios
-      .get("/two", {
+      .get("/doctorprofile", {
         params: {
           hospital,
           specialty,

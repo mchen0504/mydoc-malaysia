@@ -13,7 +13,6 @@ import CovidAlert from "../components/Alert";
 
 // import DocEditProfile from "../components/docAccount/DocEditProfile";
 import DocAccountVerification from "../components/docAccount/DocAccountVerification";
-import AccountSettings from "../components/docAccount/AccountSettings";
 import DocEditProfile from "../components/docAccount/DocEditProfile";
 
 //eshin加的 5/4/2020
@@ -51,7 +50,7 @@ function Account(props) {
             params: {
               username: userInfo.username,
               specialty: userInfo.profile.specialty,
-              hospital: userInfo.profile.hospital,
+              hospital: userInfo.profile.hospital.replace(/\s+/g, ""),
             },
           })
           .then((res) => {
@@ -151,7 +150,7 @@ function Account(props) {
         userInfo={userInfo}
       />
     );
-  } else if (index === 4) {
+  } else {
     rightPanel = (
       <DocAccountVerification
         verifyShowWarning={verifyShowWarning}
@@ -166,9 +165,6 @@ function Account(props) {
         userInfo={userInfo}
       />
     );
-  } else {
-    rightPanel = <AccountSettings />;
-    mobileScreen = <AccountSettings />;
   }
 
   return (

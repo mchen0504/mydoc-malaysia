@@ -32,7 +32,7 @@ function HospProfile(props) {
 
   useEffect(() => {
     axios
-      .get("/hosptwo", {
+      .get("/hospitalprofile", {
         params: {
           hospital,
           specialty,

@@ -71,9 +71,6 @@ function TabPanel(props) {
 export default function SearchTabs(props) {
   const classes = useStyles();
 
-  const conditions = props.conditionListForInput;
-  const specialties = props.specialtyListForInput;
-
   const [value, setValue] = useState(0);
   const [keyword, setkeyword] = useState("");
 
@@ -174,12 +171,13 @@ export default function SearchTabs(props) {
       <TabPanel value={value} index={0}>
         <Autocomplete
           onChange={handleSpecialtySearchKeyChange}
-          options={specialties}
+          options={props.specialties}
           getOptionLabel={(option) => option.specialty}
           filterOptions={filterOptions("specialty")}
           disabled={
-            props.searchData === undefined ||
-            props.specialtyListForInput === undefined
+            !props.searchData ||
+            props.conditions.length === 0 ||
+            props.specialties.length === 0
           }
           renderInput={(params) => (
             <TextField
@@ -204,8 +202,9 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.docName}
           filterOptions={filterOptions("docName")}
           disabled={
-            props.searchData === undefined ||
-            props.specialtyListForInput === undefined
+            !props.searchData ||
+            props.conditions.length === 0 ||
+            props.specialties.length === 0
           }
           renderInput={(params) => (
             <TextField
@@ -235,8 +234,9 @@ export default function SearchTabs(props) {
           getOptionLabel={(option) => option.hospName}
           filterOptions={filterOptions("hospName")}
           disabled={
-            props.searchData === undefined ||
-            props.specialtyListForInput === undefined
+            !props.searchData ||
+            props.conditions.length === 0 ||
+            props.specialties.length === 0
           }
           renderInput={(params) => (
             <TextField
@@ -262,13 +262,13 @@ export default function SearchTabs(props) {
       <TabPanel value={value} index={3}>
         <Autocomplete
           onChange={handleConditionSearchKeyChange}
-          options={conditions}
+          options={props.conditions}
           getOptionLabel={(option) => option.condition}
           filterOptions={filterOptions("condition")}
           disabled={
-            props.searchData === undefined ||
-            props.conditionListForInput === undefined ||
-            props.specialtyListForInput === undefined
+            !props.searchData ||
+            props.conditions.length === 0 ||
+            props.specialties.length === 0
           }
           renderInput={(params) => {
             if (props.conditionLabel !== "") {

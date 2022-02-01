@@ -61,7 +61,7 @@ export default function SearchResults(props) {
     keyword,
     filtered,
     searchState,
-    searchType,
+    urlSearchType,
     filters,
     setFilters,
   } = props;
@@ -153,7 +153,7 @@ export default function SearchResults(props) {
   }
 
   let docHosbuttonGroup = [];
-  if (searchType != "Doctor") {
+  if (urlSearchType != "Doctor") {
     docHosbuttonGroup = (
       <ToggleButtonGroup value={display} exclusive onChange={handleDisplay}>
         <ToggleButton value="doctor" color="primary">
@@ -172,7 +172,7 @@ export default function SearchResults(props) {
 
   let dataInfoNotesDoc = "Display results by doctors";
   let dataInfoNotesHos = "Display results by hospitals";
-  if (searchType == "Hospital") {
+  if (urlSearchType == "Hospital") {
     dataInfoNotesDoc = "Doctors related to " + '"' + keyword + '"';
     dataInfoNotesHos = "Hospitals related to " + '"' + keyword + '"';
   }

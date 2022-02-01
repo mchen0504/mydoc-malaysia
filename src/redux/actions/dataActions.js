@@ -1,8 +1,6 @@
-// 以后会用到
 import { LOADING_USER, GET_SEARCH_DATA, GET_INPUT_LIST } from "../types";
 import axios from "axios";
 
-// send specialty list to database
 export const sendSpecList = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
@@ -13,7 +11,6 @@ export const sendSpecList = (data) => (dispatch) => {
     .catch((err) => console.error(err));
 };
 
-// send condition list to database
 export const sendCondList = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios

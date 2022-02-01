@@ -66,8 +66,8 @@ export default function GlobalSearch(props) {
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const handleClickOpen = () => {
-    props.setSearchType("Specialty");
-    props.setSearchValue("");
+    // props.setSearchType("Specialty");
+    // props.setSearchValue("");
     setOpen(true);
   };
 

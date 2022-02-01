@@ -141,8 +141,8 @@ function DocEditProfile(props) {
   useEffect(() => {
     const getData = async () => {
       try {
-        let specialties = await axios.get("/specialtylist");
-        let conditions = await axios.get("/conditionlist");
+        let specialties = props.specialtyListForInput;
+        let conditions = props.conditionListForInput;
 
         setList({
           specialtyList: specialties,
@@ -171,14 +171,14 @@ function DocEditProfile(props) {
             state: profile.state,
             postalCode: profile.postalCode,
             // appt
-            call: appt.call.status,
-            online: appt.online.status,
-            email: appt.email.status,
-            onsite: appt.onsite.status,
+            call: appt?.call.status,
+            online: appt?.online.status,
+            email: appt?.email.status,
+            onsite: appt?.onsite.status,
             // contact
-            callNumber: appt.call.content,
-            onlineLink: appt.online.content,
-            emailAddress: appt.email.content,
+            callNumber: appt?.call.content,
+            onlineLink: appt?.online.content,
+            emailAddress: appt?.email.content,
             // expertise
             specialty: docInfo.specialty,
             removedSpecialty: docInfo.specialty,
@@ -827,6 +827,7 @@ function DocEditProfile(props) {
   } else {
     return (
       <a id="profile" className={classes.anchor}>
+        {console.log(docInfo)}
         <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
           <Grid item xs={10} md={8}>
@@ -1411,8 +1412,8 @@ function DocEditProfile(props) {
 const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
   doctorData: state.user.doctorData,
-  specialtyList: state.data.specialtyList,
-  conditionsList: state.data.conditionsList,
+  specialtyListForInput: state.data.specialtyList,
+  conditionListForInput: state.data.conditionList,
 });
 
 const mapActionsToProps = {

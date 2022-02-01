@@ -223,7 +223,7 @@ function HospInfo(props) {
     };
 
     toggleLike(updateInfo, newLikedList);
-    updateLocalHospList(newLikes);
+    // updateLocalHospList(newLikes);
   };
 
   const toggleLike = (updateInfo, likedList) => {
@@ -231,29 +231,29 @@ function HospInfo(props) {
     props.updateHospitalLikes(updateInfo);
   };
 
-  const updateLocalHospList = (newLikes) => {
-    // set location target list location
-    let newHospList = [];
-    for (let hosp in hospInfo) {
-      let hospItem = hospInfo[hosp];
-      if (hospItem.name === hospInfo.name) {
-        hospItem.NumberOfLikes = newLikes;
-        hospItem.likes = newLikes;
-      }
-      newHospList.push(hospItem);
-    }
-    props.sethospitalInfo(newHospList);
+  // const updateLocalHospList = (newLikes) => {
+  //   // set location target list location
+  //   let newHospList = [];
+  //   for (let hosp in hospInfo) {
+  //     let hospItem = hospInfo[hosp];
+  //     if (hospItem.name === hospInfo.name) {
+  //       hospItem.NumberOfLikes = newLikes;
+  //       hospItem.likes = newLikes;
+  //     }
+  //     newHospList.push(hospItem);
+  //   }
+  //   props.sethospitalInfo(newHospList);
 
-    // set database
-    let newDatabase = props.database;
-    let hospitalId = hospInfo.name.replace(/\s/g, "");
+  // set database
+  //   let newDatabase = props.database;
+  //   let hospitalId = hospInfo.name.replace(/\s/g, "");
 
-    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].likes =
-      newLikes;
-    newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].NumberOfLikes =
-      newLikes;
-    props.setDatabase(newDatabase);
-  };
+  //   newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].likes =
+  //     newLikes;
+  //   newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].NumberOfLikes =
+  //     newLikes;
+  //   props.setDatabase(newDatabase);
+  // };
 
   // if the user has liked this hospital before: filled heart, otherwise outlined heart
   const LikeIcon = likeSaveInfo.hasLiked
@@ -406,14 +406,14 @@ function HospInfo(props) {
 
       {/* For 'return to hospitals' button (需要换成return to doctors， depending on user之前是怎么搜的) */}
       <Box display="flex" mt={3} mb={3} className={classes.returnBox}>
-        <Button
+        {/* <Button
           style={{ fontSize: 16, textTransform: "none" }}
           color="primary"
           startIcon={<ArrowBackIosIcon />}
           onClick={backToRes}
         >
           Return to {returnPageDesc}
-        </Button>
+        </Button> */}
       </Box>
 
       {/* 手机屏幕才会出现的格式：hospital照片在上面 ，like icon 在右上角*/}

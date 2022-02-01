@@ -74,6 +74,18 @@ function Header(props) {
   const classes = useStyles();
   const history = useHistory();
   const [bodyPartsDic, setBodyPartsDic] = useState();
+  const [searchType, setSearchType] = useState("Specialty");
+  const [searchValue, setSearchValue] = useState();
+
+  let conditions = [];
+  Object.keys(props.conditionListForInput).forEach((key) => {
+    conditions.push({ condition: key });
+  });
+
+  let specialties = [];
+  Object.keys(props.specialtyListForInput).forEach((key) => {
+    specialties.push({ specialty: key });
+  });
 
   useEffect(() => {
     axios
@@ -87,7 +99,7 @@ function Header(props) {
   });
 
   let renderBodyParts = null;
-  if (props.searchType === "Condition") {
+  if (searchType === "Condition") {
     renderBodyParts = (
       <BodyPartsDialog
         setKeywords={props.setKeywords}
@@ -100,8 +112,8 @@ function Header(props) {
 
   const handleSubmit = () => {
     props.setConditionLabel("");
-    let searchKeyword = props.searchValue.replace(/\s+/g, "-");
-    history.push(`/results/${props.searchType}/${searchKeyword}`);
+    let searchKeyword = searchValue.replace(/\s+/g, "-");
+    history.push(`/results/${searchType}/${searchKeyword}`);
   };
 
   let headerDisplay;
@@ -123,13 +135,13 @@ function Header(props) {
         <SearchTabs
           searchData={props.searchData}
           getKeyWords={props.getKeyWords}
-          searchType={props.searchType}
-          setSearchType={props.setSearchType}
-          searchValue={props.searchValue}
-          setSearchValue={props.setSearchValue}
+          searchType={searchType}
+          setSearchType={setSearchType}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
           setKeywords={props.setKeywords}
-          conditionListForInput={props.conditionListForInput}
-          specialtyListForInput={props.specialtyListForInput}
+          conditions={conditions}
+          specialties={specialties}
           conditionLabel={props.conditionLabel}
           setConditionLabel={props.setConditionLabel}
         />

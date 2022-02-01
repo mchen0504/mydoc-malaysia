@@ -10,8 +10,8 @@ import { getData } from "../redux/actions/dataActions";
 function Results(props) {
   const location = useLocation();
   const locationParts = location.pathname.split("/");
-  const searchType = locationParts[2];
-  const searchValue = locationParts[3].replace(/-/g, "");
+  const urlSearchType = locationParts[2];
+  const urlSearchValue = locationParts[3].replace(/-/g, "");
   const keyword = locationParts[3].replace(/-/g, " ");
   const reportMax = 50;
 
@@ -37,11 +37,14 @@ function Results(props) {
   }, []);
 
   useEffect(() => {
+    setFilters({
+      hosType: "both",
+      languageList: [],
+      yearOfPractice: [1000, -1],
+    });
     if (props.searchData) {
-      let userKeyWords = searchValue.toLowerCase();
-      console.log(props.searchData);
+      let userKeyWords = urlSearchValue.toLowerCase();
       let searchResults = getSearchInfo(userKeyWords, props.searchData);
-      console.log(searchResults);
       sethospitalInfo(searchResults.newHosData);
       setDocInfo(searchResults.newDocData);
       // setSearchState("finished");
@@ -51,7 +54,7 @@ function Results(props) {
   const getSearchInfo = (userKeyWords, data) => {
     let newDocData = [];
     let newHosData = [];
-    if (searchType === "Specialty") {
+    if (urlSearchType === "Specialty") {
       for (let specialty in data) {
         if (specialty.replace(/\s/g, "").toLowerCase() === userKeyWords) {
           for (let hospital in data[specialty].hospitals) {
@@ -77,7 +80,7 @@ function Results(props) {
           }
         }
       }
-    } else if (searchType === "Doctor") {
+    } else if (urlSearchType === "Doctor") {
       for (let specialty in data) {
         for (let hospital in data[specialty].hospitals) {
           let hosp = data[specialty].hospitals[hospital];
@@ -86,7 +89,10 @@ function Results(props) {
             for (let doctor in hosp.doctors) {
               let doc = hosp.doctors[doctor];
               if (
-                doc.name.replace(/\s/g, "").toLowerCase().includes(userKeyWords)
+                doc.name
+                  ?.replace(/\s/g, "")
+                  .toLowerCase()
+                  .includes(userKeyWords)
               ) {
                 if (
                   !doc.deleted &&
@@ -105,7 +111,7 @@ function Results(props) {
           }
         }
       }
-    } else if (searchType === "Hospital") {
+    } else if (urlSearchType === "Hospital") {
       for (let specialty in data) {
         for (let hospital in data[specialty].hospitals) {
           let hosp = data[specialty].hospitals[hospital];
@@ -142,12 +148,10 @@ function Results(props) {
           return item.toLowerCase().replace(/\s/g, "");
         });
         let conditionMatch = conditionList.includes(userKeyWords);
-        console.log("found condition");
         if (conditionMatch) {
           for (let hospital in data[specialty].hospitals) {
             let hosp = data[specialty].hospitals[hospital];
             if (!hosp.report || hosp.report.reportCount < reportMax) {
-              console.log(hosp.name);
               let doctorsFound = 0;
               for (let doctor in hosp.doctors) {
                 let doc = hosp.doctors[doctor];
@@ -155,26 +159,20 @@ function Results(props) {
                 doctorCondition = doctorCondition.map((item) => {
                   return item.toLowerCase().replace(/\s/g, "");
                 });
-                console.log(doctorCondition);
-                console.log(doc);
                 if (
                   doctorCondition.includes(userKeyWords) &&
                   !doc.deleted &&
                   (!doc.report || doc.report.reportCount < reportMax) &&
                   doc.publish
                 ) {
-                  console.log(doctor);
                   doc.username = doctor;
                   newDocData.push(doc);
                   doctorsFound++;
                 }
               }
-              console.log(newDocData);
               if (doctorsFound > 0) {
-                console.log(hosp);
                 newHosData.push(hosp);
               }
-              console.log(newHosData);
             }
           }
         }
@@ -190,13 +188,10 @@ function Results(props) {
           newItem = newItem.replace(newItem[0], newItem[0].toUpperCase());
           return newItem;
         });
-        // targetDoc.conditions?.forEach((condition) => {
-        // for (let condition in targetDoc.conditions) {
         for (let i = 0; i < targetDoc.conditions?.length; i++) {
-          console.log(targetDoc.conditions[i]);
-          console.log(conditionList.indexOf(targetDoc.conditions[i]));
-          if (conditionList.indexOf(targetDoc.conditions[i]) === -1) {
-            conditionList.push(targetDoc.conditions[i]);
+          let condition = targetDoc.conditions[i];
+          if (conditionList.indexOf(condition) === -1) {
+            conditionList.push(condition);
           }
         }
       }
@@ -261,26 +256,24 @@ function Results(props) {
 
   return (
     <div key={location.key}>
-      {console.log(searchState)}
-      {console.log(docInfo)}
       <Navbar
         currentPage="results"
         {...props}
         database={props.database}
         conditionListForInput={props.conditionListForInput}
         specialtyListForInput={props.specialtyListForInput}
-        searchType={props.searchType}
-        setFilters={setFilters}
-        setSearchType={props.setSearchType}
-        searchValue={props.searchValue}
-        setSearchValue={props.setSearchValue}
+        // setFilters={setFilters}
+        // searchType={props.searchType}
+        // setSearchType={props.setSearchType}
+        // searchValue={props.searchValue}
+        // setSearchValue={props.setSearchValue}
       />
       <SearchResults
         setSearchState={setSearchState}
         keyword={keyword}
         filtered={filtered}
         searchState={searchState}
-        searchType={searchType}
+        urlSearchType={urlSearchType}
         filters={filters}
         setFilters={setFilters}
       />

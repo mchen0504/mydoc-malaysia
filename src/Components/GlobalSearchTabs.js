@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
@@ -100,15 +101,23 @@ function GlobalSearchTabs(props) {
   const history = useHistory();
 
   const [value, setValue] = useState(0);
-  const [keyword, setkeyword] = useState("");
-  let specialties = props.specialtyListForInput;
-  let conditions = props.conditionListForInput;
+  const [searchType, setSearchType] = useState("Specialty");
+  const [searchValue, setSearchValue] = useState();
+
+  let conditions = [];
+  Object.keys(props.conditionListForInput).forEach((key) => {
+    conditions.push({ condition: key });
+  });
+
+  let specialties = [];
+  Object.keys(props.specialtyListForInput).forEach((key) => {
+    specialties.push({ specialty: key });
+  });
 
   let docNames = [];
   let hospNames = [];
 
   const getDocHosNameList = () => {
-    console.log(props.searchData);
     let allInfo = props.searchData;
     for (let spec in allInfo) {
       let targetSpec = allInfo[spec];
@@ -143,36 +152,35 @@ function GlobalSearchTabs(props) {
       method = "Condition";
     }
     setValue(newValue);
-    props.setSearchType(method);
+    setSearchType(method);
   };
 
   const handleSpecialtySearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchValue(newValue.specialty);
+      setSearchValue(newValue.specialty);
     }
   };
 
   const handleDoctorSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchValue(newValue.docName);
+      setSearchValue(newValue.docName);
     }
   };
 
   const handleHospitalSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchValue(newValue.hospName);
+      setSearchValue(newValue.hospName);
     }
   };
 
   const handleConditionSearchKeyChange = (event, newValue) => {
     if (newValue) {
-      props.setSearchValue(newValue.condition);
+      setSearchValue(newValue.condition);
     }
   };
 
   const getTextFieldValue = (event) => {
-    setkeyword(event.target.value);
-    props.setSearchValue(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const filterOptions = (searchType) => {
@@ -184,19 +192,15 @@ function GlobalSearchTabs(props) {
 
   const handleSearch = () => {
     props.handleClose();
-    console.log(props.searchType);
-    console.log(props.searchValue);
-    props.setFilters({
-      hosType: "both",
-      languageList: [],
-      yearOfPractice: [1000, -1],
-    });
-    let searchKeyword = props.searchValue.replace(/\s+/g, "-");
-    history.push(`/results/${props.searchType}/${searchKeyword}`);
+    let searchKeyword = searchValue.replace(/\s+/g, "-");
+    history.push(`/results/${searchType}/${searchKeyword}`);
   };
 
   return (
     <div className={classes.verticalTabContainer}>
+      {console.log(conditions)}
+      {console.log(specialties)}
+
       {/* vertical search tabs for screen > ipad size */}
       <Hidden smDown>
         <Tabs

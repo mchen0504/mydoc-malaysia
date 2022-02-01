@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { updateVerification } from "../../redux/actions/userActions";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -15,8 +16,6 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
-
-import { updateVerification } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   ...theme.account,
@@ -174,7 +173,6 @@ function DocAccountVerification(props) {
               fullWidth
               required
               label="Medical Registration Number"
-              // defaultValue={storedMedicalNum}
               defaultValue={currentInfo.medicalRegistrationNumber}
               variant="outlined"
               onChange={editMedicalNumber}
@@ -270,15 +268,8 @@ DocAccountVerification.propTypes = {
   updateVerification: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  storedVerificationInfo: state.user.credentials.verification,
-});
-
 const mapActionsToProps = {
   updateVerification,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(DocAccountVerification);
+export default connect(mapStateToProps)(DocAccountVerification);

@@ -163,6 +163,7 @@ function DocInfo(props) {
   };
 
   useEffect(() => {
+    console.log("setting states");
     const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
     const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 
@@ -185,7 +186,7 @@ function DocInfo(props) {
 
       oneReason: "",
     });
-  }, [docInfo, userInfo]);
+  }, []);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LIKE FUNCTIONALITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -195,7 +196,6 @@ function DocInfo(props) {
     let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
       console.log("unlike this doctor");
-      console.log(newLikes);
       let index = newLikedList.findIndex(
         (doctor) => doctor.username === docInfo.username
       );
@@ -210,8 +210,8 @@ function DocInfo(props) {
       }));
     } else {
       console.log("like this doctor");
-      console.log(newLikes);
       newLikes = newLikes + 1;
+      console.log(newLikes);
       let newDocInfo = {
         hospital: docInfo.hospital,
         specialty: docInfo.specialty,
@@ -238,7 +238,7 @@ function DocInfo(props) {
       likes: newLikes,
     };
     toggleLike(updateInfo, newLikedList);
-    updateLocalDocList(newLikes);
+    // updateLocalDocList(newLikes);
   };
 
   const toggleLike = (updateInfo, likedList) => {
