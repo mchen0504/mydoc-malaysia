@@ -1,16 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import Bg from "../img/login/doctors-heart.png";
 
-// material ui
-import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from "@material-ui/core/styles";
 
-// components
 import SignupTab from "../components/login/SignupTab";
 import Navbar from "../components/Navbar";
 import CovidAlert from "../components/Alert";
 
-// material ui style
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   ...theme.auth,
   bg: {
     [theme.breakpoints.down("md")]: {
@@ -32,24 +29,22 @@ const styles = (theme) => ({
       marginRight: 20,
     },
   },
-});
+}));
 
-// Sign up page
-class Signup extends Component {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Navbar currentPage="signUp" />
-        <div className={classes.covidBox}>
-          <CovidAlert />
+function Signup() {
+  const classes = useStyles();
 
-          <SignupTab />
-          <img src={Bg} alt="doctor-hearts" className={classes.bg} />
-        </div>
+  return (
+    <div>
+      <Navbar currentPage="signUp" />
+      <div className={classes.covidBox}>
+        <CovidAlert />
+
+        <SignupTab />
+        <img src={Bg} alt="doctor-hearts" className={classes.bg} />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-export default withStyles(styles)(Signup);
+export default Signup;

@@ -1,6 +1,8 @@
-import React, { Fragment, useEffect } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -9,9 +11,12 @@ import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
-import axios from "axios";
-
-//icons
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
+import CloseIcon from "@material-ui/icons/Close";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
@@ -21,16 +26,6 @@ import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutline
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import TextField from "@material-ui/core/TextField";
-import CloseIcon from "@material-ui/icons/Close";
-import { Link } from "react-router-dom";
-
-import PropTypes from "prop-types";
 
 import {
   changeDocLikeStatus,
@@ -42,7 +37,6 @@ import {
   reportDoctor,
 } from "../../redux/actions/dataActions";
 
-//components
 import CovidAlert from "../Alert";
 import DocTags from "./DocTags";
 
@@ -98,13 +92,7 @@ const useStyles = makeStyles((theme) => ({
 
 function DocInfo(props) {
   const classes = useStyles();
-  const location = useLocation();
   const { docInfo, userInfo } = props;
-
-  if (props.backTo === null) {
-    props.history.push("/");
-    window.location.reload();
-  }
 
   // const backToRes = () => {
   //   if (props.history !== null) {
@@ -126,16 +114,14 @@ function DocInfo(props) {
 
   const authenticated = props.authenticated;
 
-  const [likeSaveInfo, setState] = React.useState({
+  const [likeSaveInfo, setState] = useState({
     // like functionality
     hasLiked: false,
     likedList: [],
     numLikes: 0,
-
     // save functionality
     hasSaved: false,
     savedList: [],
-
     // report functionality
     reportedList: [],
     numReports: 0,
@@ -238,37 +224,11 @@ function DocInfo(props) {
       likes: newLikes,
     };
     toggleLike(updateInfo, newLikedList);
-    // updateLocalDocList(newLikes);
   };
 
   const toggleLike = (updateInfo, likedList) => {
     props.changeDocLikeStatus(likedList);
     props.updateDoctorLikes(updateInfo);
-  };
-
-  const updateLocalDocList = (newLikes) => {
-    let newDocList = [];
-    for (let doc in docInfo) {
-      let docItem = docInfo[doc];
-      if (docItem.DocName === docInfo.name) {
-        docItem.NumberOfLikes = newLikes;
-        docItem.likes = newLikes;
-      }
-      newDocList.push(docItem);
-    }
-    // props.setDocInfo(newDocList);
-
-    // set database
-    // let newDatabase = props.database;
-    // let hospitalId = docInfo.hospital.replace(/\s/g, "");
-    // let docID = docInfo.username.replace(/\s/g, "");
-
-    // newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[docID].likes =
-    //   newLikes;
-    // newDatabase[docInfo.specialty].hospitals[hospitalId].doctors[
-    //   docID
-    // ].NumberOfLikes = newLikes;
-    // props.setDatabase(newDatabase);
   };
 
   // if the user has liked this doctor before: filled heart, otherwise outlined heart
@@ -312,16 +272,13 @@ function DocInfo(props) {
     props.changeDocSaveStatus(newSavedList);
   };
 
-  // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
   const SaveIcon = likeSaveInfo.hasSaved
     ? BookmarkIcon
     : BookmarkBorderOutlinedIcon;
 
-  // -------------------------------------------------------------------- //
   // ----------------------------Report---------------------------------------- //
-  // 新加 5/14
   //report弹窗：填的表
-  const [reportOpen, setReportOpen] = React.useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const handleReportOpen = () => {
     setReportOpen(true);
   };
@@ -351,7 +308,7 @@ function DocInfo(props) {
       reportedList.push(docInfo.username);
     }
 
-    // send to specialty doctor account
+    // send to specialty doctor profile
     const oneReport = {
       reportCount: likeSaveInfo.numReports + 1,
       reportReasons: reasons,
@@ -378,11 +335,9 @@ function DocInfo(props) {
     }));
   };
 
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // ~~~~~~~~~~~ign up or login in if want to save or report~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~Sign up or login in if want to save or report~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  // 弹窗去signin/signup如果要report没有login
-  const [loginOpen, setLoginOpen] = React.useState({
+  const [loginOpen, setLoginOpen] = useState({
     open: false,
     // keep track of what function the user selects (report, like, save, tag)
     userOption: "",
@@ -414,17 +369,16 @@ function DocInfo(props) {
     Icon = EditOutlinedIcon;
   }
 
-  // He Chen
-  let returnPageDesc;
-  if (props.backTo === "resultsPage") {
-    returnPageDesc = "Result Page";
-  } else if (props.backTo === "hospprofile") {
-    returnPageDesc = "Hospital Profile";
-  } else if (props.backTo === "likeHistory") {
-    returnPageDesc = "Like History";
-  } else {
-    returnPageDesc = "Saved";
-  }
+  // let returnPageDesc;
+  // if (props.backTo === "resultsPage") {
+  //   returnPageDesc = "Result Page";
+  // } else if (props.backTo === "hospprofile") {
+  //   returnPageDesc = "Hospital Profile";
+  // } else if (props.backTo === "likeHistory") {
+  //   returnPageDesc = "Like History";
+  // } else {
+  //   returnPageDesc = "Saved";
+  // }
 
   return (
     <div>
@@ -433,7 +387,7 @@ function DocInfo(props) {
         <CovidAlert />
       </div>
 
-      {/* For 'return to doctors' button (需要换成return to hospital， depending on user之前是怎么搜的) */}
+      {/* For 'return to doctors' button */}
       <Box display="flex" mt={3} mb={3} className={classes.returnBox}>
         {/* <Button
           style={{ fontSize: 16, textTransform: "none" }}
@@ -445,7 +399,7 @@ function DocInfo(props) {
         </Button> */}
       </Box>
 
-      {/* 手机屏幕才会出现的格式：doctor照片在上面 ，like icon 在右上角*/}
+      {/* mobile view: doctor's image on top and like icon in upper right hand*/}
       <Hidden smUp>
         <Grid container display="flex" justifyContent="center">
           <Grid item xs={3}></Grid>
@@ -463,15 +417,11 @@ function DocInfo(props) {
               justifyContent="center"
               alignItems="center"
             >
-              {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-                <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-                */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
                 <Fragment>
                   <IconButton onClick={() => handleLoginOpen("Recommend")}>
                     <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
@@ -497,7 +447,7 @@ function DocInfo(props) {
             justifyContent="center"
             alignItems="center"
           >
-            {/* 大屏幕会出现的格式：doctor照片在左边 */}
+            {/* desktop view: doctor image on the left */}
             <Hidden xsDown>
               {/* doctor image */}
               <div style={{ width: 200, height: 250 }}>
@@ -509,7 +459,7 @@ function DocInfo(props) {
               </div>
             </Hidden>
 
-            {/* 手机屏幕出现的格式：doctor's name 在照片下面 */}
+            {/* mobile view: name below image */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
                 {"Dr. " + docInfo?.name}
@@ -518,7 +468,6 @@ function DocInfo(props) {
 
             <Box display="flex" mt={2}>
               {/* report button */}
-
               {authenticated ? (
                 <Button
                   disabled={reported}
@@ -530,7 +479,6 @@ function DocInfo(props) {
                   Report
                 </Button>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的 （这里新的东西比原来长很多 麻烦小心对一下位置）
                 <Fragment>
                   <Button
                     startIcon={<ErrorOutlineOutlinedIcon />}
@@ -612,7 +560,7 @@ function DocInfo(props) {
                 </Fragment>
               )}
 
-              {/* report dialogue 新加的 5/10/2020 */}
+              {/* report dialogue*/}
               <Dialog
                 fullWidth="true"
                 maxWidth="sm"
@@ -666,7 +614,6 @@ function DocInfo(props) {
               </Dialog>
 
               {/* save button */}
-
               {authenticated ? (
                 <Button
                   startIcon={<SaveIcon />}
@@ -693,7 +640,7 @@ function DocInfo(props) {
         </Grid>
 
         <Grid item xs={12} sm={6} md={6}>
-          {/* 大屏幕会出现的格式：doctor name 在右边 */}
+          {/* desktop view: name on the right */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
               {"Dr. " + docInfo?.name}
@@ -701,7 +648,7 @@ function DocInfo(props) {
           </Hidden>
           <br></br>
 
-          {/* 手机幕会出现的格式：灰色比较粗的divider line */}
+          {/* mobile view: thick divider */}
           <Hidden smUp>
             <hr className={classes.line}></hr>
           </Hidden>
@@ -752,7 +699,7 @@ function DocInfo(props) {
         </Grid>
 
         <Grid item xs={12} sm={1} md={2}>
-          {/* 大屏幕会出现的格式：like icon在最右边 */}
+          {/* desktop view: like button on far right */}
           <Hidden xsDown>
             <Box
               display="flex"
@@ -760,15 +707,11 @@ function DocInfo(props) {
               justifyContent="center"
               alignItems="center"
             >
-              {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-                <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-                */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
                 <Fragment>
                   <IconButton onClick={() => handleLoginOpen("Recommend")}>
                     <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
@@ -801,8 +744,6 @@ DocInfo.propTypes = {
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
-  storedCredentials: state.user.credentials,
-  searchInfo: state.data.searchInfo,
 });
 
 const mapActionsToProps = {

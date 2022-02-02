@@ -1,86 +1,78 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 
-// material ui
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Avatar from "@material-ui/core/Avatar";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { logoutUser } from "../redux/actions/userActions";
 
-// redux
 import { connect } from "react-redux";
 
 // material ui style
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   ...theme.userMenu,
-});
+}));
 
 // User Menu component (used in Navbar)
-class UserMenu extends Component {
-  state = {
+
+function UserMenu(props) {
+  const classes = useStyles();
+
+  const [state, setState] = useState({
     anchorEl: null,
     setAnchorEl: null,
+  });
+
+  const handleLogout = () => {
+    props.logoutUser(props.history);
   };
 
-  handleLogout = () => {
-    this.props.logoutUser(this.props.history);
+  const handleMenu = (event) => {
+    setState({ anchorEl: event.currentTarget });
   };
 
-  handleMenu = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleClose = () => {
+    setState({ anchorEl: null });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  render() {
-    const {
-      classes,
-      user: {
-        credentials: { firstLetter, userType },
-      },
-    } = this.props;
-
-    return (
-      <Fragment>
-        <IconButton onClick={this.handleMenu} className={classes.userButton}>
-          <Avatar className={classes.avatar}>{firstLetter}</Avatar>
-        </IconButton>
-        <Menu
-          id="menu-appbar"
-          anchorEl={this.state.anchorEl}
-          getContentAnchorEl={null}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(this.state.anchorEl)}
-          onClose={this.handleClose}
-        >
-          <div>
-            {/* 目前是link to docaccount (我还没弄Useraccount) 5/1/2020 */}
-            <MenuItem component={Link} to="/account">
-              My Account
-            </MenuItem>
-            <MenuItem onClick={this.handleLogout}>Log Out</MenuItem>
-          </div>
-        </Menu>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <IconButton onClick={handleMenu} className={classes.userButton}>
+        <Avatar className={classes.avatar}>
+          {props.credentials.firstLetter}
+        </Avatar>
+      </IconButton>
+      <Menu
+        id="menu-appbar"
+        anchorEl={state.anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(state.anchorEl)}
+        onClose={handleClose}
+      >
+        <div>
+          <MenuItem component={Link} to="/account">
+            My Account
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+        </div>
+      </Menu>
+    </Fragment>
+  );
 }
+
 const mapStateToProps = (state) => ({
-  user: state.user,
+  credentials: state.user.credentials,
 });
 
-export default connect(mapStateToProps, { logoutUser })(
-  withStyles(styles)(UserMenu)
-);
+export default connect(mapStateToProps, { logoutUser })(UserMenu);

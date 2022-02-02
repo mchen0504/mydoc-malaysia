@@ -1,4 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -8,19 +10,10 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Link } from "react-router-dom";
-
-import axios from "axios";
 
 import savedLikeNoResultsFound from "../../img/savedLikeNoResultsFound.png";
 import DocCard from "../results/DocCard";
 import HospitalCard from "../results/HospitalCard";
-
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Chip from "@material-ui/core/Chip";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const useStyles = makeStyles((theme) => ({
   ...theme.account,
@@ -73,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 function LikeHistorySaved(props) {
   const classes = useStyles();
   const { userInfo } = props;
@@ -82,11 +73,8 @@ function LikeHistorySaved(props) {
   // decide if the page should render Like History or Saved
   const displayType = props.saveLike;
 
-  const [display, setDisplay] = React.useState("doctor"); //display by doctor as default
-  // const [doctorCards, setDoctorCards] = React.useState([]); //display by doctor as default
-  // const [hospitalCards, setHospitalCards] = React.useState([]); //display by doctor as default
-
-  const [stored, setStored] = React.useState({
+  const [display, setDisplay] = useState("doctor"); //display by doctor by default
+  const [stored, setStored] = useState({
     username: "",
     doctors: [],
     hospitals: [],
@@ -97,10 +85,6 @@ function LikeHistorySaved(props) {
       setDisplay(newDisplay);
     }
   };
-
-  const [renderCount, setRenderCount] = React.useState(0);
-
-  const [databaseInfo, setDatabase] = React.useState({});
 
   useEffect(() => {
     let doctors = [];
@@ -136,17 +120,11 @@ function LikeHistorySaved(props) {
       </Box>
     ) : (
       stored.doctors?.map((doctor) => {
-        // let specialty = doctor.specialty;
-        // let hospital = doctor.hospital.replace(/\s+/g, "");
-        // let username = doctor.username.replace(/\s+/g, "");
-        // let targetDoc =
-        //   res[1].data[specialty]["hospitals"][hospital]["doctors"][username];
         return (
           <DocCard
             {...props}
             key={doctor.username}
             docInfo={doctor}
-            // targetDocUserName={username}
             displayType={displayType}
           />
         );
@@ -171,19 +149,12 @@ function LikeHistorySaved(props) {
       </Box>
     ) : (
       stored.hospitals?.map((hospital) => {
-        // let specialty = hospital.relatedSpecialty;
-        // let hospitalUserName = hospital.name.replace(/\s+/g, "");
-        // let targetHos = res[1].data[specialty]["hospitals"][hospitalUserName];
         return (
           <HospitalCard
             {...props}
             key={hospital.name}
             hospInfo={hospital}
-            // targetHos={targetHos}
-            // targetHosUserName={hospitalUserName}
-            // hospitalInfo={hospital}
             displayType={displayType}
-            database={databaseInfo}
           />
         );
       })

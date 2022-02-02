@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import searchNotFoundImg from "../../img/results/searchnotfound.png";
 import Box from "@material-ui/core/Box";
+
 const useStyles = makeStyles((theme) => ({
   img: {
     objectFit: "cover",

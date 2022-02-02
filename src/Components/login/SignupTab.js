@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-// material ui
 import { withStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-// components
 import GeneralSignup from "./GeneralSignup";
 import DoctorSignup from "./DoctorSignup";
 
@@ -63,7 +61,7 @@ const StyledTab = withStyles((theme) => ({
 }))((props) => <Tab disableRipple {...props} />);
 
 export default function CustomizedTabs() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

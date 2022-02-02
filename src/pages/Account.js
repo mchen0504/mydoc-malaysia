@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import axios from "axios";
+
+import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
-//components from docAccount folder
 import DocSideNav from "../components/docAccount/DocSideNav";
 import Navbar from "../components/Navbar";
 import CovidAlert from "../components/Alert";
-
-// import DocEditProfile from "../components/docAccount/DocEditProfile";
 import DocAccountVerification from "../components/docAccount/DocAccountVerification";
 import DocEditProfile from "../components/docAccount/DocEditProfile";
-
-//eshin加的 5/4/2020
 import LikeHistorySaved from "../components/docAccount/LikeHistorySaved";
 
-// material ui style
 const useStyles = makeStyles((theme) => ({
   covidBox: {
     marginTop: 64,
@@ -32,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Account(props) {
   const classes = useStyles();
-  const [isLoading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState();
   const [docInfo, setDocInfo] = useState();
   const [profileShowWarning, setWarningProfile] = useState("");
@@ -55,7 +48,6 @@ function Account(props) {
           })
           .then((res) => {
             setDocInfo(res.data);
-            setLoading(false);
           })
           .catch((err) => console.error(err));
       }
@@ -83,12 +75,7 @@ function Account(props) {
           docInfo={docInfo}
         />
       ) : (
-        <LikeHistorySaved
-          {...props}
-          database={props.database}
-          saveLike="saved"
-          userInfo={userInfo}
-        />
+        <LikeHistorySaved {...props} saveLike="saved" userInfo={userInfo} />
       );
 
     mobileScreen = (
@@ -117,38 +104,14 @@ function Account(props) {
       />
     );
   } else if (index === 2) {
-    rightPanel = (
-      <LikeHistorySaved
-        {...props}
-        database={props.database}
-        saveLike="saved"
-        userInfo={userInfo}
-      />
-    );
-    mobileScreen = (
-      <LikeHistorySaved
-        {...props}
-        database={props.database}
-        saveLike="saved"
-        userInfo={userInfo}
-      />
-    );
+    rightPanel = <LikeHistorySaved saveLike="saved" userInfo={userInfo} />;
+    mobileScreen = <LikeHistorySaved saveLike="saved" userInfo={userInfo} />;
   } else if (index === 3) {
     rightPanel = (
-      <LikeHistorySaved
-        {...props}
-        database={props.database}
-        saveLike="likeHistory"
-        userInfo={userInfo}
-      />
+      <LikeHistorySaved saveLike="likeHistory" userInfo={userInfo} />
     );
     mobileScreen = (
-      <LikeHistorySaved
-        {...props}
-        database={props.database}
-        saveLike="likeHistory"
-        userInfo={userInfo}
-      />
+      <LikeHistorySaved saveLike="likeHistory" userInfo={userInfo} />
     );
   } else {
     rightPanel = (
@@ -177,7 +140,6 @@ function Account(props) {
         <Grid container spacing={0}>
           <Grid item md={4} lg={3}>
             <DocSideNav
-              isLoading={isLoading}
               userInfo={userInfo}
               docInfo={docInfo}
               profileShowWarning={profileShowWarning}

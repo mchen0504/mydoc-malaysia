@@ -1,12 +1,10 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import clsx from "clsx";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
-import props from "prop-types";
 import FilterListIcon from "@material-ui/icons/FilterList";
-//filter functions
 import {
   HospitalType,
   Languages,
@@ -36,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 //filter button for small screens
 export function FilterButtonPhone(props) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     left: false,
   });
 
@@ -56,7 +54,6 @@ export function FilterButtonPhone(props) {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Box display="flex" flexDirection="column" justifyContent="center" ml={8}>
@@ -68,7 +65,7 @@ export function FilterButtonPhone(props) {
         <Languages filterLanguageList={props.filterLanguageList} />
         <br></br>
         <br></br>
-        {/* NOT DONE YET - If display by doctor, filter sidebar will show years of practice; 
+        {/* If display by doctor, filter sidebar will show years of practice; 
             if display by hospital, filter sidebar will show location */}
         {props.display === "doctor" && <YearsOfPractice />}
       </Box>
@@ -78,7 +75,7 @@ export function FilterButtonPhone(props) {
   return (
     <div>
       {["Filter"].map((anchor) => (
-        <React.Fragment key={anchor}>
+        <Fragment key={anchor}>
           <Button
             className={classes.filterButton}
             variant="outlined"
@@ -95,7 +92,7 @@ export function FilterButtonPhone(props) {
           >
             {list(anchor)}
           </Drawer>
-        </React.Fragment>
+        </Fragment>
       ))}
     </div>
   );

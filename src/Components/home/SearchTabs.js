@@ -72,7 +72,6 @@ export default function SearchTabs(props) {
   const classes = useStyles();
 
   const [value, setValue] = useState(0);
-  const [keyword, setkeyword] = useState("");
 
   const handleSearchMethodChange = (event, newValue) => {
     let method = "";
@@ -141,7 +140,6 @@ export default function SearchTabs(props) {
   };
 
   const getTextFieldValue = (event) => {
-    setkeyword(event.target.value);
     props.setSearchValue(event.target.value);
   };
 
@@ -181,7 +179,6 @@ export default function SearchTabs(props) {
           }
           renderInput={(params) => (
             <TextField
-              // disabled={true}
               {...params}
               label="Search by specialty"
               variant="filled"
@@ -212,11 +209,6 @@ export default function SearchTabs(props) {
               label="Search by doctor name"
               variant="filled"
               onChange={getTextFieldValue}
-              onKeyPress={(ev) => {
-                if (ev.key === "Enter") {
-                  props.getKeyWords(keyword);
-                }
-              }}
               className={classes.inputRoot}
               InputProps={{ ...params.InputProps, disableUnderline: true }}
             />
@@ -243,12 +235,6 @@ export default function SearchTabs(props) {
               {...params}
               label="Search by hospital name"
               onChange={getTextFieldValue}
-              onKeyPress={(ev) => {
-                if (ev.key === "Enter") {
-                  props.getKeyWords(keyword);
-                  props.startSearch();
-                }
-              }}
               variant="filled"
               className={classes.inputRoot}
               InputProps={{ ...params.InputProps, disableUnderline: true }}

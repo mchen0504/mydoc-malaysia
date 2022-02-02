@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -12,7 +13,6 @@ import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,12 +33,12 @@ export default function BodyPartsDialog(props) {
   const classes = useStyles();
 
   //dialog open/close
-  const [open, setOpen] = React.useState(false);
-  const [fullWidth] = React.useState(true);
-  const [maxWidth] = React.useState("lg");
-  const [selectedSym, setSelectedSym] = React.useState("");
-  const [selectedCondition, setSelectedCondition] = React.useState("");
-  const [selectedBodyPart, setSelectedBodyPart] = React.useState("");
+  const [open, setOpen] = useState(false);
+  const [fullWidth] = useState(true);
+  const [maxWidth] = useState("lg");
+  const [selectedSym, setSelectedSym] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState("");
+  const [selectedBodyPart, setSelectedBodyPart] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,7 +48,7 @@ export default function BodyPartsDialog(props) {
   };
 
   const handleSubmit = () => {
-    props.setKeywords(selectedCondition);
+    props.setSearchValue(selectedCondition);
     props.setConditionLabel(selectedCondition);
     setOpen(false);
   };
@@ -64,8 +64,9 @@ export default function BodyPartsDialog(props) {
   };
 
   const getBodyPart = (bodyPart) => {
+    console.log("setting body part");
     setSelectedBodyPart(bodyPart);
-    setSelectedSym("");
+    // setSelectedSym("");
   };
 
   let symList = [];
@@ -82,7 +83,7 @@ export default function BodyPartsDialog(props) {
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Typography style={{ color: "white" }}>
         Don’t know your condition name?{" "}
         <Link
@@ -208,10 +209,10 @@ export default function BodyPartsDialog(props) {
                 mt={5}
                 ml={2}
               >
-                <List className={classes.bodypartList} id="Head">
-                  {symList.map((text, index) => (
+                <List className={classes.bodypartList}>
+                  {symList.map((text) => (
                     <ListItem
-                      id={text}
+                      // id={text}
                       button
                       selected={selectedSym === text}
                       key={text}
@@ -238,7 +239,7 @@ export default function BodyPartsDialog(props) {
                 ml={2}
               >
                 <List className={classes.conditionList}>
-                  {condition.map((text, index) => (
+                  {condition.map((text) => (
                     <ListItem
                       button
                       key={text}
@@ -268,6 +269,6 @@ export default function BodyPartsDialog(props) {
           </Grid>
         </DialogContent>
       </Dialog>
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 //This card is imported in SearchResult.js
 
-// Each indiivdual hospital card
+// Indiivdual hospital card
 export default function HospitalCard(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -60,23 +61,17 @@ export default function HospitalCard(props) {
   const handleClick = () => {
     // props.setProfileBackToDestination("resultsPage");
     // props.updateTargetHos(props.resultData);
-
     let hospital = hospInfo?.name.replace(/\s+/g, "-");
     let specialty = hospInfo?.relatedSpecialty.replace(" & ", "-");
-
-    // if (props.history != null) {
     history.push(`/profile/${hospital}/${specialty}`);
-    // }
   };
 
   let cardImage = (
     <div style={{ width: 150, height: 150 }}>
-      {/* <img className={classes.img} src={props.resultData["imgSrc"]}></img> */}
       <img className={classes.img} src={hospInfo.imgSrc}></img>
     </div>
   );
 
-  // let hospLikes = props.resultData["likes"] ? props.resultData["likes"] : 0;
   let hospLikes = hospInfo.likes ? hospInfo.likes : 0;
 
   return (
@@ -92,15 +87,12 @@ export default function HospitalCard(props) {
 
         <Grid item xs={12} sm={7}>
           <CardContent>
-            {/* hospital details */}
             <Typography variant="h6" color="primary">
-              {/* {props.resultData["HospitalName"]} */}
               {hospInfo.name}
             </Typography>
             <br></br>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Address: </strong>
-              {/* <span>{props.resultData["Address"]}</span> */}
               <span>{hospInfo.address}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
@@ -109,7 +101,6 @@ export default function HospitalCard(props) {
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Phone: </strong>
-              {/* <span>{props.resultData["Phone"]}</span> */}
               <span>{hospInfo.phone}</span>
             </Typography>
 

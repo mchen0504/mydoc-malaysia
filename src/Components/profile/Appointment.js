@@ -1,4 +1,5 @@
 import React from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -45,7 +46,6 @@ export default function Appointment(props) {
   const classes = useStyles();
   const { docInfo } = props;
 
-  // create grid based on appointment list
   let appointment = docInfo?.appointment;
   let appointmentList = [];
   for (let appointmentType in appointment) {

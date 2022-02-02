@@ -1,4 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,13 +22,8 @@ import Badge from "@material-ui/core/Badge";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-
 import { changeProfilePic } from "../../redux/actions/userActions";
 import { updateDoctorProfilePic } from "../../redux/actions/dataActions";
-
-// const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,9 +84,6 @@ function DocSideNav(props) {
     likes: 0,
   });
 
-  const indicator = "";
-
-  // initial render: only gets called once
   useEffect(() => {
     if (userInfo) {
       let tags;
@@ -170,8 +165,8 @@ function DocSideNav(props) {
     <p>No review tags yet</p>
   );
 
-  //选list item (profile, saved, like history, acc verification, acc settings)
-  const [selectedIndex, setSelectedIndex] = React.useState();
+  //list item (profile, saved, like history, acc verification, acc settings)
+  const [selectedIndex, setSelectedIndex] = useState();
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -265,7 +260,6 @@ function DocSideNav(props) {
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary="Profile" />
-              {/* 第一次user要显示这个tooltip */}
 
               {props.profileShowWarning ? (
                 <Tooltip
@@ -331,7 +325,6 @@ function DocSideNav(props) {
                 <VerifiedUserIcon />
               </ListItemIcon>
               <ListItemText primary="Account Verification" />
-              {/* 第一次user要显示这个tooltip */}
 
               {props.verifyShowWarning ? (
                 <Tooltip
@@ -366,13 +359,10 @@ function DocSideNav(props) {
 DocSideNav.propTypes = {
   changeProfilePic: PropTypes.func.isRequired,
   updateDoctorProfilePic: PropTypes.func.isRequired,
-  getDoctorUserSearchInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
   storedCredentials: state.user.credentials,
-  searchUserInfo: state.data.doctorUserInfo,
 });
 
 const mapActionsToProps = {

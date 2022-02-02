@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -27,9 +27,9 @@ function DocAccountVerification(props) {
   const { userInfo } = props;
 
   // submit success success message alert
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [currentInfo, setState] = React.useState({
+  const [currentInfo, setState] = useState({
     medicalRegistrationNumber: "",
     identityCardSrc: "",
     identityCardName: "",
@@ -268,8 +268,15 @@ DocAccountVerification.propTypes = {
   updateVerification: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = (state) => ({
+  storedCredentials: state.user.credentials,
+});
+
 const mapActionsToProps = {
   updateVerification,
 };
 
-export default connect(mapStateToProps)(DocAccountVerification);
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(DocAccountVerification);

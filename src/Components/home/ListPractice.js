@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 
-//image
 import doctorsImg from "../../img/home/doctors.png";
 
 const useStyles = makeStyles((theme) => ({

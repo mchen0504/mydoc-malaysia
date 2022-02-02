@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -60,27 +60,15 @@ export default function GlobalSearch(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState("sm");
+  const [open, setOpen] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const handleClickOpen = () => {
-    // props.setSearchType("Specialty");
-    // props.setSearchValue("");
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleMaxWidthChange = (event) => {
-    setMaxWidth(event.target.value);
-  };
-
-  const handleFullWidthChange = (event) => {
-    setFullWidth(event.target.checked);
   };
 
   return (
@@ -89,8 +77,8 @@ export default function GlobalSearch(props) {
         {/* user clicks 'search' on Navbar and will render this dialog */}
         <Dialog
           fullScreen={fullScreen}
-          fullWidth={fullWidth}
-          maxWidth={maxWidth}
+          fullWidth="true"
+          maxWidth="sm"
           open={open}
           onClose={handleClose}
         >

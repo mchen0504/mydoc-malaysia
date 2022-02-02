@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
@@ -32,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
 // Autocomplete + Google MAP Api for Location search box
 export default function Location() {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState("");
-  const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
+  const [inputValue, setInputValue] = useState("");
+  const [options, setOptions] = useState([]);
+  const loaded = useRef(false);
 
   if (typeof window !== "undefined" && !loaded.current) {
     if (!document.querySelector("#google-maps")) {
@@ -52,7 +52,7 @@ export default function Location() {
     setInputValue(event.target.value);
   };
 
-  const fetch = React.useMemo(
+  const fetch = useMemo(
     () =>
       throttle((request, callback) => {
         autocompleteService.current.getPlacePredictions(request, callback);
@@ -60,7 +60,7 @@ export default function Location() {
     []
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true;
 
     if (!autocompleteService.current && window.google) {

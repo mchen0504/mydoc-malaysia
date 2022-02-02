@@ -1,24 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/login.css";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import AuthRoute from "./util/AuthRoute";
-import { useState, useEffect } from "react";
 
-// material ui theme
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import themeFile from "./util/theme";
 
-//redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { SET_AUTHENTICATED } from "./redux/types";
 import { logoutUser, getUserData } from "./redux/actions/userActions";
 import { getData, getInputs } from "./redux/actions/dataActions";
 
-// pages
 import Home from "./pages/Home";
 import login from "./pages/Login";
 import signup from "./pages/Signup";
@@ -30,10 +26,6 @@ import Account from "./pages/Account";
 
 // use themeFile from theme.js
 const theme = createMuiTheme(themeFile);
-
-// set up api
-// axios.defaults.baseURL = "http://localhost:3008/";
-// "https://cors-anywhere.herokuapp.com/https://us-central1-mydoc-f3cd9.cloudfunctions.net/api/";
 
 const token = localStorage.FBIdToken;
 
@@ -56,7 +48,7 @@ store.dispatch(getInputs());
 function App() {
   // const [location, setLocation] = useState("");
   // const [filterlocation, setFilterlocation] = useState([]);
-  const proxyurl = "https://cors-anywhere.herokuapp.com/";
+  // const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
   // const [drivingTime, setDrivingTime] = useState([1000, -1]);
   const [conditionLabel, setConditionLabel] = useState("");

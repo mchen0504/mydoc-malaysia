@@ -1,7 +1,4 @@
-// -------------------- ------------------------- //
-// 你需要去app.js, userReducer, userAction, type, 加入其他东西
-
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -14,8 +11,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import axios from "axios";
-
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -30,17 +25,11 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Alert from "@material-ui/lab/Alert";
 
+import { sendAccountProfile } from "../../redux/actions/userActions";
 import {
-  // to "users" collection
-  sendAccountProfile,
-} from "../../redux/actions/userActions";
-import {
-  // to "inputList" collection
   sendSpecList,
   sendCondList,
-  // to "specialties" collection
   sendProfileToSpec,
-  // disable original account if doctor has changed hospital/specialty in "specialties" collection
   deleteProfileInSpec,
   publish,
 } from "../../redux/actions/dataActions";
@@ -57,24 +46,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// doctor edit profile
 function DocEditProfile(props) {
   const classes = useStyles();
   const { userInfo, docInfo } = props;
 
-  // --------------------------- initialize states --------------------------- //
-
-  // putting most inputs in one state, initialize states
-  const [allState, setAllState] = React.useState({
+  const [allState, setAllState] = useState({
     // personal
     firstName: "",
     lastName: "",
     gender: "",
     yearsOfPractice: "",
-
     // work
     hospital: "",
-
     // check if hospital has changed
     removedHospital: "",
     type: "",
@@ -84,7 +67,6 @@ function DocEditProfile(props) {
     city: "",
     state: "",
     postalCode: "",
-
     // appt
     call: false,
     online: false,
@@ -94,50 +76,37 @@ function DocEditProfile(props) {
     callNumber: "",
     onlineLink: "",
     emailAddress: "",
-
     // expertise
     specialty: "",
-
     // check if specialty has changed
     removedSpecialty: "",
     qualifications: "",
     procedures: [],
-
     // to store one procedure entered
     newProc: "",
     conditions: [],
-
     // check if conditions have changed
     removedConditions: [],
-
     // to store one condition entered
     newCond: "",
     languages: [],
-
     // to enable publish if there is spec/hosp info in database (user already filled out and submitted the profile)
     specOrNot: "",
     hospOrNot: "",
   });
 
   // submit success alert
-  const [open, setOpen] = React.useState(false);
-
+  const [open, setOpen] = useState(false);
   // to stop fetching data after the first round
-  const [renderCount, setRenderCount] = React.useState(0);
-
-  // to store inputList (specialty & conditions) data returned from database so I can compare and send new lists to replace the ones in database
-  const [list, setList] = React.useState({
+  const [isLoading, setLoading] = useState(true);
+  // to store inputList (specialty & conditions) data returned from database so I can  compare and send new lists to replace the ones in database
+  const [list, setList] = useState({
     specialtyList: {},
     conditionsList: {},
   });
-
   //publish switch
-  const [publish, setPublish] = React.useState(false);
+  const [publish, setPublish] = useState(false);
 
-  // -------------------------------------------------------------------- //
-
-  // get data
-  // only call useEffect if renderCount = 0 (will be updated to 1 if stored data
   useEffect(() => {
     const getData = async () => {
       try {
@@ -192,7 +161,7 @@ function DocEditProfile(props) {
             hospOrNot: profile.hospital,
           });
           setPublish(docInfo.publish);
-          setRenderCount(1);
+          setLoading(false);
         }
       } catch (err) {
         console.error(err);
@@ -247,8 +216,6 @@ function DocEditProfile(props) {
       yearsOfPractice: event.target.value,
     });
   };
-
-  // -------------------------------------------------------------------- //
 
   // work
   // hospital name
@@ -315,8 +282,6 @@ function DocEditProfile(props) {
     });
   };
 
-  // -------------------------------------------------------------------- //
-
   // appt status
   const handleAppointmentChange = (event) => {
     setAllState({
@@ -348,8 +313,6 @@ function DocEditProfile(props) {
       emailAddress: event.target.value,
     });
   };
-
-  // -------------------------------------------------------------------- //
 
   // expertise
   //specialty
@@ -638,8 +601,6 @@ function DocEditProfile(props) {
       }
     }
 
-    // ------------------  data to send  -------------------------- //
-
     // send to account profile "users" collection
     const accountData = {
       // personal
@@ -725,13 +686,10 @@ function DocEditProfile(props) {
 
     // to user account
     props.sendAccountProfile(accountData);
-
     // to account in specialty
     props.sendProfileToSpec(specData);
-
     // send specialty
     props.sendSpecList(specListData);
-
     // send condition list
     props.sendCondList(condListData);
 
@@ -813,9 +771,7 @@ function DocEditProfile(props) {
     languageError;
   const submitError = personalError || workError || apptError || expertiseError;
 
-  // -------------------------------------------------------------------- //
-
-  if (renderCount === 0) {
+  if (isLoading) {
     return (
       <div>
         <CircularProgress
@@ -827,7 +783,6 @@ function DocEditProfile(props) {
   } else {
     return (
       <a id="profile" className={classes.anchor}>
-        {console.log(docInfo)}
         <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
           <Grid item xs={10} md={8}>

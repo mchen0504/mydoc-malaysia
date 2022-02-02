@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme) => ({
 function HospProfile(props) {
   const classes = useStyles();
   window.scrollTo(0, 0);
-  const backToPage = props.profileBackToDestination;
+  // const backToPage = props.profileBackToDestination;
 
   const locationParts = useLocation().pathname.split("/");
   const hospital = locationParts[2];
   const specialty = locationParts[3];
 
-  const [hospInfo, setHospInfo] = React.useState();
-  const [userInfo, setUserInfo] = React.useState();
+  const [hospInfo, setHospInfo] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
     axios

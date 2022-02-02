@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { connect } from "react-redux";
 
-//material ui
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -11,15 +11,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-//redux
-import { connect } from "react-redux";
-import store from "../../redux/store";
-//bring in action
-import { CLEAR_ERRORS } from "../../redux/types";
 import { signupGeneralUser } from "../../redux/actions/userActions";
 import { validateSignUpData } from "./validateSignUpData";
 
-// material ui style
 const useStyles = makeStyles((theme) => ({
   ...theme.auth,
   signupGrid: {
@@ -207,7 +201,6 @@ GeneralSignup.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
   UI: state.UI,
 });
 

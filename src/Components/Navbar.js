@@ -55,7 +55,6 @@ function Navbar(props) {
     window.location.replace("/");
   };
 
-  // const { classes, ...other } = props;
   const { authenticated } = props;
 
   let globalSearch = null;

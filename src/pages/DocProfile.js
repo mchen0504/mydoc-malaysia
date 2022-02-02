@@ -5,7 +5,6 @@ import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-//components
 import Navbar from "../components/Navbar";
 import Appointment from "../components/profile/Appointment";
 import DocDetailedInfo from "../components/profile/DocDetailedInfo";
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 function DocProfile(props) {
   const classes = useStyles();
   window.scrollTo(0, 0);
-  const backToPage = props.profileBackToDestination;
+  // const backToPage = props.profileBackToDestination;
 
   const locationParts = useLocation().pathname.split("/");
   const hospital = locationParts[2];

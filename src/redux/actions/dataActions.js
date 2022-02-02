@@ -1,8 +1,38 @@
-import { LOADING_USER, GET_SEARCH_DATA, GET_INPUT_LIST } from "../types";
+import { GET_SEARCH_DATA, GET_INPUT_LIST } from "../types";
 import axios from "axios";
 
+// -------------Used in page Result.js and Home.js (search)
+
+export const getData = () => (dispatch) => {
+  axios
+    .get("/alldata")
+    .then((res) => {
+      dispatch({
+        type: GET_SEARCH_DATA,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.error(err));
+};
+
+// -------------Used in page Result.js, Home.js (search) and DocEditProfile.js
+
+export const getInputs = () => (dispatch) => {
+  axios
+    .get("/inputs")
+    .then((res) => {
+      dispatch({
+        type: GET_INPUT_LIST,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.error(err));
+};
+
+// -------------Used in page account.js
+
+// used in DocEditProfile.js
 export const sendSpecList = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/updatespecialtylist", data)
     .then(() => {
@@ -11,8 +41,8 @@ export const sendSpecList = (data) => (dispatch) => {
     .catch((err) => console.error(err));
 };
 
+// used in DocEditProfile.js
 export const sendCondList = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/updateconditionlist", data)
     .then(() => {
@@ -23,7 +53,6 @@ export const sendCondList = (data) => (dispatch) => {
 
 // used in DocEditProfile.js
 export const sendProfileToSpec = (specData) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/updatepublicprofile", specData)
     .then(() => {
@@ -32,8 +61,8 @@ export const sendProfileToSpec = (specData) => (dispatch) => {
     .catch((err) => console.error(err));
 };
 
+// used in DocEditProfile.js
 export const deleteProfileInSpec = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/deleteoldprofile", data)
     .then(() => {
@@ -42,9 +71,8 @@ export const deleteProfileInSpec = (data) => (dispatch) => {
     .catch((err) => console.error(err));
 };
 
-// publish
+// // used in DocEditProfile.js
 export const publish = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/publishprofile", data)
     .then(() => {
@@ -52,6 +80,8 @@ export const publish = (data) => (dispatch) => {
     })
     .catch((err) => console.error(err));
 };
+
+// -------------Used in page DocProfile and HospProfile.js
 
 // used in DocTags.js
 export const updateDoctorTags = (doctorTags) => (dispatch) => {
@@ -105,7 +135,6 @@ export const updateDoctorProfilePic = (imgSrc) => (dispatch) => {
 
 // DocInfo.js
 export const reportDoctor = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/reportdoctor", data)
     .then(() => {
@@ -116,35 +145,10 @@ export const reportDoctor = (data) => (dispatch) => {
 
 // HospInfo.js
 export const reportHospital = (data) => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .post("/reporthospital", data)
     .then(() => {
       dispatch(getData());
-    })
-    .catch((err) => console.error(err));
-};
-
-export const getData = () => (dispatch) => {
-  axios
-    .get("/alldata")
-    .then((res) => {
-      dispatch({
-        type: GET_SEARCH_DATA,
-        payload: res.data,
-      });
-    })
-    .catch((err) => console.error(err));
-};
-
-export const getInputs = () => (dispatch) => {
-  axios
-    .get("/inputs")
-    .then((res) => {
-      dispatch({
-        type: GET_INPUT_LIST,
-        payload: res.data,
-      });
     })
     .catch((err) => console.error(err));
 };

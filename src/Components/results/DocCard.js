@@ -97,20 +97,15 @@ export default function DocCard(props) {
         </Grid>
         <Grid item xs={12} sm={7}>
           <CardContent>
-            {/* doctor details */}
             <Typography variant="h6" color="primary">
-              {/* {"Dr. " + props.resultData["DocName"]} */}
               {"Dr. " + docInfo.name}
             </Typography>
             <br></br>
             <Typography variant="subtitle1" color="textSecondary">
-              <strong>Specialty: </strong>{" "}
-              {/* <span>{props.resultData["Specialty"]}</span> */}
-              <span>{docInfo.specialty}</span>
+              <strong>Specialty: </strong> <span>{docInfo.specialty}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               <strong>Hospital: </strong>
-              {/* <span>{props.resultData["Hospital"]}</span> */}
               <span>{docInfo.hospital}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
@@ -119,12 +114,7 @@ export default function DocCard(props) {
             </Typography>
             <br></br>
             {/* private tag */}
-            <Chip
-              color="secondary"
-              size="small"
-              // label={props.resultData["Type"]}
-              label={docInfo.type}
-            ></Chip>
+            <Chip color="secondary" size="small" label={docInfo.type}></Chip>
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={2}>

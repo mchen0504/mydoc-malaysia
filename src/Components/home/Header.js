@@ -102,7 +102,7 @@ function Header(props) {
   if (searchType === "Condition") {
     renderBodyParts = (
       <BodyPartsDialog
-        setKeywords={props.setKeywords}
+        setSearchValue={setSearchValue}
         setConditionLabel={props.setConditionLabel}
         changeConditionLabel={props.changeConditionLabel}
         bodyPartsDic={bodyPartsDic}
@@ -134,12 +134,10 @@ function Header(props) {
       <div>
         <SearchTabs
           searchData={props.searchData}
-          getKeyWords={props.getKeyWords}
           searchType={searchType}
           setSearchType={setSearchType}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
-          setKeywords={props.setKeywords}
           conditions={conditions}
           specialties={specialties}
           conditionLabel={props.conditionLabel}

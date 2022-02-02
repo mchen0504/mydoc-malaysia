@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-// material ui
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -15,17 +14,14 @@ import Box from "@material-ui/core/Box";
 // Doctor heart background
 import Bg from "../img/login/doctors-heart.png";
 
-//redux
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
 import store from "../redux/store";
 import { SET_AUTHENTICATED } from "../redux/types";
 
-// components
 import Navbar from "../components/Navbar";
 import CovidAlert from "../components/Alert";
 
-// material ui style
 const useStyles = makeStyles((theme) => ({
   ...theme.auth,
   bg: {
@@ -53,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -108,7 +105,7 @@ function Login(props) {
     if (Object.keys(errors).length > 0) {
       setCredentials((credentials) => ({ ...credentials, errors }));
     } else {
-      props.loginUser(userData, props.history);
+      props.loginUser(userData, history);
     }
   };
 
@@ -217,8 +214,4 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
 });
 
-const mapActionsToProps = {
-  loginUser,
-};
-
-export default connect(mapStateToProps, mapActionsToProps)(Login);
+export default connect(mapStateToProps, { loginUser })(Login);

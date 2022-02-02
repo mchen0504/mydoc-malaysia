@@ -1,5 +1,8 @@
 import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -8,9 +11,6 @@ import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
-import axios from "axios";
-
-//icons
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
@@ -20,17 +20,13 @@ import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutline
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
-//components
 import CovidAlert from "../Alert";
 import HospTags from "./HospTags";
 
@@ -62,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  //hospital image
   img: {
     width: "100%",
     height: "100%",
@@ -93,33 +88,34 @@ const useStyles = makeStyles((theme) => ({
 function HospInfo(props) {
   const classes = useStyles();
   const { hospInfo, userInfo } = props;
+  const history = useHistory();
 
   const authenticated = props.authenticated;
 
-  const backToRes = () => {
-    if (props.history !== null) {
-      if (props.backTo === "resultsPage") {
-        props.history.push("/results");
-      } else if (props.backTo === "hospprofile") {
-        props.history.push("/results");
-      } else if (props.backTo === "likeHistory") {
-        props.history.push("/likehistory");
-      } else {
-        props.history.push("/saved");
-      }
-    }
-  };
+  // const backToRes = () => {
+  //   if (props.history !== null) {
+  //     if (props.backTo === "resultsPage") {
+  //       props.history.push("/results");
+  //     } else if (props.backTo === "hospprofile") {
+  //       props.history.push("/results");
+  //     } else if (props.backTo === "likeHistory") {
+  //       props.history.push("/likehistory");
+  //     } else {
+  //       props.history.push("/saved");
+  //     }
+  //   }
+  // };
 
-  let returnPageDesc;
-  if (props.backTo === "resultsPage") {
-    returnPageDesc = "Result Page";
-  } else if (props.backTo === "hospprofile") {
-    returnPageDesc = "Result Page";
-  } else if (props.backTo === "likeHistory") {
-    returnPageDesc = "Liked History Page";
-  } else {
-    returnPageDesc = "Saved History Page";
-  }
+  // let returnPageDesc;
+  // if (props.backTo === "resultsPage") {
+  //   returnPageDesc = "Result Page";
+  // } else if (props.backTo === "hospprofile") {
+  //   returnPageDesc = "Result Page";
+  // } else if (props.backTo === "likeHistory") {
+  //   returnPageDesc = "Liked History Page";
+  // } else {
+  //   returnPageDesc = "Saved History Page";
+  // }
 
   const [likeSaveInfo, setState] = React.useState({
     hasLiked: false,
@@ -223,37 +219,12 @@ function HospInfo(props) {
     };
 
     toggleLike(updateInfo, newLikedList);
-    // updateLocalHospList(newLikes);
   };
 
   const toggleLike = (updateInfo, likedList) => {
     props.changeHospLikeStatus(likedList);
     props.updateHospitalLikes(updateInfo);
   };
-
-  // const updateLocalHospList = (newLikes) => {
-  //   // set location target list location
-  //   let newHospList = [];
-  //   for (let hosp in hospInfo) {
-  //     let hospItem = hospInfo[hosp];
-  //     if (hospItem.name === hospInfo.name) {
-  //       hospItem.NumberOfLikes = newLikes;
-  //       hospItem.likes = newLikes;
-  //     }
-  //     newHospList.push(hospItem);
-  //   }
-  //   props.sethospitalInfo(newHospList);
-
-  // set database
-  //   let newDatabase = props.database;
-  //   let hospitalId = hospInfo.name.replace(/\s/g, "");
-
-  //   newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].likes =
-  //     newLikes;
-  //   newDatabase[hospInfo.relatedSpecialty].hospitals[hospitalId].NumberOfLikes =
-  //     newLikes;
-  //   props.setDatabase(newDatabase);
-  // };
 
   // if the user has liked this hospital before: filled heart, otherwise outlined heart
   const LikeIcon = likeSaveInfo.hasLiked
@@ -296,15 +267,11 @@ function HospInfo(props) {
     props.changeHospSaveStatus(newSavedList);
   };
 
-  // if the user has saved this doctor before: filled bookmark, otherwise outlined bookmark
   const SaveIcon = likeSaveInfo.hasSaved
     ? BookmarkIcon
     : BookmarkBorderOutlinedIcon;
 
-  // -------------------------------------------------------------------- //
   // ----------------------------Report---------------------------------------- //
-  // 新加 5/14
-  //report弹窗：填的表
   const [reportOpen, setReportOpen] = React.useState(false);
   const handleReportOpen = () => {
     setReportOpen(true);
@@ -334,12 +301,10 @@ function HospInfo(props) {
       reportedList.push(hospInfo.name);
     }
 
-    // send to specialty doctor account
+    // send to specialty doctor profile
     const oneReport = {
       reportCount: likeSaveInfo.numReports + 1,
       reportReasons: reasons,
-
-      // *******hard code
       specialty: hospInfo.relatedSpecialty,
       hospital: hospInfo.name,
     };
@@ -361,10 +326,8 @@ function HospInfo(props) {
     }));
   };
 
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // ~~~~~~~~~~~sign up or login in if want to save or report~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  // 弹窗去signin/signup如果要report没有login
   const [loginOpen, setLoginOpen] = React.useState({
     open: false,
     // keep track of what function the user selects (report, like, save, tag)
@@ -404,7 +367,7 @@ function HospInfo(props) {
         <CovidAlert />
       </div>
 
-      {/* For 'return to hospitals' button (需要换成return to doctors， depending on user之前是怎么搜的) */}
+      {/* For 'return to hospitals' button*/}
       <Box display="flex" mt={3} mb={3} className={classes.returnBox}>
         {/* <Button
           style={{ fontSize: 16, textTransform: "none" }}
@@ -416,7 +379,7 @@ function HospInfo(props) {
         </Button> */}
       </Box>
 
-      {/* 手机屏幕才会出现的格式：hospital照片在上面 ，like icon 在右上角*/}
+      {/* mobile view: image on top, like icon on upper right*/}
       <Hidden smUp>
         <Grid container display="flex" justifyContent="center">
           <Grid item xs={3}></Grid>
@@ -438,15 +401,11 @@ function HospInfo(props) {
               justifyContent="center"
               alignItems="center"
             >
-              {/* 如果登入了，爱心icon成了iconButton，可以点 , 但是我没写logic, 目前点了的话，这个button不会从
-              <FavoriteBorderOutlinedIcon> 换成<FavoriteIcon>, likeCount也不会增加，麻烦你了
-              */}
               {authenticated ? (
                 <IconButton onClick={toggleLikeUnlike}>
                   <LikeIcon style={{ color: "red" }} />
                 </IconButton>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
                 <Fragment>
                   <IconButton onClick={() => handleLoginOpen("Recommend")}>
                     <FavoriteBorderOutlinedIcon style={{ color: "red" }} />
@@ -473,7 +432,7 @@ function HospInfo(props) {
             justifyContent="center"
             alignItems="center"
           >
-            {/* 大屏幕会出现的格式：hospital照片在左边 */}
+            {/* desktop view: image on the left */}
             <Hidden xsDown>
               {/* hospital image */}
               <div style={{ width: 200, height: 250 }}>
@@ -485,7 +444,7 @@ function HospInfo(props) {
               </div>
             </Hidden>
 
-            {/* 手机屏幕出现的格式：hospital name 在照片下面 */}
+            {/* mobile view: name below image */}
             <Hidden smUp>
               <Typography variant="h5" color="primary" style={{ margin: 20 }}>
                 {hospInfo?.name}
@@ -506,7 +465,6 @@ function HospInfo(props) {
                   Report
                 </Button>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的 （这里新的东西比原来长很多 麻烦小心对一下位置）
                 <Fragment>
                   <Button
                     startIcon={<ErrorOutlineOutlinedIcon />}
@@ -588,7 +546,6 @@ function HospInfo(props) {
                 </Fragment>
               )}
 
-              {/* report dialogue 新加的 5/10/2020 */}
               <Dialog
                 fullWidth="true"
                 maxWidth="sm"
@@ -653,7 +610,6 @@ function HospInfo(props) {
                   Save
                 </Button>
               ) : (
-                // michelle 5/16: 这里的fragment和里面的东西都替换掉原来的
                 <Fragment>
                   <Button
                     startIcon={<SaveIcon />}
@@ -670,7 +626,7 @@ function HospInfo(props) {
         </Grid>
 
         <Grid item xs={12} sm={6} md={6}>
-          {/* 大屏幕会出现的格式：hospital name 在右边 */}
+          {/* desktop view: name on the right */}
           <Hidden xsDown>
             <Typography variant="h5" color="primary">
               {hospInfo?.name}
@@ -684,7 +640,7 @@ function HospInfo(props) {
             </Typography>
           </Hidden>
 
-          {/* 手机幕会出现的格式：灰色比较粗的divider line */}
+          {/* mobile view: thicker divider */}
           <Hidden smUp>
             <hr className={classes.line}></hr>
           </Hidden>
@@ -729,12 +685,7 @@ function HospInfo(props) {
               </Typography>
             </Box>
           </Box>
-          {/* edit Tag component (imported from HospTag.js) */}
-          {/* <HospTags
-            hospInfo={hospInfo}
-            userInfo={userInfo}
-            handleLoginOpen={handleLoginOpen}
-          /> */}
+          {/* edit Tag component */}
           <HospTags
             hospInfo={hospInfo}
             userInfo={userInfo}
@@ -743,7 +694,7 @@ function HospInfo(props) {
         </Grid>
 
         <Grid item xs={12} sm={1} md={2}>
-          {/* 大屏幕会出现的格式：like icon在最右边 */}
+          {/* desktop view: like icon on the right */}
           <Hidden xsDown>
             <Box
               display="flex"
@@ -779,10 +730,8 @@ HospInfo.propTypes = {
   // like
   changeHospLikeStatus: PropTypes.func.isRequired,
   updateHospitalLikes: PropTypes.func.isRequired,
-
   // save
   changeHospSaveStatus: PropTypes.func.isRequired,
-
   // report
   sendReportedHospitals: PropTypes.func.isRequired,
   reportHospital: PropTypes.func.isRequired,
@@ -790,16 +739,12 @@ HospInfo.propTypes = {
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
-  storedCredentials: state.user.credentials,
-  searchInfo: state.data.searchInfoHospital,
 });
 
 const mapActionsToProps = {
   changeHospLikeStatus,
   updateHospitalLikes,
-
   changeHospSaveStatus,
-
   sendReportedHospitals,
   reportHospital,
 };

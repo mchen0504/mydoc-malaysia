@@ -5,12 +5,8 @@ const initialState = {
   searchInfo: {},
   conditionList: [],
   specialtyList: [],
-
-  doctorInfo: {},
-  doctorUserInfo: {},
 };
 
-//depending on the action type we receive, we will do something
 export default function (state = initialState, action) {
   switch (action.type) {
     case GET_SEARCH_DATA:

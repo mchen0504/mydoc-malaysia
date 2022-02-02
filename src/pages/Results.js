@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+
 import SearchResults from "../components/results/SearchResults";
 import Navbar from "../components/Navbar";
 
@@ -29,8 +30,6 @@ function Results(props) {
     yearOfPractice: [1000, -1],
   });
 
-  // const [searchingState, setSearchingState] = React.useState("in-progress");
-
   useEffect(() => {
     setSearchState("in-progress");
     props.getData();
@@ -47,10 +46,10 @@ function Results(props) {
       let searchResults = getSearchInfo(userKeyWords, props.searchData);
       sethospitalInfo(searchResults.newHosData);
       setDocInfo(searchResults.newDocData);
-      // setSearchState("finished");
     }
   }, [location.key, props.searchData]);
 
+  // Getting info based on search
   const getSearchInfo = (userKeyWords, data) => {
     let newDocData = [];
     let newHosData = [];
@@ -210,6 +209,7 @@ function Results(props) {
     };
   };
 
+  // filters
   useEffect(() => {
     let newDocList = [];
     let newHospitalList = [];
@@ -262,11 +262,6 @@ function Results(props) {
         database={props.database}
         conditionListForInput={props.conditionListForInput}
         specialtyListForInput={props.specialtyListForInput}
-        // setFilters={setFilters}
-        // searchType={props.searchType}
-        // setSearchType={props.setSearchType}
-        // searchValue={props.searchValue}
-        // setSearchValue={props.setSearchValue}
       />
       <SearchResults
         setSearchState={setSearchState}
@@ -281,17 +276,8 @@ function Results(props) {
   );
 }
 
-Results.propTypes = {
-  getData: PropTypes.func.isRequired,
-  searchData: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
   searchData: state.data.searchInfo,
 });
 
-const mapActionsToProps = {
-  getData,
-};
-
-export default connect(mapStateToProps, mapActionsToProps)(Results);
+export default connect(mapStateToProps, { getData })(Results);

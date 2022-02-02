@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
@@ -16,6 +15,7 @@ import Autocomplete, {
 } from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
+
 import GlobalLocation from "./GlobalLocation";
 
 function TabPanel(props) {
@@ -198,9 +198,6 @@ function GlobalSearchTabs(props) {
 
   return (
     <div className={classes.verticalTabContainer}>
-      {console.log(conditions)}
-      {console.log(specialties)}
-
       {/* vertical search tabs for screen > ipad size */}
       <Hidden smDown>
         <Tabs

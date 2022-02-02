@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { connect } from "react-redux";
 
-//material ui
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -11,9 +11,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-//redux
-import { connect } from "react-redux";
-//bring in action
 import { signupDoctorUser } from "../../redux/actions/userActions";
 import { validateSignUpData } from "./validateSignUpData";
 
@@ -99,7 +96,6 @@ function DoctorSignup(props) {
 
   return (
     <div>
-      {console.log(credentials.errors)}
       <Grid container className={classes.form}>
         <Grid item md />
         <Grid item md className={classes.signupGrid}>
@@ -220,7 +216,6 @@ DoctorSignup.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
   UI: state.UI,
 });
 

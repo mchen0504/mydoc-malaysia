@@ -2,7 +2,6 @@ import React, { Fragment, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import Dialog from "@material-ui/core/Dialog";
 import Chip from "@material-ui/core/Chip";
@@ -67,8 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// Edit Tags (用在DocInfo.js)
-// 目前doctor所有的tags and edit tags 都是hardcoded， 麻烦你了
+// Edit Tags (used in DocInfo.js)
 function Tags(props) {
   const classes = useStyles();
   const { docInfo, userInfo } = props;
@@ -240,9 +238,9 @@ function Tags(props) {
           <Divider className={classes.divider} />
         </Box>
       </Hidden>
-      {/* 显示这个doctor现在有的tags, 目前是hardcoded的， 麻烦你了 */}
       <div className={classes.tagDialog}>
-        {tagList} {/* 如果登入了，edit tags的button会出现，否则不会出现 */}
+        {tagList}
+        {/* Edits Tags opens up login in dialogue if no user is signed in */}
         {authenticated ? (
           <Button
             color="primary"
@@ -254,7 +252,6 @@ function Tags(props) {
             Edit Tags
           </Button>
         ) : (
-          // michelle 5/16: 这边原来是“”  现在用下面的button替换掉
           <Button
             color="primary"
             startIcon={<EditOutlinedIcon />}
@@ -272,10 +269,8 @@ function Tags(props) {
           Please select tag(s) that best describe this doctor from the list
           below:
         </Typography>
-        {/* 弹窗出现所有tags选项 */}
         <div className={classes.editTagDialog}>{predefinedTagList}</div>
 
-        {/* Done button， 目前是点了就关掉窗口，没有save user点了什么 */}
         <DialogActions>
           <Button
             onClick={updateSelectedTags}
@@ -316,12 +311,11 @@ function PreDefinedTag(props) {
 
 Tags.propTypes = {
   updateUserStoredDocTags: PropTypes.func.isRequired,
+  updateDoctorTags: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
-  storedCredentials: state.user.credentials,
-  searchInfo: state.data.searchInfo,
 });
 
 const mapActionsToProps = {

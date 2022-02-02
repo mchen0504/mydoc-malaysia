@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -10,11 +10,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Hidden from "@material-ui/core/Hidden";
 import Divider from "@material-ui/core/Divider";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import { updateUserStoredHospTags } from "../../redux/actions/userActions";
 import { updateHospTags } from "../../redux/actions/dataActions";
@@ -78,7 +76,7 @@ function HospTags(props) {
   const { hospInfo, userInfo } = props;
   const authenticated = props.authenticated;
 
-  const [allTags, setState] = React.useState({
+  const [allTags, setState] = useState({
     currentTags: [],
     storedUserTags: [],
   });
@@ -100,7 +98,7 @@ function HospTags(props) {
     }
   }, [hospInfo]);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -290,7 +288,7 @@ function HospTags(props) {
 function PreDefinedTag(props) {
   const classes = useStyles();
 
-  const [selected, selectUnselectTag] = React.useState(props.selected);
+  const [selected, selectUnselectTag] = useState(props.selected);
 
   const handleClick = () => {
     selectUnselectTag(!selected);
@@ -316,8 +314,6 @@ HospTags.propTypes = {
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
-  storedCredentials: state.user.credentials,
-  searchInfo: state.data.searchInfoHospital,
 });
 
 const mapActionsToProps = {

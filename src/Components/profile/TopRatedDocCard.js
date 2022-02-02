@@ -1,4 +1,6 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -40,20 +42,16 @@ const useStyles = makeStyles((theme) => ({
 export default function TopRatedDocCard(props) {
   const classes = useStyles();
   const { docInfo } = props;
+  const history = useHistory();
 
   const likes = docInfo.likes ? docInfo.likes : 0;
 
   const handleOnclick = () => {
-    props.setProfileBackToDestination("hospprofile");
-    props.updateTargetDoc(docInfo);
-
+    // props.setProfileBackToDestination("hospprofile");
     let hospital = docInfo?.hospital.replace(/\s+/g, "-");
     let specialty = docInfo?.specialty.replace(" & ", "-");
     let name = docInfo?.name.replace(/\s+/g, "-");
-
-    if (props.history != null) {
-      props.history.push(`/profile/${hospital}/${specialty}/${name}`);
-    }
+    history.push(`/profile/${hospital}/${specialty}/${name}`);
   };
 
   return (

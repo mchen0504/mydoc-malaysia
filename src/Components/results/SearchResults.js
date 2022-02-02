@@ -11,7 +11,6 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Hidden from "@material-ui/core/Hidden";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-// components
 import CovidAlert from "../Alert";
 import DocCard from "./DocCard";
 import HospitalCard from "./HospitalCard";
@@ -89,11 +88,6 @@ export default function SearchResults(props) {
     window.scrollTo(0, 0);
     setPage(value);
   };
-
-  // if (props.searchingState == "in-progress" && !props.keywords) {
-  //   props.history.push("/");
-  //   window.location.reload();
-  // }
 
   useEffect(() => {
     if (filtered) {

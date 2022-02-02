@@ -8,7 +8,6 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 
 //These filters functions are imported in 'SearchResult.js'
-// Filter: hospital type
 export function HospitalType(props) {
   const [value, setValue] = useState("both");
 
@@ -41,22 +40,9 @@ export function HospitalType(props) {
 export function Languages(props) {
   const [selectedLanguages, setSelectedLanguages] = useState(
     props.filters?.languageList
-    // English: false,
-    // Malay: false,
-    // Mandarin: false,
-    // Tamil: false,
-    // Cantonese: false,
   );
-  // const [changeLanguage, setChangeLanguage] = React.useState(true);
-
-  // useEffect(() => {
-  //   if (props.filters) {
-  //     setSelectedLanguages(props.filters.languagesList);
-  //   }
-  // }, [props.filters]);
 
   const handleChange = (event) => {
-    console.log(selectedLanguages);
     let languages = [...selectedLanguages];
     if (languages.includes(event.target.name)) {
       languages = languages.filter(
@@ -70,27 +56,8 @@ export function Languages(props) {
       ...filters,
       languageList: languages,
     }));
-    // setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  // useEffect(() => {
-  //   if (filters) {
-  //     setState(filters.languagesList);
-  //   }
-
-  //   // let languagesList = [];
-  //   // for (let key in state) {
-  //   //   if (state[key]) {
-  //   //     languagesList.push(key);
-  //   //   }
-  //   // }
-  //   // props.setFilters((filters) => ({
-  //   //   ...filters,
-  //   //   languageList: languagesList,
-  //   // }));
-  // }, [props.filters]);
-
-  // const { English, Malay, Mandarin, Tamil, Cantonese } = state;
   const allLanguages = ["English", "Malay", "Mandarin", "Tamil", "Cantonese"];
 
   return (
@@ -128,11 +95,8 @@ export function YearsOfPractice(props) {
     twenty: false,
   });
 
-  // const [yearChange, setYearChange] = React.useState(false);
-
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
-    // setYearChange(true);
   };
 
   useEffect(() => {
@@ -222,7 +186,7 @@ export function YearsOfPractice(props) {
 
 // Filter: location
 export function Location(props) {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     lessThan30mins: false,
     between30minsTo1hour: false,
     between1hourTo2hours: false,
@@ -230,7 +194,7 @@ export function Location(props) {
     over3hours: false,
   });
 
-  const [timeDomain, settimeDomain] = React.useState(true);
+  const [timeDomain, settimeDomain] = useState(true);
 
   useEffect(() => {
     if (timeDomain) {
@@ -254,7 +218,7 @@ export function Location(props) {
           }
         }
       }
-      props.filterDrivingTime(timeRange);
+      // props.filterDrivingTime(timeRange);
     }
     return settimeDomain(false);
   });

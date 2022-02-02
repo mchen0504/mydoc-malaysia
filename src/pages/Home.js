@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "../components/home/Header";
 import Problem from "../components/home/Problem";
 import Solution from "../components/home/Solution";
@@ -11,7 +11,6 @@ import Navbar from "../components/Navbar";
 function Home(props) {
   return (
     <div>
-      {/* Change */}
       <Navbar {...props} currentPage={"Home"} />
       <Header {...props} />
       <Problem />
