@@ -79,7 +79,7 @@ function Login(props) {
       store.dispatch({ type: SET_AUTHENTICATED });
       axios.defaults.headers.common["Authorization"] = token;
     }
-  });
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -64,9 +64,8 @@ export default function BodyPartsDialog(props) {
   };
 
   const getBodyPart = (bodyPart) => {
-    console.log("setting body part");
     setSelectedBodyPart(bodyPart);
-    // setSelectedSym("");
+    setSelectedSym("");
   };
 
   let symList = [];
@@ -212,10 +211,9 @@ export default function BodyPartsDialog(props) {
                 <List className={classes.bodypartList}>
                   {symList.map((text) => (
                     <ListItem
-                      // id={text}
                       button
-                      selected={selectedSym === text}
                       key={text}
+                      selected={selectedSym === text}
                       onClick={getSymName.bind(this, text)}
                     >
                       <ListItemText primary={text} />

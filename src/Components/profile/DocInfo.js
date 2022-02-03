@@ -149,7 +149,6 @@ function DocInfo(props) {
   };
 
   useEffect(() => {
-    console.log("setting states");
     const [listOfLikes, liked] = getUserLikeSaveInfo(userInfo, "likeHistory");
     const [listOfSaves, saved] = getUserLikeSaveInfo(userInfo, "saved");
 

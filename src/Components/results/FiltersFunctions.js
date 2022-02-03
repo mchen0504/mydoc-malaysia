@@ -221,7 +221,8 @@ export function Location(props) {
       // props.filterDrivingTime(timeRange);
     }
     return settimeDomain(false);
-  });
+  }, []);
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
     settimeDomain(true);

@@ -120,11 +120,11 @@ export const logoutUser = () => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
   if (
-    window.location.pathname == "/account" ||
-    window.location.pathname == "/profile" ||
-    window.location.pathname == "/saved" ||
-    window.location.pathname == "/likehistory" ||
-    window.location.pathname == "/accountverification"
+    window.location.pathname === "/account" ||
+    window.location.pathname === "/profile" ||
+    window.location.pathname === "/saved" ||
+    window.location.pathname === "/likehistory" ||
+    window.location.pathname === "/accountverification"
   ) {
     window.location.replace("/login");
   }

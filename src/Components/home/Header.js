@@ -96,7 +96,7 @@ function Header(props) {
       .catch((err) => {
         console.error(err);
       });
-  });
+  }, []);
 
   let renderBodyParts = null;
   if (searchType === "Condition") {

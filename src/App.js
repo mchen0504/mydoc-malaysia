@@ -74,7 +74,7 @@ function App() {
   //         });
   //     });
   //   }
-  // });
+  // }, []);
 
   // const getLocationValue = (value) => {
   //   setLocation(value);

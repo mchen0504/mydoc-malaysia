@@ -1,23 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.e7721a60.chunk.css",
-    "main.js": "/static/js/main.a8e2d594.chunk.js",
-    "main.js.map": "/static/js/main.a8e2d594.chunk.js.map",
+    "main.css": "/static/css/main.78113dc0.chunk.css",
+    "main.js": "/static/js/main.4a8f7b4b.chunk.js",
+    "main.js.map": "/static/js/main.4a8f7b4b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.77573157.js",
     "runtime-main.js.map": "/static/js/runtime-main.77573157.js.map",
-    "static/js/2.fd108e85.chunk.js": "/static/js/2.fd108e85.chunk.js",
-    "static/js/2.fd108e85.chunk.js.map": "/static/js/2.fd108e85.chunk.js.map",
+    "static/js/2.6da8e798.chunk.js": "/static/js/2.6da8e798.chunk.js",
+    "static/js/2.6da8e798.chunk.js.map": "/static/js/2.6da8e798.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.44674d133f5446b3920c0f567edbee40.js": "/precache-manifest.44674d133f5446b3920c0f567edbee40.js",
+    "precache-manifest.3aafbdc0f3ed43b66b727e40008b7169.js": "/precache-manifest.3aafbdc0f3ed43b66b727e40008b7169.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/main.e7721a60.chunk.css.map": "/static/css/main.e7721a60.chunk.css.map",
-    "static/js/2.fd108e85.chunk.js.LICENSE.txt": "/static/js/2.fd108e85.chunk.js.LICENSE.txt",
+    "static/css/main.78113dc0.chunk.css.map": "/static/css/main.78113dc0.chunk.css.map",
+    "static/js/2.6da8e798.chunk.js.LICENSE.txt": "/static/js/2.6da8e798.chunk.js.LICENSE.txt",
     "static/media/avoidtouchIcon.png": "/static/media/avoidtouchIcon.7c67fce6.png",
     "static/media/bodyparts.png": "/static/media/bodyparts.af94586b.png",
     "static/media/callIcon.png": "/static/media/callIcon.d0977acf.png",
     "static/media/coughIcon.png": "/static/media/coughIcon.dd4492fc.png",
     "static/media/covidIcon.png": "/static/media/covidIcon.8261382f.png",
-    "static/media/docAlex.png": "/static/media/docAlex.8054ce3f.png",
     "static/media/doctors-heart.png": "/static/media/doctors-heart.d4005c5c.png",
     "static/media/doctors.png": "/static/media/doctors.f9c9c23c.png",
     "static/media/eshin.png": "/static/media/eshin.46210ddc.png",
@@ -45,8 +44,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.77573157.js",
-    "static/js/2.fd108e85.chunk.js",
-    "static/css/main.e7721a60.chunk.css",
-    "static/js/main.a8e2d594.chunk.js"
+    "static/js/2.6da8e798.chunk.js",
+    "static/css/main.78113dc0.chunk.css",
+    "static/js/main.4a8f7b4b.chunk.js"
   ]
 }

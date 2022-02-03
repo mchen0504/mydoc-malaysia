@@ -132,6 +132,9 @@ function Account(props) {
 
   return (
     <div>
+      {console.log(userInfo)}
+
+      {console.log(docInfo)}
       <Navbar currentPage="account" />
       <Hidden smDown>
         <div className={classes.covidBox} style={{ position: "relative" }}>

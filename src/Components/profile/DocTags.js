@@ -214,7 +214,7 @@ function Tags(props) {
     const updateInfo = {
       specialty: docInfo.specialty,
       hospital: docInfo.hospital,
-      username: docInfo.userName,
+      username: docInfo.username,
       tags: allTags["currentTags"],
     };
     props.updateDoctorTags(updateInfo);
@@ -223,6 +223,7 @@ function Tags(props) {
 
   return (
     <div>
+      {console.log(docInfo.username)}
       <Hidden smUp>
         <hr className={classes.line}></hr>
         <Box

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import SearchResults from "../components/results/SearchResults";
 import Navbar from "../components/Navbar";
@@ -144,7 +143,7 @@ function Results(props) {
       for (let specialty in data) {
         let conditionList = data[specialty].conditions;
         conditionList = conditionList.map((item) => {
-          return item.toLowerCase().replace(/\s/g, "");
+          return item.toLowerCase().replace(/\s/g, "").replace(/-/g, "");
         });
         let conditionMatch = conditionList.includes(userKeyWords);
         if (conditionMatch) {
@@ -156,7 +155,10 @@ function Results(props) {
                 let doc = hosp.doctors[doctor];
                 let doctorCondition = doc.conditions;
                 doctorCondition = doctorCondition.map((item) => {
-                  return item.toLowerCase().replace(/\s/g, "");
+                  return item
+                    .toLowerCase()
+                    .replace(/\s/g, "")
+                    .replace(/-/g, "");
                 });
                 if (
                   doctorCondition.includes(userKeyWords) &&
