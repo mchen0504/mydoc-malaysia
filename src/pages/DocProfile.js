@@ -34,7 +34,7 @@ function DocProfile(props) {
 
   useEffect(() => {
     axios
-      .get("/doctorprofile", {
+      .get("/api/doctorprofile", {
         params: {
           hospital,
           specialty,
@@ -58,7 +58,7 @@ function DocProfile(props) {
       <div>
         <CircularProgress
           color="secondary"
-          style={{ marginLeft: "45%", marginTop: "5%" }}
+          style={{ marginLeft: "50%", marginTop: "5%" }}
         />
       </div>
     );

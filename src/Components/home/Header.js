@@ -89,7 +89,7 @@ function Header(props) {
 
   useEffect(() => {
     axios
-      .get("/bodyparts")
+      .get("/api/bodyparts")
       .then((res) => {
         setBodyPartsDic(res.data);
       })

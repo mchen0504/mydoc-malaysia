@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const getData = () => (dispatch) => {
   axios
-    .get("/alldata")
+    .get("/api/alldata")
     .then((res) => {
       dispatch({
         type: GET_SEARCH_DATA,
@@ -19,7 +19,7 @@ export const getData = () => (dispatch) => {
 
 export const getInputs = () => (dispatch) => {
   axios
-    .get("/inputs")
+    .get("/api/inputs")
     .then((res) => {
       dispatch({
         type: GET_INPUT_LIST,
@@ -34,7 +34,7 @@ export const getInputs = () => (dispatch) => {
 // used in DocEditProfile.js
 export const sendSpecList = (data) => (dispatch) => {
   axios
-    .post("/updatespecialtylist", data)
+    .post("/api/updatespecialtylist", data)
     .then(() => {
       dispatch(getInputs());
     })
@@ -44,7 +44,7 @@ export const sendSpecList = (data) => (dispatch) => {
 // used in DocEditProfile.js
 export const sendCondList = (data) => (dispatch) => {
   axios
-    .post("/updateconditionlist", data)
+    .post("/api/updateconditionlist", data)
     .then(() => {
       dispatch(getInputs());
     })
@@ -54,7 +54,7 @@ export const sendCondList = (data) => (dispatch) => {
 // used in DocEditProfile.js
 export const sendProfileToSpec = (specData) => (dispatch) => {
   axios
-    .post("/updatepublicprofile", specData)
+    .post("/api/updatepublicprofile", specData)
     .then(() => {
       dispatch(getData());
     })
@@ -64,7 +64,7 @@ export const sendProfileToSpec = (specData) => (dispatch) => {
 // used in DocEditProfile.js
 export const deleteProfileInSpec = (data) => (dispatch) => {
   axios
-    .post("/deleteoldprofile", data)
+    .post("/api/deleteoldprofile", data)
     .then(() => {
       dispatch(getData());
     })
@@ -74,7 +74,7 @@ export const deleteProfileInSpec = (data) => (dispatch) => {
 // // used in DocEditProfile.js
 export const publish = (data) => (dispatch) => {
   axios
-    .post("/publishprofile", data)
+    .post("/api/publishprofile", data)
     .then(() => {
       dispatch(getData());
     })
@@ -86,7 +86,7 @@ export const publish = (data) => (dispatch) => {
 // used in DocTags.js
 export const updateDoctorTags = (doctorTags) => (dispatch) => {
   axios
-    .post("/updatedoctortags", doctorTags)
+    .post("/api/updatedoctortags", doctorTags)
     .then(() => {
       dispatch(getData());
     })
@@ -96,7 +96,7 @@ export const updateDoctorTags = (doctorTags) => (dispatch) => {
 // used in DocInfo.js
 export const updateDoctorLikes = (likes) => (dispatch) => {
   axios
-    .post("/updatedoctorlikes", likes)
+    .post("/api/updatedoctorlikes", likes)
     .then(() => {
       dispatch(getData());
     })
@@ -106,7 +106,7 @@ export const updateDoctorLikes = (likes) => (dispatch) => {
 // used in HospTags.js
 export const updateHospTags = (hospTags) => (dispatch) => {
   axios
-    .post("/updatehospitaltags", hospTags)
+    .post("/api/updatehospitaltags", hospTags)
     .then(() => {
       dispatch(getData());
     })
@@ -116,7 +116,7 @@ export const updateHospTags = (hospTags) => (dispatch) => {
 // used in HospInfo.js
 export const updateHospitalLikes = (likes) => (dispatch) => {
   axios
-    .post("/updatehospitallikes", likes)
+    .post("/api/updatehospitallikes", likes)
     .then(() => {
       dispatch(getData());
     })
@@ -126,7 +126,7 @@ export const updateHospitalLikes = (likes) => (dispatch) => {
 // used in DocSideNav.js
 export const updateDoctorProfilePic = (imgSrc) => (dispatch) => {
   axios
-    .post("/updatedoctorprofilepic", imgSrc)
+    .post("/api/updatedoctorprofilepic", imgSrc)
     .then(() => {
       dispatch(getData());
     })
@@ -136,7 +136,7 @@ export const updateDoctorProfilePic = (imgSrc) => (dispatch) => {
 // DocInfo.js
 export const reportDoctor = (data) => (dispatch) => {
   axios
-    .post("/reportdoctor", data)
+    .post("/api/reportdoctor", data)
     .then(() => {
       dispatch(getData());
     })
@@ -146,7 +146,7 @@ export const reportDoctor = (data) => (dispatch) => {
 // HospInfo.js
 export const reportHospital = (data) => (dispatch) => {
   axios
-    .post("/reporthospital", data)
+    .post("/api/reporthospital", data)
     .then(() => {
       dispatch(getData());
     })

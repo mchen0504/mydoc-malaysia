@@ -39,7 +39,7 @@ function Account(props) {
     if (userInfo) {
       if (userInfo.userType === "doctor" && userInfo.profile.specialty) {
         axios
-          .get("/doctorprofile", {
+          .get("/api/doctorprofile", {
             params: {
               username: userInfo.username,
               specialty: userInfo.profile.specialty,
@@ -132,9 +132,6 @@ function Account(props) {
 
   return (
     <div>
-      {console.log(userInfo)}
-
-      {console.log(docInfo)}
       <Navbar currentPage="account" />
       <Hidden smDown>
         <div className={classes.covidBox} style={{ position: "relative" }}>

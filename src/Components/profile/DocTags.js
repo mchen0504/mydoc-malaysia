@@ -223,7 +223,6 @@ function Tags(props) {
 
   return (
     <div>
-      {console.log(docInfo.username)}
       <Hidden smUp>
         <hr className={classes.line}></hr>
         <Box

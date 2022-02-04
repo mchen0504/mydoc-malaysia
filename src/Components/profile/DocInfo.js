@@ -180,13 +180,11 @@ function DocInfo(props) {
     let newLikedList = [...likeSaveInfo.likedList];
     let newLikes = likeSaveInfo.numLikes;
     if (likeSaveInfo.hasLiked) {
-      console.log("unlike this doctor");
       let index = newLikedList.findIndex(
         (doctor) => doctor.username === docInfo.username
       );
       newLikedList.splice(index, 1);
       newLikes = newLikes - 1;
-      console.log(newLikes);
       setState((prevState) => ({
         ...prevState,
         numLikes: newLikes,
@@ -194,9 +192,7 @@ function DocInfo(props) {
         likedList: newLikedList,
       }));
     } else {
-      console.log("like this doctor");
       newLikes = newLikes + 1;
-      console.log(newLikes);
       let newDocInfo = {
         hospital: docInfo.hospital,
         specialty: docInfo.specialty,
@@ -381,7 +377,6 @@ function DocInfo(props) {
 
   return (
     <div>
-      {console.log(likeSaveInfo.numLikes)}
       <div className={classes.covidBox}>
         <CovidAlert />
       </div>

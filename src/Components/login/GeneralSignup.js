@@ -68,7 +68,9 @@ function GeneralSignup(props) {
       setCredentials((credentials) => ({ ...credentials, errors }));
     } else {
       axios
-        .get(`/checkduplicateusername?username=${newGeneralUserData.username}`)
+        .get(
+          `/api/checkduplicateusername?username=${newGeneralUserData.username}`
+        )
         .then((res) => {
           if (res.data === "This username is taken") {
             let errors = { username: res.data };

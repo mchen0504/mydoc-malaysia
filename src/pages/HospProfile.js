@@ -32,7 +32,7 @@ function HospProfile(props) {
 
   useEffect(() => {
     axios
-      .get("/hospitalprofile", {
+      .get("/api/hospitalprofile", {
         params: {
           hospital,
           specialty,
@@ -55,7 +55,7 @@ function HospProfile(props) {
       <div>
         <CircularProgress
           color="secondary"
-          style={{ marginLeft: "45%", marginTop: "5%" }}
+          style={{ marginLeft: "50%", marginTop: "5%" }}
         />
       </div>
     );

@@ -136,7 +136,7 @@ export const logoutUser = () => (dispatch) => {
 export const changeDocLikeStatus = (newLikedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatelikeddoctors", newLikedList)
+    .post("/api/updatelikeddoctors", newLikedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -147,7 +147,7 @@ export const changeDocLikeStatus = (newLikedList) => (dispatch) => {
 export const changeDocSaveStatus = (newSavedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatesaveddoctors", newSavedList)
+    .post("/api/updatesaveddoctors", newSavedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -158,7 +158,7 @@ export const changeDocSaveStatus = (newSavedList) => (dispatch) => {
 export const updateUserStoredDocTags = (userSelectedTags) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updateuserstoreddoctags", userSelectedTags)
+    .post("/api/updateuserstoreddoctags", userSelectedTags)
     .then(() => {
       dispatch(getUserData());
     })
@@ -169,7 +169,7 @@ export const updateUserStoredDocTags = (userSelectedTags) => (dispatch) => {
 export const changeHospLikeStatus = (newLikedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatelikedhospitals", newLikedList)
+    .post("/api/updatelikedhospitals", newLikedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -180,7 +180,7 @@ export const changeHospLikeStatus = (newLikedList) => (dispatch) => {
 export const changeHospSaveStatus = (newSavedList) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatesavedhospitals", newSavedList)
+    .post("/api/updatesavedhospitals", newSavedList)
     .then(() => {
       dispatch(getUserData());
     })
@@ -191,7 +191,7 @@ export const changeHospSaveStatus = (newSavedList) => (dispatch) => {
 export const updateUserStoredHospTags = (userSelectedTags) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updateuserstoredhosptags", userSelectedTags)
+    .post("/api/updateuserstoredhosptags", userSelectedTags)
     .then(() => {
       dispatch(getUserData());
     })
@@ -202,7 +202,7 @@ export const updateUserStoredHospTags = (userSelectedTags) => (dispatch) => {
 export const sendReportedDoctors = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatereporteddoctors", data)
+    .post("/api/updatereporteddoctors", data)
     .then(() => {
       dispatch(getUserData());
     })
@@ -213,7 +213,7 @@ export const sendReportedDoctors = (data) => (dispatch) => {
 export const sendReportedHospitals = (data) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updatereportedhospitals", data)
+    .post("/api/updatereportedhospitals", data)
     .then(() => {
       dispatch(getUserData());
     })
@@ -225,7 +225,7 @@ export const sendReportedHospitals = (data) => (dispatch) => {
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/user")
+    .get("/api/user")
     .then((res) => {
       dispatch({
         type: SET_USER,
@@ -239,7 +239,7 @@ export const getUserData = () => (dispatch) => {
 export const changeProfilePic = (newProfilePic) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updateprofilepic", newProfilePic)
+    .post("/api/updateprofilepic", newProfilePic)
     .then(() => {
       dispatch(getUserData());
     })
@@ -251,7 +251,7 @@ export const changeProfilePic = (newProfilePic) => (dispatch) => {
 export const updateVerification = (newVerification) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updateverification", newVerification)
+    .post("/api/updateverification", newVerification)
     .then(() => {
       dispatch(getUserData());
     })
@@ -262,7 +262,7 @@ export const updateVerification = (newVerification) => (dispatch) => {
 export const sendAccountProfile = (accountData) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .post("/updateprofile", accountData)
+    .post("/api/updateprofile", accountData)
     .then(() => {
       dispatch(getUserData());
     })

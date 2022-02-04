@@ -333,5 +333,3 @@
   //   return fakeUser;
 
   // }
-  // console.log('fake data here');
-  // console.log(createSplData(3));
