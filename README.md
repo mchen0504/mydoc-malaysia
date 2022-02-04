@@ -12,8 +12,8 @@ To maximize life-saving potential, patients require efficient access to medical 
 
 ## Project Duration
 
-January 2020 - June 2020
-Back end rewritten in January 2022
+January 2020 - June 2020<br>
+**Back end rewritten in January 2022**
 
 ## Technology Stack
 
